@@ -1,7 +1,6 @@
 <?php 
 require_once 'includes/auth.php'; 
 
-// Nếu đã đăng nhập rồi thì chuyển về trang chủ
 Auth::redirectIfLoggedIn('/');
 ?>
 
@@ -10,7 +9,7 @@ Auth::redirectIfLoggedIn('/');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Đăng nhập</title>
+    <title>Đăng ký tài khoản</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
@@ -44,20 +43,20 @@ Auth::redirectIfLoggedIn('/');
         <div class="col-md-8 col-lg-6 col-xl-5">
             <div class="card shadow-lg">
                 <div class="card-header bg-primary text-white text-center py-4">
-                    <h3 class="mb-0"><i class="bi bi-box-arrow-in-right me-2"></i> Đăng nhập</h3>
+                    <h3 class="mb-0"><i class="bi bi-person-plus-fill me-2"></i> Đăng ký tài khoản</h3>
                 </div>
                 <div class="card-body p-5">
 
                     <!-- Thông báo lỗi -->
-                    <?php if (isset($_SESSION['login_error'])): ?>
+                    <?php if (isset($_SESSION['register_error'])): ?>
                         <div class="alert alert-danger alert-dismissible fade show">
-                            <i class="bi bi-exclamation-triangle-fill"></i> <?= htmlspecialchars($_SESSION['login_error']) ?>
+                            <i class="bi bi-exclamation-triangle-fill"></i> <?= htmlspecialchars($_SESSION['register_error']) ?>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
-                        <?php unset($_SESSION['login_error']); ?>
+                        <?php unset($_SESSION['register_error']); ?>
                     <?php endif; ?>
 
-                    <!-- Thông báo thành công từ đăng ký -->
+                    <!-- Thông báo thành công (hiếm khi dùng ở đây, nhưng để sẵn) -->
                     <?php if (isset($_SESSION['register_success'])): ?>
                         <div class="alert alert-success alert-dismissible fade show">
                             <i class="bi bi-check-circle-fill"></i> <?= htmlspecialchars($_SESSION['register_success']) ?>
@@ -66,33 +65,49 @@ Auth::redirectIfLoggedIn('/');
                         <?php unset($_SESSION['register_success']); ?>
                     <?php endif; ?>
 
-                    <form action="process_login.php" method="POST" novalidate>
+                    <form action="process_register.php" method="POST" novalidate>
                         <div class="mb-3">
-                            <label for="login" class="form-label">
-                                <i class="bi bi-person-circle"></i> Tên đăng nhập hoặc Email
+                            <label for="username" class="form-label">
+                                <i class="bi bi-person-circle"></i> Tên đăng nhập
                             </label>
-                            <input type="text" name="login" id="login" class="form-control form-control-lg" 
-                                   placeholder="Nhập tên đăng nhập hoặc email" required 
-                                   value="<?= htmlspecialchars($_POST['login'] ?? '') ?>">
+                            <input type="text" name="username" id="username" class="form-control form-control-lg" 
+                                   placeholder="Nhập tên đăng nhập" required minlength="3" maxlength="50" value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
+                            <div class="form-text">Từ 3-50 ký tự</div>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                <i class="bi bi-envelope"></i> Email
+                            </label>
+                            <input type="email" name="email" id="email" class="form-control form-control-lg" 
+                                   placeholder="example@gmail.com" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                        </div>
+
+                        <div class="mb-3">
                             <label for="password" class="form-label">
                                 <i class="bi bi-lock"></i> Mật khẩu
                             </label>
                             <input type="password" name="password" id="password" class="form-control form-control-lg" 
-                                   placeholder="Nhập mật khẩu" required>
+                                   placeholder="Ít nhất 6 ký tự" required minlength="6">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="password_confirm" class="form-label">
+                                <i class="bi bi-lock-fill"></i> Nhập lại mật khẩu
+                            </label>
+                            <input type="password" name="password_confirm" id="password_confirm" class="form-control form-control-lg" 
+                                placeholder="Nhập lại mật khẩu" required>
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-lg w-100">
-                            <i class="bi bi-box-arrow-in-right"></i> Đăng nhập ngay
+                            <i class="bi bi-person-check"></i> Đăng ký ngay
                         </button>
                     </form>
 
                     <div class="text-center mt-4">
                         <p class="mb-0">
-                            Chưa có tài khoản? 
-                            <a href="register.php" class="text-primary fw-bold">Đăng ký ngay</a>
+                            Đã có tài khoản? 
+                            <a href="login.php" class="text-primary fw-bold">Đăng nhập ngay</a>
                         </p>
                         <p class="mt-3">
                             <a href="<?= BASE_URL ?>/" class="text-muted"><i class="bi bi-arrow-left"></i> Quay về trang chủ</a>
