@@ -105,9 +105,7 @@ class Auth {
         session_destroy();
     }
 
-    /**
-     * Chuyển hướng nếu đã đăng nhập (dùng cho trang login/register)
-     */
+
     public static function redirectIfLoggedIn($url = '/') {
         if (self::isLoggedIn()) {
             header("Location: " . BASE_URL . $url);
@@ -115,9 +113,7 @@ class Auth {
         }
     }
 
-    /**
-     * Bắt buộc phải đăng nhập mới vào được trang (dùng cho trang admin, profile...)
-     */
+    
     public static function requireLogin($url = '/login.php') {
         if (!self::isLoggedIn()) {
             header("Location: " . BASE_URL . $url);
