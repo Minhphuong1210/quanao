@@ -1,4 +1,8 @@
+<?php
+require_once 'includes/database.php';  // tên file chữ thường, đúng như bạn có
 
+$pdo = Database::getInstance();
+?>
 <!-- Searvices Start -->
 <div class="container-fluid px-0">
     <div class="row g-0">
@@ -79,23 +83,23 @@
             <div class="col-lg-6 wow fadeInLeft" data-wow-delay="0.2s">
                 <a href="#!" class="d-flex align-items-center justify-content-between border bg-white rounded p-4">
                     <div>
-                        <p class="text-muted mb-3">Find The Best Camera for You!</p>
-                        <h3 class="text-primary">Smart Camera</h3>
+                        <p class="text-muted mb-3">The Best Clothing For Boys</p>
+                        <h3 class="text-primary">Best Shirt</h3>
                         <h1 class="display-3 text-secondary mb-0">40% <span
                                 class="text-primary fw-normal">Off</span></h1>
                     </div>
-                    <img src="/quanao/php-thuan/assets/img/product-1.png" class="img-fluid" alt="">
+                    <img src="/quanao/php-thuan/assets/img/" class="img-fluid" alt="">
                 </a>
             </div>
             <div class="col-lg-6 wow fadeInRight" data-wow-delay="0.3s">
                 <a href="#!" class="d-flex align-items-center justify-content-between border bg-white rounded p-4">
                     <div>
-                        <p class="text-muted mb-3">Find The Best Whatches for You!</p>
-                        <h3 class="text-primary">Smart Whatch</h3>
+                        <p class="text-muted mb-3">The Best Clothing For Boys</p>
+                        <h3 class="text-primary">Best Dress</h3>
                         <h1 class="display-3 text-secondary mb-0">20% <span
                                 class="text-primary fw-normal">Off</span></h1>
                     </div>
-                    <img src="/quanao/php-thuan/assets/img/product-2.png" class="img-fluid" alt="">
+                    <img src="/quanao/php-thuan/assets/img/" class="img-fluid" alt="">
                 </a>
             </div>
         </div>
@@ -105,64 +109,54 @@
 
 
 <!-- Our Products Start -->
-<div class="container-fluid product py-5">
-    <div class="container py-5">
-        <div class="tab-class">
-            <div class="row g-4">
-                <div class="col-lg-4 text-start wow fadeInLeft" data-wow-delay="0.1s">
-                    <h1>Our Products</h1>
-                </div>
-                <div class="col-lg-8 text-end wow fadeInRight" data-wow-delay="0.1s">
-                    <ul class="nav nav-pills d-inline-flex text-center mb-5">
-                        <li class="nav-item mb-4">
-                            <a class="d-flex mx-2 py-2 bg-light rounded-pill active" data-bs-toggle="pill"
-                                href="#!tab-1">
-                                <span class="text-dark" style="width: 130px;">All Products</span>
-                            </a>
-                        </li>
-                        <li class="nav-item mb-4">
-                            <a class="d-flex py-2 mx-2 bg-light rounded-pill" data-bs-toggle="pill" href="#!tab-2">
-                                <span class="text-dark" style="width: 130px;">New Arrivals</span>
-                            </a>
-                        </li>
-                        <li class="nav-item mb-4">
-                            <a class="d-flex mx-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#!tab-3">
-                                <span class="text-dark" style="width: 130px;">Featured</span>
-                            </a>
-                        </li>
-                        <li class="nav-item mb-4">
-                            <a class="d-flex mx-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#!tab-4">
-                                <span class="text-dark" style="width: 130px;">Top Selling</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="tab-content">
-                <div id="tab-1" class="tab-pane fade show p-0 active">
-                    <div class="row g-4">
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.1s">
+<div class="container-fluid py-5 product">
+    <div class="container">
+        <div class="mx-auto text-center mb-5" style="max-width: 900px;">
+            <h4 class="text-primary border-bottom border-primary border-2 d-inline-block p-2 title-border-radius wow fadeInUp" data-wow-delay="0.1s">
+                Our Products
+            </h4>
+        </div>
+
+        <div class="row g-4">
+            <?php
+            try {
+                $stmt = $pdo->prepare("SELECT * FROM products WHERE active = 1 ORDER BY id DESC LIMIT 12");
+                $stmt->execute();
+                $products = $stmt->fetchAll();
+
+                if (empty($products)) {
+                    echo '<div class="col-12 text-center py-5"><p class="text-muted">Chưa có sản phẩm nào.</p></div>';
+                } else {
+                    $delay = 0.1;
+                    foreach ($products as $row):
+                        $image = $row['image'] ? $row['image'] : 'no-img.png';
+                        $price = number_format($row['price'], 0, ',', '.') . '<sup>đ</sup>';
+                        $label_new = ($row['hien_trang_chu'] == 1) ? '<div class="product-new">New</div>' : '';
+                        $detail_link = 'chi-tiet-san-pham.php?slug=' . urlencode($row['slug']);
+            ?>
+                        <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="<?= $delay ?>s">
+                            <div class="product-item rounded">
                                 <div class="product-item-inner border rounded">
                                     <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-3.png" class="img-fluid w-100 rounded-top" alt="">
-                                        <div class="product-new">New</div>
+                                        <img src="/quanao/php-thuan/assets/img/<?= htmlspecialchars($image) ?>"
+                                            class="img-fluid w-100 rounded-top"
+                                            alt="<?= htmlspecialchars($row['name']) ?>">
+                                        <?= $label_new ?>
                                         <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
+                                            <a href="<?= $detail_link ?>"><i class="fa fa-eye fa-1x"></i></a>
                                         </div>
                                     </div>
                                     <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
+                                        <a href="<?= $detail_link ?>" class="d-block h4">
+                                            <?= htmlspecialchars($row['name']) ?>
+                                        </a>
+                                        <span class="text-primary fs-5"><?= $price ?></span>
                                     </div>
                                 </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
+                                <div class="product-item-add border border-top-0 rounded-bottom text-center p-4 pt-0">
+                                    <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4">
+                                        <i class="fas fa-shopping-cart me-2"></i> Add To Cart
+                                    </a>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="d-flex">
                                             <i class="fas fa-star text-primary"></i>
@@ -172,1655 +166,264 @@
                                             <i class="fas fa-star"></i>
                                         </div>
                                         <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
+                                            <a href="#!" class="text-primary d-flex align-items-center justify-content-center me-3">
+                                                <span class="rounded-circle btn-sm-square border"><i class="fas fa-random"></i></span>
+                                            </a>
+                                            <a href="#!" class="text-primary d-flex align-items-center justify-content-center me-0">
+                                                <span class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></span>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.3s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-4.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-sale">sale</div>
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.5s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-5.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.7s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-6.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-new">New</div>
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-7.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-sale">Sale</div>
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.3s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-8.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.5s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-9.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-new">New</div>
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.7s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-10.png" class="img-fluid w-100 rounded-top" alt="">
-                                        <div class="product-sale">Sale</div>
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-2" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-3.png" class="img-fluid rounded-top" alt="">
-                                        <div class="product-new">New</div>
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.3s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-4.png" class="img-fluid w-100 rounded-top" alt="">
-                                        <div class="product-new">New</div>
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.5s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-5.png" class="img-fluid w-100 rounded-top" alt="">
-                                        <div class="product-new">New</div>
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.7s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-6.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-new">New</div>
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-3" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-9.png" class="img-fluid w-100 rounded-top" alt="">
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.3s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-10.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.5s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-11.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.7s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-12.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="tab-4" class="tab-pane fade show p-0">
-                    <div class="row g-4">
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-14.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.3s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-15.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.5s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-17.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-item rounded wow fadeInUp" data-wow-delay="0.7s">
-                                <div class="product-item-inner border rounded">
-                                    <div class="product-item-inner-item">
-                                        <img src="/quanao/php-thuan/assets/img/product-16.png" class="img-fluid w-100 rounded-top"
-                                            alt="Image">
-                                        <div class="product-details">
-                                            <a href="#!"><i class="fa fa-eye fa-1x"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="text-center rounded-bottom p-4">
-                                        <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                        <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                        <del class="me-2 fs-5">$1,250.00</del>
-                                        <span class="text-primary fs-5">$1,050.00</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item-add border border-top-0 rounded-bottom  text-center p-4 pt-0">
-                                    <a href="#!"
-                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4"><i
-                                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex">
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star text-primary"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                        <div class="d-flex">
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-random"></i></i></a>
-                                            <a href="#!"
-                                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                                    class="rounded-circle btn-sm-square border"><i
-                                                        class="fas fa-heart"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php
+                        $delay += 0.1;
+                        if ($delay > 0.7) $delay = 0.1;
+                    endforeach;
+                }
+            } catch (Exception $e) {
+                echo "<div class='col-12 text-center text-danger'>Lỗi tải sản phẩm: " . htmlspecialchars($e->getMessage()) . "</div>";
+            }
+            ?>
         </div>
     </div>
 </div>
 <!-- Our Products End -->
 
 <!-- Product Banner Start -->
-<div class="container-fluid py-5">
+<!-- <div class="container-fluid py-5">
     <div class="container">
         <div class="row g-4">
-            <div class="col-lg-6 wow fadeInLeft" data-wow-delay="0.1s">
-                <a href="#!">
-                    <div class="bg-primary rounded position-relative">
-                        <img src="/quanao/php-thuan/assets/img/product-banner.jpg" class="img-fluid w-100 rounded" alt="">
-                        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center rounded p-4"
-                            style="background: rgba(255, 255, 255, 0.5);">
-                            <h3 class="display-5 text-primary">EOS Rebel <br> <span>T7i Kit</span></h3>
-                            <p class="fs-4 text-muted">$899.99</p>
-                            <a href="#!" class="btn btn-primary rounded-pill align-self-start py-2 px-4">Shop
-                                Now</a>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-6 wow fadeInRight" data-wow-delay="0.2s">
-                <a href="#!">
-                    <div class="text-center bg-primary rounded position-relative">
-                        <img src="/quanao/php-thuan/assets/img/product-banner-2.jpg" class="img-fluid w-100" alt="">
-                        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center rounded p-4"
-                            style="background: rgba(242, 139, 0, 0.5);">
-                            <h2 class="display-2 text-secondary">SALE</h2>
-                            <h4 class="display-5 text-white mb-4">Get UP To 50% Off</h4>
-                            <a href="#!" class="btn btn-secondary rounded-pill align-self-center py-2 px-4">Shop
-                                Now</a>
-                        </div>
-                    </div>
-                </a>
-            </div>
+            <?php
+            try {
+                $stmt = $pdo->prepare("
+                    SELECT * FROM products 
+                    WHERE active = 1 
+                    AND (san_pham_noi_bat = 1 OR hien_trang_chu = 1)
+                    ORDER BY san_pham_noi_bat DESC, id DESC 
+                    LIMIT 2
+                ");
+                $stmt->execute();
+                $banners = $stmt->fetchAll();
+
+                if (count($banners) < 2) {
+                    $limit = 2 - count($banners);
+                    $stmt2 = $pdo->prepare("SELECT * FROM products WHERE active = 1 LIMIT $limit");
+                    $stmt2->execute();
+                    $banners = array_merge($banners, $stmt2->fetchAll());
+                }
+
+                if (isset($banners[0])):
+                    $b1 = $banners[0];
+                    $img1 = $b1['image'] ? $b1['image'] : 'product-banner.jpg';
+                    $price1 = number_format($b1['price'], 0, ',', '.') . 'đ';
+                    $name1 = htmlspecialchars($b1['name']);
+                    $link1 = 'chi-tiet-san-pham.php?slug=' . urlencode($b1['slug']);
+            ?>
+                
+            <?php
+                endif;
+
+                if (isset($banners[1])):
+                    $b2 = $banners[1];
+                    $img2 = $b2['image'] ? $b2['image'] : 'product-banner-2.jpg';
+                    $name2 = htmlspecialchars($b2['name']);
+                    $link2 = 'chi-tiet-san-pham.php?slug=' . urlencode($b2['slug']);
+            ?>
+
+            <?php
+                endif;
+            } catch (Exception $e) {
+                echo "<p class='text-danger text-center col-12'>Lỗi tải banner: " . htmlspecialchars($e->getMessage()) . "</p>";
+            }
+            ?>
         </div>
     </div>
-</div>
+</div> -->
+<!-- Product Banner End -->
 <!-- Product Banner End -->
 
-<!-- Product List Satrt -->
-<div class="container-fluid products productList overflow-hidden">
-    <div class="container products-mini py-5">
+<!-- Product List Start -->
+<div class="container-fluid py-5 product">
+    <div class="container">
         <div class="mx-auto text-center mb-5" style="max-width: 900px;">
-            <h4 class="text-primary border-bottom border-primary border-2 d-inline-block p-2 title-border-radius wow fadeInUp"
-                data-wow-delay="0.1s">Products</h4>
-            <h1 class="mb-0 display-3 wow fadeInUp" data-wow-delay="0.3s">All Product Items</h1>
+            <h4 class="text-primary border-bottom border-primary border-2 d-inline-block p-2 title-border-radius wow fadeInUp" data-wow-delay="0.1s">
+                Sản Phẩm Nổi Bật
+            </h4>
         </div>
-        <div class="productList-carousel owl-carousel pt-4 wow fadeInUp" data-wow-delay="0.3s">
-            <div class="productImg-carousel owl-carousel productList-item">
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-4.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
+
+        <div class="row g-4">
+            <?php
+            try {
+                $stmt = $pdo->prepare("SELECT * FROM products WHERE active = 1 AND san_pham_noi_bat = 1 ORDER BY id DESC");
+                $stmt->execute();
+                $products = $stmt->fetchAll();
+
+                if (empty($products)) {
+                    echo '<div class="col-12 text-center py-5"><p class="text-muted">Chưa có sản phẩm nổi bật nào.</p></div>';
+                } else {
+                    $delay = 0.1;
+                    foreach ($products as $row):
+                        $image = $row['image'] ? $row['image'] : 'no-img.png';
+                        $price = number_format($row['price'], 0, ',', '.') . '<sup>đ</sup>';
+                        $label_featured = ($row['san_pham_noi_bat'] == 1) ? '<div class="product-featured">Featured</div>' : ''; // Thêm label nếu cần
+                        $detail_link = 'chi-tiet-san-pham.php?slug=' . urlencode($row['slug']);
+
+                        // Kiểm tra file tồn tại (từ thư mục gốc script)
+                        $full_image_path = 'assets/img/' . $row['image'];
+                        if (!empty($row['image']) && file_exists($full_image_path)) {
+                            $image_src = '/quanao/php-thuan/' . $full_image_path;
+                        } else {
+                            $image_src = '/quanao/php-thuan/assets/img/no-img.png';
+                        }
+            ?>
+                        <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="<?= $delay ?>s">
+                            <div class="product-item rounded">
+                                <div class="product-item-inner border rounded">
+                                    <div class="product-item-inner-item">
+                                        <img src="<?= htmlspecialchars($image_src) ?>"
+                                            class="img-fluid w-100 rounded-top"
+                                            alt="<?= htmlspecialchars($row['name']) ?>">
+                                        <?= $label_featured ?>
+                                        <div class="product-details">
+                                            <a href="<?= $detail_link ?>"><i class="fa fa-eye fa-1x"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="text-center rounded-bottom p-4">
+                                        <a href="<?= $detail_link ?>" class="d-block h4">
+                                            <?= htmlspecialchars($row['name']) ?>
+                                        </a>
+                                        <span class="text-primary fs-5"><?= $price ?></span>
+                                    </div>
+                                </div>
+                                <div class="product-item-add border border-top-0 rounded-bottom text-center p-4 pt-0">
+                                    <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4">
+                                        <i class="fas fa-shopping-cart me-2"></i> Add To Cart
+                                    </a>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex">
+                                            <i class="fas fa-star text-primary"></i>
+                                            <i class="fas fa-star text-primary"></i>
+                                            <i class="fas fa-star text-primary"></i>
+                                            <i class="fas fa-star text-primary"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <div class="d-flex">
+                                            <a href="#!" class="text-primary d-flex align-items-center justify-content-center me-3">
+                                                <span class="rounded-circle btn-sm-square border"><i class="fas fa-random"></i></span>
+                                            </a>
+                                            <a href="#!" class="text-primary d-flex align-items-center justify-content-center me-0">
+                                                <span class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></span>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-4.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-6.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-7.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="productImg-carousel owl-carousel productList-item">
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-8.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-9.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-10.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-11.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="productImg-carousel owl-carousel productList-item">
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-12.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-13.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-14.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-15.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="productImg-carousel owl-carousel productList-item">
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-16.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-17.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="productImg-item products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-3.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php
+                        $delay += 0.1;
+                        if ($delay > 0.7) $delay = 0.1;
+                    endforeach;
+                }
+            } catch (Exception $e) {
+                echo "<div class='col-12 text-center text-danger'>Lỗi tải sản phẩm nổi bật: " . htmlspecialchars($e->getMessage()) . "</div>";
+            }
+            ?>
         </div>
     </div>
 </div>
 <!-- Product List End -->
 
 <!-- Bestseller Products Start -->
+<!-- Bestseller Products Start -->
 <div class="container-fluid products pb-5">
     <div class="container products-mini py-5">
         <div class="mx-auto text-center mb-5" style="max-width: 700px;">
             <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius wow fadeInUp"
                 data-wow-delay="0.1s">Bestseller Products</h4>
-            <p class="mb-0 wow fadeInUp" data-wow-delay="0.2s">Lorem ipsum dolor sit amet consectetur adipisicing
-                elit. Modi, asperiores ducimus sint quos tempore officia similique quia? Libero, pariatur
-                consectetur?</p>
+            <p class="mb-0 wow fadeInUp" data-wow-delay="0.2s">
+                Những sản phẩm được yêu thích nhất và bán chạy trong thời gian gần đây.
+            </p>
         </div>
+
         <div class="row g-4">
-            <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
-                <div class="products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-3.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
+            <?php
+            try {
+                $stmt = $pdo->prepare("
+                    SELECT * FROM products 
+                    WHERE active = 1 
+                    ORDER BY san_pham_noi_bat DESC, view DESC 
+                    LIMIT 6
+                ");
+                $stmt->execute();
+                $bestsellers = $stmt->fetchAll();
+
+                $delays = [0.1, 0.3, 0.5, 0.1, 0.3, 0.5];
+                $index = 0;
+
+                foreach ($bestsellers as $row):
+                    $image = $row['image'] ? $row['image'] : 'no-img.png';
+                    $name = htmlspecialchars($row['name']);
+                    $price = number_format($row['price'], 0, ',', '.') . '<sup>đ</sup>';
+                    $detail_link = 'chi-tiet-san-pham.php?slug=' . urlencode($row['slug']);
+                    $delay = $delays[$index % 6];
+            ?>
+                    <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="<?= $delay ?>s">
+                        <div class="products-mini-item border">
+                            <div class="row g-0">
+                                <div class="col-5">
+                                    <div class="products-mini-img border-end h-100 position-relative">
+                                        <img src="/quanao/php-thuan/assets/img/<?= htmlspecialchars($image) ?>"
+                                            class="img-fluid w-100 h-100" alt="<?= $name ?>">
+                                        <div class="products-mini-icon rounded-circle bg-primary">
+                                            <a href="<?= $detail_link ?>"><i class="fa fa-eye fa-1x text-white"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-7">
+                                    <div class="products-mini-content p-3">
+                                        <a href="<?= $detail_link ?>" class="d-block mb-2 text-muted small">
+                                            Sản phẩm nổi bật
+                                        </a>
+                                        <a href="<?= $detail_link ?>" class="d-block h4 text-dark">
+                                            <?= $name ?>
+                                        </a>
+                                        <!-- Nếu bạn có giá cũ (old_price), bỏ comment bên dưới -->
+                                        <!-- <del class="me-2 fs-5 text-muted">$1,250.00</del> -->
+                                        <span class="text-primary fs-5"><?= $price ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="products-mini-add border p-3">
+                                <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4 w-100 mb-3">
+                                    <i class="fas fa-shopping-cart me-2"></i> Add To Cart
+                                </a>
+                                <div class="d-flex justify-content-center">
+                                    <a href="#!" class="text-primary d-flex align-items-center justify-content-center me-3">
+                                        <span class="rounded-circle btn-sm-square border"><i class="fas fa-random"></i></span>
+                                    </a>
+                                    <a href="#!" class="text-primary d-flex align-items-center justify-content-center">
+                                        <span class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
                     </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
+                <?php
+                    $index++;
+                endforeach;
+                if (empty($bestsellers)): ?>
+                    <div class="col-12 text-center">
+                        <p class="text-muted">Chưa có sản phẩm bestseller nào.</p>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.3s">
-                <div class="products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-4.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.5s">
-                <div class="products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-5.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
-                <div class="products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-6.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.3s">
-                <div class="products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-7.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.5s">
-                <div class="products-mini-item border">
-                    <div class="row g-0">
-                        <div class="col-5">
-                            <div class="products-mini-img border-end h-100">
-                                <img src="/quanao/php-thuan/assets/img/product-11.png" class="img-fluid w-100 h-100" alt="Image">
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-7">
-                            <div class="products-mini-content p-3">
-                                <a href="#!" class="d-block mb-2">SmartPhone</a>
-                                <a href="#!" class="d-block h4">Apple iPad Mini <br> G2356</a>
-                                <del class="me-2 fs-5">$1,250.00</del>
-                                <span class="text-primary fs-5">$1,050.00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4"><i
-                                class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
-                        <div class="d-flex">
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-3"><span
-                                    class="rounded-circle btn-sm-square border"><i
-                                        class="fas fa-random"></i></i></a>
-                            <a href="#!"
-                                class="text-primary d-flex align-items-center justify-content-center me-0"><span
-                                    class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php endif;
+            } catch (Exception $e) {
+                echo "<div class='col-12 text-center text-danger'>Lỗi tải bestseller: " . htmlspecialchars($e->getMessage()) . "</div>";
+            }
+            ?>
         </div>
     </div>
 </div>
+<!-- Bestseller Products End -->
 <!-- Bestseller Products End -->

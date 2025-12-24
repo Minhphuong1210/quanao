@@ -1,108 +1,61 @@
 <!-- Footer Start -->
 <div class="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.2s">
     <div class="container py-5">
-        <div class="row g-4 rounded mb-5" style="background: rgba(255, 255, 255, .03);">
-            <div class="col-md-6 col-lg-6 col-xl-3">
-                <div class="rounded p-4">
-                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
-                        style="width: 70px; height: 70px;">
-                        <i class="fas fa-map-marker-alt fa-2x text-primary"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-white">Address</h4>
-                        <p class="mb-2">123 Street New York.USA</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-3">
-                <div class="rounded p-4">
-                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
-                        style="width: 70px; height: 70px;">
-                        <i class="fas fa-envelope fa-2x text-primary"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-white">Mail Us</h4>
-                        <p class="mb-2">info@example.com</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-3">
-                <div class="rounded p-4">
-                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
-                        style="width: 70px; height: 70px;">
-                        <i class="fa fa-phone-alt fa-2x text-primary"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-white">Telephone</h4>
-                        <p class="mb-2">(+012) 3456 7890</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6 col-xl-3">
-                <div class="rounded p-4">
-                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
-                        style="width: 70px; height: 70px;">
-                        <i class="fab fa-firefox-browser fa-2x text-primary"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-white">Yoursite@ex.com</h4>
-                        <p class="mb-2">(+012) 3456 7890</p>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="row g-5">
             <div class="col-md-6 col-lg-6 col-xl-3">
                 <div class="footer-item d-flex flex-column">
-                    <div class="footer-item">
-                        <h4 class="text-primary mb-4">Newsletter</h4>
-                        <p class="mb-3">Dolor amet sit justo amet elitr clita ipsum elitr est.Lorem ipsum dolor sit
-                            amet, consectetur adipiscing elit consectetur adipiscing elit.</p>
-                        <form action="<?= BASE_URL ?>/register.php" method="get" class="position-relative mx-auto rounded-pill">
-                            <input class="form-control rounded-pill w-100 py-3 ps-4 pe-5" type="text"
-                                name="email" placeholder="Enter your email">
-                            <button type="submit"
-                                class="btn btn-primary rounded-pill position-absolute top-0 end-0 py-2 mt-2 me-2">
-                                SignUp
-                            </button>
-                        </form>
+                    <h4 class="text-white mb-4"><i class="fas fa-shopping-bag me-2"></i>Electro</h4>
+                    <p class="text-white mb-3">Chuyên cung cấp quần áo trẻ em chất lượng cao, an toàn và thời trang.</p>
+                    <div class="d-flex align-items-center">
+                        <a class="btn btn-outline-light btn-social me-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social me-2" href="#"><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social me-2" href="#"><i class="fab fa-instagram"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3">
                 <div class="footer-item d-flex flex-column">
-                    <h4 class="text-primary mb-4">Customer Service</h4>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Contact Us</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Returns</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Order History</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Site Map</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Testimonials</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> My Account</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Unsubscribe Notification</a>
+                    <h4 class="text-primary mb-4">Liên hệ</h4>
+                    <a href="#" class="text-white mb-2"><i class="fas fa-map-marker-alt me-3"></i>123 Đường ABC, TP.HCM, Việt Nam</a>
+                    <a href="#" class="text-white mb-2"><i class="fas fa-phone-alt me-3"></i>+012 345 6789</a>
+                    <a href="#" class="text-white"><i class="fas fa-envelope me-3"></i>info@electro.com</a>
                 </div>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3">
                 <div class="footer-item d-flex flex-column">
-                    <h4 class="text-primary mb-4">Information</h4>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> About Us</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Delivery infomation</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Privacy Policy</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Terms & Conditions</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Warranty</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> FAQ</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Seller Login</a>
+                    <h4 class="text-primary mb-4">Thông tin</h4>
+                    <a href="#" class="text-white mb-2"><i class="fas fa-angle-right me-2"></i>Giới thiệu</a>
+                    <a href="#" class="text-white mb-2"><i class="fas fa-angle-right me-2"></i>Chính sách đổi trả</a>
+                    <a href="#" class="text-white mb-2"><i class="fas fa-angle-right me-2"></i>Chính sách bảo mật</a>
+                    <a href="#" class="text-white mb-2"><i class="fas fa-angle-right me-2"></i>Điều khoản dịch vụ</a>
+                    <a href="#" class="text-white mb-2"><i class="fas fa-angle-right me-2"></i>Liên hệ</a>
                 </div>
             </div>
             <div class="col-md-6 col-lg-6 col-xl-3">
                 <div class="footer-item d-flex flex-column">
-                    <h4 class="text-primary mb-4">Extras</h4>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Brands</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Gift Vouchers</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Affiliates</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Wishlist</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Order History</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Track Your Order</a>
-                    <a href="#!" class=""><i class="fas fa-angle-right me-2"></i> Track Your Order</a>
+                    <h4 class="text-primary mb-4">Quan trọng!</h4>
+                    <p class="text-white mb-3">Đăng ký để nhận ưu đãi và sản phẩm mới nhất!</p>
+                    <form action="">
+                        <input type="email" class="form-control mb-3" placeholder="Email của bạn">
+                        <button class="btn btn-primary w-100"><a href="/quanao/php-thuan/register.php">Đăng ký</a></button>
+                    </form>
+                </div>
+                <div>
+                    <form action="">
+                    <h5 class="text-primary mb-4">Đăng nhập tài khoản</h5>
+                    <button class="btn btn-primary w-100"><a href="/quanao/php-thuan/login.php">Đăng nhập</a></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5 pt-5 border-top border-secondary">
+            <div class="col-12 text-center">
+                <div class="d-flex justify-content-center mb-3">
+                    <a class="me-4" href="#"><img src="/quanao/php-thuan/assets/img/payment-1.png" alt="Visa"></a>
+                    <a class="me-4" href="#"><img src="/quanao/php-thuan/assets/img/payment-2.png" alt="MasterCard"></a>
+                    <a class="me-4" href="#"><img src="/quanao/php-thuan/assets/img/payment-3.png" alt="PayPal"></a>
+                    <a class="me-4" href="#"><img src="/quanao/php-thuan/assets/img/payment-4.png" alt="Apple Pay"></a>
                 </div>
             </div>
         </div>
@@ -110,32 +63,83 @@
 </div>
 <!-- Footer End -->
 
-
 <!-- Copyright Start -->
-<div class="container-fluid copyright py-4">
-    <div class="container">
-        <div class="row g-4 align-items-center">
-            <div class="col-md-6 text-center text-md-start mb-md-0">
-                <span class="text-white"><a href="#!" class="border-bottom text-white"><i
-                            class="fas fa-copyright text-light me-2"></i>Your Site Name</a>, All right
-                    reserved.</span>
-            </div>
-        </div>
+<div class="container-fluid copyright bg-dark py-4">
+    <div class="container text-center">
+        <p class="text-white mb-0">&copy; <a class="text-primary fw-bold" href="#">Electro</a> 2025, All Rights Reserved.</p>
+        <p class="text-white mb-0">Designed by <a class="text-primary fw-bold" href="https://htmlcodex.com">HTML Codex</a> | Distributed by <a class="text-primary fw-bold" href="https://themewagon.com">ThemeWagon</a></p>
     </div>
 </div>
 <!-- Copyright End -->
 
+<!-- Back to Top -->
+<a href="#" class="btn btn-primary btn-lg-square back-to-top"><i class="fa fa-arrow-up"></i></a>
 
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-primary btn-lg-square back-to-top"><i class="fa fa-arrow-up"></i></a>
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/quanao/php-thuan/assets/lib/wow/wow.min.js"></script>
+<script src="/quanao/php-thuan/assets/lib/owlcarousel/owl.carousel.min.js"></script>
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/quanao/php-thuan/assets/lib/wow/wow.min.js"></script>
-    <script src="/quanao/php-thuan/assets/lib/owlcarousel/owl.carousel.min.js"></script>
+<!-- Template Javascript -->
+<script src="/quanao/php-thuan/assets/js/main.js"></script>
 
-    <!-- Template Javascript -->
-    <script src="/quanao/php-thuan/assets/js/main.js"></script>
+<!-- Init Carousel & WOW -->
+<script>
+    $(document).ready(function() {
+        // Carousel chính - All Product Items
+        $(".productList-carousel").owlCarousel({
+            loop: true,
+            margin: 30,
+            nav: true,
+            dots: false,
+            autoplay: true,
+            autoplayTimeout: 5000,
+            autoplayHoverPause: true,
+            navText: ['<i class="fa fa-angle-left fa-2x"></i>', '<i class="fa fa-angle-right fa-2x"></i>'],
+            responsive: {
+                0: {
+                    items: 1
+                },
+                576: {
+                    items: 2
+                },
+                768: {
+                    items: 3
+                },
+                992: {
+                    items: 4
+                }
+            }
+        });
+
+        // Carousel con - 4 sản phẩm trong mỗi slide
+        $(".productImg-carousel").owlCarousel({
+            loop: false,
+            margin: 15,
+            nav: false,
+            dots: false,
+            items: 4,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                576: {
+                    items: 2
+                },
+                768: {
+                    items: 3
+                },
+                992: {
+                    items: 4
+                }
+            }
+        });
+
+        // Init WOW.js
+        new WOW().init();
+    });
+</script>
 </body>
+
 </html>
