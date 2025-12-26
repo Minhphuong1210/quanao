@@ -1,9 +1,3 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-require_once __DIR__ . '/../includes/auth.php';
-?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -42,26 +36,17 @@ require_once __DIR__ . '/../includes/auth.php';
     <aside class="sidebar">
         <div class="logo">BABY'S CLOTHES</div>
         <ul>
-            <li><a href="<?= BASE_URL ?>/admin/index.php">Dashboard</a></li>
-            <li><a href="<?= BASE_URL ?>/views/admin/category/index.php">Category</a></li>
-            <li><a href="<?= BASE_URL ?>/admin/product/index.php">Products</a></li>
-            <li><a href="<?= BASE_URL ?>/admin/order/index.php">Orders</a></li>
-            <li><a href="<?= BASE_URL ?>/admin/user/index.php">Users</a></li>
-            <li><a href="<?= BASE_URL ?>/logout.php">Logout</a></li>
+        <li><a href="<?= BASE_URL ?>/admin/index.php?page=dashboard">Dashboard</a></li>
+
+        <li><a href="<?= BASE_URL ?>/admin/index.php?page=category">Category</a></li>
+
+        <li><a href="<?= BASE_URL ?>/admin/index.php?page=product">Products</a></li>
+
+        <li><a href="<?= BASE_URL ?>/admin/index.php?page=order">Orders</a></li>
+
+        <li><a href="<?= BASE_URL ?>/admin/index.php?page=user">Users</a></li>
+
+        <li><a href="<?= BASE_URL ?>/logout.php">Logout</a></li>
+
         </ul>
     </aside>
-
-    <div class="main">
-        <!-- <header class="topbar">
-            <input type="text" placeholder="Tìm kiếm...">
-            <div class="user">Admin</div>
-        </header> -->
-
-        <section class="content">
-            <?= isset($content) ? $content : '' ?>
-        </section>
-    </div>
-</div>
-
-</body>
-</html>

@@ -20,26 +20,38 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
 
-    <!-- Libraries Stylesheet (LOCAL) -->
-    <link rel="stylesheet" href="/quanao/php-thuan/assets/lib/animate/animate.min.css">
-    <link rel="stylesheet" href="/quanao/php-thuan/assets/lib/owlcarousel/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/lib/animate/animate.min.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/lib/owlcarousel/assets/owl.carousel.min.css">
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="/quanao/php-thuan/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/bootstrap.min.css">
 
     <!-- Template Stylesheet -->
-    <link rel="stylesheet" href="/quanao/php-thuan/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
+
+
+
+    <!-- Libraries Stylesheet (LOCAL) -->
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/lib/animate/animate.min.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/lib/owlcarousel/assets/owl.carousel.min.css">
+
+<!-- Bootstrap -->
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/bootstrap.min.css">
+
+<!-- Template Stylesheet -->
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
+
 </head>
 
 <body>
 
     <!-- Spinner Start -->
-    <div id="spinner"
+    <!-- <div id="spinner"
         class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
             <span class="sr-only">Loading...</span>
         </div>
-    </div>
+    </div> -->
     <!-- Spinner End -->
 
 
