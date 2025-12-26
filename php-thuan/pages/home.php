@@ -154,7 +154,8 @@ $pdo = Database::getInstance();
                                     </div>
                                 </div>
                                 <div class="product-item-add border border-top-0 rounded-bottom text-center p-4 pt-0">
-                                    <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4">
+                                    <a href="/quanao/php-thuan/views/user/cart/addtocart.php?id=<?= $row['id'] ?>"
+                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4">
                                         <i class="fas fa-shopping-cart me-2"></i> Add To Cart
                                     </a>
                                     <div class="d-flex justify-content-between align-items-center">
@@ -298,7 +299,8 @@ $pdo = Database::getInstance();
                                     </div>
                                 </div>
                                 <div class="product-item-add border border-top-0 rounded-bottom text-center p-4 pt-0">
-                                    <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4">
+                                    <a href="/quanao/php-thuan/views/user/cart/addtocart.php?id=<?= $row['id'] ?>"
+                                        class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4">
                                         <i class="fas fa-shopping-cart me-2"></i> Add To Cart
                                     </a>
                                     <div class="d-flex justify-content-between align-items-center">
@@ -396,7 +398,8 @@ $pdo = Database::getInstance();
                                 </div>
                             </div>
                             <div class="products-mini-add border p-3">
-                                <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4 w-100 mb-3">
+                                <a href="/quanao/php-thuan/views/user/cart/addtocart.php?id=<?= $row['id'] ?>"
+                                    class="btn btn-primary border-secondary rounded-pill py-2 px-4 w-100 mb-3">
                                     <i class="fas fa-shopping-cart me-2"></i> Add To Cart
                                 </a>
                                 <div class="d-flex justify-content-center">
