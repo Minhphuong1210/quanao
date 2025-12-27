@@ -1,3 +1,5 @@
+Cách chạy: cd vào trong dự án và chạy php -S localhost:80
+
 Cấu trúc thư mục 
 + giao diện người dùng sẽ chạy vào index để laod các giao diện ra 
  - include vào file master -> file này sẽ có chức năng lấy các page=... gì để include đến file đó 

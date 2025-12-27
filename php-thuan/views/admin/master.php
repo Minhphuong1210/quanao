@@ -1,17 +1,21 @@
 <?php
 
-$page = $_GET['page'] ?? 'home';
+$page = $_GET['page'] ?? 'admin';
+
+
 
 switch ($page) {
-    case 'home':
-        include(__DIR__ . '/home.php');
+
+    case 'dashboard':
+        include(__DIR__ . '/dashboard/index.php');
+        break;
+    case 'category':
+        include __DIR__ . '/../../category/index.php';
         break;
     case 'allProduct':
+
         include(__DIR__ . '/allProduct.php');
             break;
-
-        
-
     case 'single':
         include(__DIR__ . '/single.php');
         break;

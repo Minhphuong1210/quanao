@@ -17,15 +17,27 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
 
-    <!-- Libraries Stylesheet (LOCAL) -->
-    <link rel="stylesheet" href="/quanao/php-thuan/assets/lib/animate/animate.min.css">
-    <link rel="stylesheet" href="/quanao/php-thuan/assets/lib/owlcarousel/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/lib/animate/animate.min.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/lib/owlcarousel/assets/owl.carousel.min.css">
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="/quanao/php-thuan/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/bootstrap.min.css">
 
     <!-- Template Stylesheet -->
-    <link rel="stylesheet" href="/quanao/php-thuan/assets/css/style.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
+
+
+
+    <!-- Libraries Stylesheet (LOCAL) -->
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/lib/animate/animate.min.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/lib/owlcarousel/assets/owl.carousel.min.css">
+
+<!-- Bootstrap -->
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/bootstrap.min.css">
+
+<!-- Template Stylesheet -->
+<link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
+
 </head>
 
 <body>

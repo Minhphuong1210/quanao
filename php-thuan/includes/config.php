@@ -12,7 +12,7 @@ if (session_status() === PHP_SESSION_NONE) {
 // ini_set('display_errors', 1);
 
 define('BASE_PATH', dirname(__DIR__));
-define('BASE_URL', 'http://localhost/quanao/php-thuan');
+define('BASE_URL', 'http://localhost/');
 
 // ---- DATABASE ----
 try {
