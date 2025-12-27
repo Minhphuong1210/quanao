@@ -1,13 +1,11 @@
 <?php
-// includes/Database.php (hoặc database.php)
-
 class Database
 {
     private static $instance = null;
     private $conn;
 
-    // Ngăn clone và unserialize - phải là public
-    public function __clone() {}
+    // Ngăn clone và unserialize
+    private function __clone() {}
     public function __wakeup() {}
 
     private function __construct()
