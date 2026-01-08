@@ -1,8 +1,7 @@
 <?php
-session_start();
+require_once BASE_PATH . '/app/models/Product.php';
+require_once BASE_PATH . '/app/models/category.php';
 
-require_once __DIR__ . '/../models/CategoryModel.php';
-require_once __DIR__ . '/../models/ProductModel.php';
 
 class AdminController
 {

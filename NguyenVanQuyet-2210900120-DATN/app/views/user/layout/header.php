@@ -136,10 +136,18 @@
         <a href="<?= BASE_URL ?>" class="nav-item nav-link active">Trang chủ</a>
 
 
+
+
+
+
+
 <?php 
+
 require_once BASE_PATH . '/app/models/category.php';
 $categoryModel = new category();
 $danh_muc = $categoryModel->getAll();
+
+
 
 
 ?>

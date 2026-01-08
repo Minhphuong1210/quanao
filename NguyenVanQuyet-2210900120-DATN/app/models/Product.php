@@ -56,23 +56,23 @@ class Product
     {
         $sql = "SELECT * FROM products 
                 WHERE san_pham_noi_bat = 1 AND active = 1 
-                ORDER BY id DESC";
+                ORDER BY id DESC LIMIT 8";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Lấy theo category (frontend/admin)
-    public function getByCategory($categoryId)
-    {
-        $sql = "SELECT * FROM products 
-                WHERE category_id = :categoryId AND active = 1 
-                ORDER BY id DESC";
-
-//     public function getAll()
+//     public function getByCategory($categoryId)
 //     {
-//         $sql = "SELECT * FROM products WHERE active = 1";
-//         return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+//         $sql = "SELECT * FROM products 
+//                 WHERE category_id = :categoryId AND active = 1 
+//                 ORDER BY id DESC";
+
+// //     public function getAll()
+// //     {
+// //         $sql = "SELECT * FROM products WHERE active = 1";
+// //         return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 //     }
 
     public function getActive($page = null, $limit = null)
@@ -107,44 +107,83 @@ class Product
     }
     
 
-    // Sản phẩm hiển thị trang chủ
-    public function getHomeProducts()
-    {
-        $sql = "SELECT * FROM products 
-                WHERE hien_trang_chu = 1 AND active = 1 LIMIT 8";
+    // // Sản phẩm hiển thị trang chủ
+    // public function getHomeProducts()
+    // {
+    //     $sql = "SELECT * FROM products 
+    //             WHERE hien_trang_chu = 1 AND active = 1 LIMIT 8";
 
-        return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-    }
+    //     return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    // }
 
     // Sản phẩm hiển thị banner
-    public function getActiveBanner()
+//     public function getActiveBanner()
+//     {
+//         $sql = "SELECT * FROM products 
+//                 WHERE active = 1 
+//                 AND san_pham_hien_nhu_baner = 1 LIMIT 8";
+//  $stmt = $this->conn->prepare($sql);
+//  $stmt->execute();
+// return $stmt->fetch(PDO::FETCH_ASSOC);
+//     }
+
+    // public function getFeaturedProducts()
+    // {
+    //     $sql = "SELECT * FROM products 
+    //             WHERE san_pham_noi_bat = 1 AND active = 1 LIMIT 8";
+
+    //     return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    // }
+
+    public function getByCategorySlug($slug, $page = 1, $limit = 8)
     {
-        $sql = "SELECT * FROM products 
-                WHERE active = 1 
-                AND san_pham_hien_nhu_baner = 1 LIMIT 8";
- $stmt = $this->conn->prepare($sql);
- $stmt->execute();
-return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function getFeaturedProducts()
-    {
-        $sql = "SELECT * FROM products 
-                WHERE san_pham_noi_bat = 1 AND active = 1 LIMIT 8";
-
-        return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getByCategory($categoryId)
-    {
-        $sql = "SELECT * FROM products 
-                WHERE category_id = :categoryId AND active = 1 LIMIT 8";
+        // 1. Lấy category ID từ slug
 
 
-        $stmt = $this->conn->prepare($sql);
+
+        $stmt = $this->conn->prepare("SELECT id FROM category WHERE slug = :slug AND active = 1 LIMIT 1");
+        $stmt->execute(['slug' => $slug]);
+        $category = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+
+        if (!$category) {
+            return [
+                'products' => [],
+                'total' => 0,
+                'page' => $page,
+                'limit' => $limit,
+                'pages' => 0
+            ];
+        }
+    
+        $categoryId = $category['id'];
+    
+        // 2. Lấy tổng số sản phẩm
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM products WHERE category_id = :categoryId AND active = 1");
         $stmt->execute(['categoryId' => $categoryId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $total = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    
+        // 3. Lấy sản phẩm theo phân trang
+        $offset = ($page - 1) * $limit;
+        $stmt = $this->conn->prepare("SELECT * FROM products 
+                                      WHERE category_id = :categoryId AND active = 1 
+                                      ORDER BY id DESC 
+                                      LIMIT :limit OFFSET :offset");
+        $stmt->bindValue(':categoryId', $categoryId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        return [
+            'products' => $products,
+            'total' => $total,
+            'page' => $page,
+            'limit' => $limit,
+            'pages' => ceil($total / $limit)
+        ];
     }
+    
 
     public function getBySlug($slug)
     {
