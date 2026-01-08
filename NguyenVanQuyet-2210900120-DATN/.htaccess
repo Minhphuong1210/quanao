@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Nếu request là file hoặc folder thật thì bỏ qua
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Tất cả còn lại đẩy vào public/index.php
+RewriteRule ^(.*)$ public/index.php [L]

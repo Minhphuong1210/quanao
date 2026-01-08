@@ -1,26 +1,15 @@
 <?php
-// app/models/CategoryModel.php
-// Model xử lý CRUD cho Category (Danh mục sản phẩm)
+require_once __DIR__ . '/../../config/database.php';
 
-class CategoryModel
+class category
 {
     private $pdo;
 
     public function __construct()
     {
-        // Kết nối DB (giả sử config trong config/database.php hoặc hardcode cho đơn giản)
-        $host = 'localhost';
-        $dbname = 'quanao_db';  // Tên DB của bạn
-        $username = 'root';     // User DB
-        $password = '';         // Pass DB (mặc định XAMPP)
-
-        try {
-            $this->pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            die("Lỗi kết nối DB: " . $e->getMessage());
-        }
+        $this->conn = Database::getInstance();
     }
+
 
     // Lấy tất cả categories
     public function getAll()
@@ -80,4 +69,15 @@ class CategoryModel
             return false;
         }
     }
+
+ 
+    // Lấy category theo slug
+    public function getBySlug($slug)
+    {
+        $sql = "SELECT * FROM category WHERE slug = :slug AND active = 1 LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['slug' => $slug]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
 }

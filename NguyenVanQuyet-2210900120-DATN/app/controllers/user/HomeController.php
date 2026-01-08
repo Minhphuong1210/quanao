@@ -1,0 +1,33 @@
+<?php
+require_once BASE_PATH . '/app/models/Product.php';
+class HomeController 
+{
+    public function index(){
+        $productModel = new Product();
+        $product_banner = $productModel->getActiveBanner();
+
+        $products = $productModel->getHomeProducts();
+
+        $product_featured = $productModel->getFeaturedProducts();
+
+        $product_active = $productModel->getActive();
+
+        include BASE_PATH . '/app/views/user/home/home.php';
+    }
+
+
+    public function tatCaSanPham(){
+        $productModel = new Product();
+          // Lấy trang hiện tại từ URL, mặc định = 1
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $limit = 9; // số sản phẩm/trang
+
+        $data = $productModel->getActive($page, $limit);
+
+        $product_active = $data['products']; // sản phẩm trang hiện tại
+        $totalPages = $data['pages'];       // tổng số trang
+        $currentPage = $data['page'];       // trang hiện tại
+        include BASE_PATH . '/app/views/user/home/tatCaSanPham.php';
+
+    }
+}
