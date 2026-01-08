@@ -2,7 +2,7 @@
 
 return [
     'host' => 'localhost',
-    'dbname' => 'quanao_db',  
+    'dbname' => 'webquanao',  
     'user' => 'root',
     'pass' => '',  
     'charset' => 'utf8mb4'
