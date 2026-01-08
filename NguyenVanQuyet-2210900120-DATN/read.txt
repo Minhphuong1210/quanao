@@ -1,4 +1,4 @@
-Cách chạy: cd vào trong dự án và chạy php -S localhost:80
+Cách chạy: cd vào trong dự án này "NguyenVanQuyet-2210900120-DATN" và chạy php -S localhost:8000 -t public
 
 Cấu trúc thư mục 
 + giao diện người dùng sẽ chạy vào index để laod các giao diện ra 

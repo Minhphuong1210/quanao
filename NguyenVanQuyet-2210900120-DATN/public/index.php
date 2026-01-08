@@ -1,7 +1,11 @@
 <?php
+session_start();
 
-require_once __DIR__ . '/../app/controllers/AdminController.php';
-require_once __DIR__ . '/../app/controllers/UserController.php';  
+define('BASE_PATH', dirname(__DIR__));
+define('BASE_URL', '/');
+require_once BASE_PATH . '/app/controllers/user/HomeController.php';
+require_once BASE_PATH . '/app/controllers/user/UserController.php';
+// require_once BASE_PATH . '/app/controllers/admin/AdminController.php';  
 
 $request = $_SERVER['REQUEST_URI'];
 $url = parse_url($request, PHP_URL_PATH);
@@ -10,16 +14,14 @@ $url = trim($url, '/');
 $isAdmin = strpos($url, 'admin/') === 0;
 $path = $isAdmin ? str_replace('admin/', '', $url) : $url;
 
-if ($isAdmin) {
-    $controller = new AdminController();
-} else {
-    $controller = new UserController();
-}
+
 
 switch ($path) {
+    // case '/':
     case '':
-    case 'index':
-        $controller->index();  
+        $homeController = new HomeController();
+    $homeController->index(); 
+       
         break;
 
     case 'admin/category':
@@ -29,9 +31,6 @@ switch ($path) {
     case 'admin/category/create':
         $controller->categoryCreate();
         break;
-    // ... (tương tự edit/delete)
-
-    // Routes user (ví dụ shop)
     case 'shop':
     case 'shop/index':
         $controller->shopIndex();
