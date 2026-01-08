@@ -1,9 +1,9 @@
 <?php
-require_once __DIR__ . '/../models/ProductModel.php';  // Giả sử có model sản phẩm
+require_once __DIR__ . '/../../models/Category.php';
 
 class UserController {
     public function __construct() {
-        // Có thể check session user nếu cần (khách hàng đăng nhập)
+        
     }
 
     // Index user: Trang chủ shop, hiển thị sản phẩm nổi bật
