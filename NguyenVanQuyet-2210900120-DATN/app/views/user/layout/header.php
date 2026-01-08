@@ -66,17 +66,6 @@
 </head>
 
 <body>
-
-    <!-- Spinner Start -->
-    <!-- <div id="spinner"
-        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div> -->
-    <!-- Spinner End -->
-
-
     <!-- Topbar Start -->
     <div class="container-fluid px-5 d-none border-bottom d-lg-block">
         <div class="row gx-0 align-items-center">
@@ -111,14 +100,7 @@
                 <div class="position-relative ps-4">
                     <div class="d-flex border rounded-pill">
                         <input class="form-control border-0 rounded-pill w-100 py-3" type="text"
-                            data-bs-target="#!dropdownToggle123" placeholder="Search Looking For?">
-                        <select class="form-select text-dark border-0 border-start rounded-0 p-3" style="width: 200px;">
-                            <option value="All Category">All Category</option>
-                            <option value="Pest Control-2">Category 1</option>
-                            <option value="Pest Control-3">Category 2</option>
-                            <option value="Pest Control-4">Category 3</option>
-                            <option value="Pest Control-5">Category 4</option>
-                        </select>
+                            data-bs-target="#!dropdownToggle123" placeholder="Tìm kiếm tại đây">
                         <button type="button" class="btn btn-primary rounded-pill py-3 px-5" style="border: 0;"><i
                                 class="fas fa-search"></i></button>
                     </div>
@@ -126,10 +108,6 @@
             </div>
             <div class="col-md-4 col-lg-3 text-center text-lg-end">
                 <div class="d-inline-flex align-items-center">
-                    <a href="#!" class="text-muted d-flex align-items-center justify-content-center me-3"><span
-                            class="rounded-circle btn-md-square border"><i class="fas fa-random"></i></i></a>
-                    <a href="#!" class="text-muted d-flex align-items-center justify-content-center me-3"><span
-                            class="rounded-circle btn-md-square border"><i class="fas fa-heart"></i></a>
                     <a href="#!" class="text-muted d-flex align-items-center justify-content-center"><span
                             class="rounded-circle btn-md-square border"><i class="fas fa-shopping-cart"></i></span>
                         <span class="text-dark ms-2">$0.00</span></a>
@@ -157,13 +135,25 @@
         <!-- Home -->
         <a href="<?= BASE_URL ?>" class="nav-item nav-link active">Trang chủ</a>
 
+
+<?php 
+require_once BASE_PATH . '/app/models/category.php';
+$categoryModel = new category();
+$danh_muc = $categoryModel->getAll();
+
+
+?>
+
         <div class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+            <a href="<?= BASE_URL ?>tat-ca-san-pham" class="nav-link dropdown-toggle" >
                 Tất cả sản phẩm
             </a>
             <div class="dropdown-menu m-0">
-                <a href="<?= BASE_URL ?>bestseller" class="dropdown-item">Bestseller</a>
-               
+            <?php foreach ($danh_muc as $dm): ?>
+        <a href="<?= BASE_URL ?>category/<?= $dm['slug'] ?>" class="dropdown-item">
+            <?= htmlspecialchars($dm['name']) ?>
+        </a>
+    <?php endforeach; ?>
             </div>
         </div>
 

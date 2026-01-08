@@ -11,10 +11,12 @@ $request = $_SERVER['REQUEST_URI'];
 $url = parse_url($request, PHP_URL_PATH);
 $url = trim($url, '/');
 
+
+
 $isAdmin = strpos($url, 'admin/') === 0;
 $path = $isAdmin ? str_replace('admin/', '', $url) : $url;
 
-
+// echo $path;
 
 switch ($path) {
     // case '/':
@@ -24,6 +26,11 @@ switch ($path) {
         break;
 
     case 'tat-ca-san-pham':
+        $homeController = new HomeController();
+        $homeController->tatCaSanPham(); 
+        break;
+
+
     case 'admin/category/index':
         $controller->categoryIndex(); 
         break;
