@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../../config/database.php';
-
 class Product
 {
     protected $conn;
@@ -10,11 +9,71 @@ class Product
         $this->conn = Database::getInstance();
     }
 
-    public function getAll()
+
+    // Lấy tất cả sản phẩm (cho admin, bao gồm inactive)
+    public function getAll($activeOnly = false)
     {
-        $sql = "SELECT * FROM products WHERE active = 1";
-        return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM products";
+        if ($activeOnly) {
+            $sql .= " WHERE active = 1";
+        }
+        $sql .= " ORDER BY id DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Lấy sản phẩm active (frontend)
+//     public function getActive()
+//     {
+//         return $this->getAll(true);  // Tái sử dụng getAll
+//     }
+
+    // Sản phẩm trang chủ (frontend)
+    public function getHomeProducts()
+    {
+        $sql = "SELECT * FROM products 
+                WHERE hien_trang_chu = 1 AND active = 1 
+                ORDER BY id DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Sản phẩm banner (frontend, fix: dùng query đơn giản)
+    public function getActiveBanner()
+    {
+        $sql = "SELECT * FROM products 
+                WHERE active = 1 AND san_pham_hien_nhu_baner = 1 
+                LIMIT 1";  // Giả sử chỉ 1 banner
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Sản phẩm nổi bật (frontend)
+    public function getFeaturedProducts()
+    {
+        $sql = "SELECT * FROM products 
+                WHERE san_pham_noi_bat = 1 AND active = 1 
+                ORDER BY id DESC";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Lấy theo category (frontend/admin)
+    public function getByCategory($categoryId)
+    {
+        $sql = "SELECT * FROM products 
+                WHERE category_id = :categoryId AND active = 1 
+                ORDER BY id DESC";
+
+//     public function getAll()
+//     {
+//         $sql = "SELECT * FROM products WHERE active = 1";
+//         return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+//     }
 
     public function getActive($page = null, $limit = null)
     {
@@ -81,6 +140,7 @@ return $stmt->fetch(PDO::FETCH_ASSOC);
         $sql = "SELECT * FROM products 
                 WHERE category_id = :categoryId AND active = 1 LIMIT 8";
 
+
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['categoryId' => $categoryId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -90,14 +150,94 @@ return $stmt->fetch(PDO::FETCH_ASSOC);
     {
         $sql = "SELECT * FROM products 
                 WHERE slug = :slug AND active = 1 LIMIT 1";
-
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['slug' => $slug]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-// đếm các số lượng của danh mục này 
-public function countByCategory($categoryId)
+    // ===== PHẦN CRUD CHO ADMIN =====
+
+    // Lấy 1 sản phẩm theo ID (admin)
+    public function find($id)
+    {
+        $sql = "SELECT * FROM products WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Tạo mới sản phẩm (admin)
+    public function create($data)
+    {
+        $sql = "INSERT INTO products (name, slug, price, description, image, category_id, stock, active, hien_trang_chu, san_pham_hien_nhu_baner, san_pham_noi_bat) 
+                VALUES (:name, :slug, :price, :description, :image, :category_id, :stock, :active, :hien_trang_chu, :san_pham_hien_nhu_baner, :san_pham_noi_bat)";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            'name' => $data['name'],
+            'slug' => $this->generateSlug($data['name']),  // Tự tạo slug
+            'price' => $data['price'],
+            'description' => $data['description'] ?? '',
+            'image' => $data['image'] ?? '',
+            'category_id' => $data['category_id'],
+            'stock' => $data['stock'] ?? 0,
+            'active' => $data['active'] ?? 1,
+            'hien_trang_chu' => $data['hien_trang_chu'] ?? 0,
+            'san_pham_hien_nhu_baner' => $data['san_pham_hien_nhu_baner'] ?? 0,
+            'san_pham_noi_bat' => $data['san_pham_noi_bat'] ?? 0
+        ]);
+    }
+
+    // Cập nhật sản phẩm (admin)
+    public function update($id, $data)
+    {
+        $sql = "UPDATE products SET 
+                name = :name, slug = :slug, price = :price, description = :description, 
+                image = :image, category_id = :category_id, stock = :stock, 
+                active = :active, hien_trang_chu = :hien_trang_chu, 
+                san_pham_hien_nhu_baner = :san_pham_hien_nhu_baner, san_pham_noi_bat = :san_pham_noi_bat 
+                WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'name' => $data['name'],
+            'slug' => $this->generateSlug($data['name']),
+            'price' => $data['price'],
+            'description' => $data['description'] ?? '',
+            'image' => $data['image'] ?? '',
+            'category_id' => $data['category_id'],
+            'stock' => $data['stock'] ?? 0,
+            'active' => $data['active'] ?? 1,
+            'hien_trang_chu' => $data['hien_trang_chu'] ?? 0,
+            'san_pham_hien_nhu_baner' => $data['san_pham_hien_nhu_baner'] ?? 0,
+            'san_pham_noi_bat' => $data['san_pham_noi_bat'] ?? 0
+        ]);
+    }
+
+    // Xóa sản phẩm (admin)
+    public function delete($id)
+    {
+        $sql = "DELETE FROM products WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute(['id' => $id]);
+    }
+
+    // Đếm tổng sản phẩm (cho dashboard)
+    public function getCount()
+    {
+        $sql = "SELECT COUNT(*) FROM products";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    // Helper: Tạo slug từ name (ví dụ: "Áo Thun" -> "ao-thun")
+    private function generateSlug($name)
+    {
+        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $name)));
+        return $slug;
+    }
+      
+      public function countByCategory($categoryId)
 {
     $sql = "SELECT COUNT(*) AS total 
             FROM products 
@@ -108,5 +248,9 @@ public function countByCategory($categoryId)
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result['total'] ?? 0;
 }
-
+      
 }
+?>
+
+
+
