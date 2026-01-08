@@ -1,5 +1,5 @@
 
-
+<?php include BASE_PATH . '/app/views/user/layout/header.php'; ?>
     <!-- Carousel Start -->
     <div class="container-fluid carousel bg-light px-0">
         <div class="row g-0 justify-content-end">
@@ -38,14 +38,11 @@
             <div class="col-12 col-lg-5 col-xl-3 wow fadeInRight" data-wow-delay="0.1s">
                 <div class="carousel-header-banner h-100">
                     <img src="img/header-img.jpg" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="Image">
-                    <div class="carousel-banner-offer">
-                        <p class="bg-primary text-white rounded fs-5 py-2 px-4 mb-0 me-3">Save $48.00</p>
-                        <p class="text-primary fs-5 fw-bold mb-0">Special Offer</p>
-                    </div>
+                   
                     <div class="carousel-banner">
                         <div class="carousel-banner-content text-center p-4">
-                            <a href="#!" class="d-block mb-2">SmartPhone</a>
-                            <a href="#!" class="d-block text-white fs-3">Apple iPad Mini <br> G2356</a>
+                           
+                            <a href="#!" class="d-block text-white fs-3"><?= isset($product_banner['name']) ? $product_banner['name'] : 'Không có sản phẩm' ?></a>
                             <del class="me-2 text-white fs-5">$1,250.00</del>
                             <span class="text-primary fs-5">$1,050.00</span>
                         </div>
@@ -1884,3 +1881,4 @@
     </div>
     <!-- Bestseller Products End -->
 
+    <?php include BASE_PATH . '/app/views/user/layout/footer.php'; ?>
