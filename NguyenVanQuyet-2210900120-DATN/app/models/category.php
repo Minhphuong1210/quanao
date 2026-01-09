@@ -34,11 +34,11 @@ class category
     }
 
     // Tạo category mới
-    public function create($name, $description = '')
+    public function create($name, $slug = '')
     {
         try {
-            $stmt = $this->pdo->prepare("INSERT INTO category (name, description) VALUES (?, ?)");
-            return $stmt->execute([$name, $description]);
+            $stmt = $this->pdo->prepare("INSERT INTO category (name, slug) VALUES (?, ?)");
+            return $stmt->execute([$name, $slug]);
         } catch (PDOException $e) {
             error_log("Lỗi tạo category: " . $e->getMessage());
             return false;
@@ -46,11 +46,14 @@ class category
     }
 
     // Cập nhật category
-    public function update($id, $name, $description = '')
+    public function update($id, $name, $slug = '')
     {
+
+
+
         try {
-            $stmt = $this->pdo->prepare("UPDATE category SET name = ?, description = ? WHERE id = ?");
-            return $stmt->execute([$name, $description, $id]);
+            $stmt = $this->pdo->prepare("UPDATE category SET name = ?, slug = ? WHERE id = ?");
+            return $stmt->execute([$name, $slug, $id]);
         } catch (PDOException $e) {
             error_log("Lỗi cập nhật category: " . $e->getMessage());
             return false;
