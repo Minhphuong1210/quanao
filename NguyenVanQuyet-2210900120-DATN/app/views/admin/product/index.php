@@ -217,7 +217,7 @@
                                     <span class="badge <?= ($status === 'active') ? 'bg-success' : 'bg-secondary' ?>">
                                         <?= ucfirst($status) ?>
                                     </span>
-                                </td>
+                                </td>   
                                 <td>
                                     <a href="<?= BASE_URL ?>/admin/product/edit/<?= $product['id'] ?? 0 ?>" class="btn btn-sm btn-warning">Sửa</a>
                                     <form method="POST" action="<?= BASE_URL ?>/admin/product/delete/<?= $product['id'] ?? 0 ?>" style="display: inline;" onsubmit="return confirm('Bạn chắc chắn xóa sản phẩm này?');">
