@@ -34,7 +34,6 @@ class AdminController
         // Giả lập recent orders cho dashboard
         $recentOrders = $this->getRecentOrders(5);
         include BASE_PATH . '/app/views/admin/layout/layout-admin.php';
-
     }
 
     /* ================= CATEGORY ================= */
@@ -48,24 +47,24 @@ class AdminController
         $search = $_GET['search'] ?? '';
         $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
         $perPage = 5; // số dòng mỗi trang
-    
+
         // Lấy tất cả danh mục từ model
         $categories = $this->categoryModel->getAll();
-    
+
         // Lọc theo search
         if ($search !== '') {
-            $categories = array_filter($categories, function($c) use ($search) {
+            $categories = array_filter($categories, function ($c) use ($search) {
                 return str_contains(strtolower($c['name']), strtolower($search));
             });
         }
-    
+
         // Pagination
         $total = count($categories);
         $pages = ceil($total / $perPage);
         $start = ($page - 1) * $perPage;
         $categoriesPage = array_slice($categories, $start, $perPage);
-    
-    
+
+
         include BASE_PATH . '/app/views/admin/category/category.php';
     }
 
@@ -82,7 +81,7 @@ class AdminController
             $slug = mb_strtolower($name, 'UTF-8'); // chuyển Unicode sang chữ thường
             $slug = preg_replace('/\s+/', '-', $slug); // thay khoảng trắng bằng '-'
             $slug = preg_replace('/[^\p{L}\p{N}-]+/u', '', $slug); // giữ chữ, số, '-' thôi
-            $slug = trim($slug, '-'); 
+            $slug = trim($slug, '-');
 
             if (empty($name)) {
                 $error = 'Tên category không được để trống!';
@@ -93,7 +92,7 @@ class AdminController
                         echo json_encode(['success' => true, 'message' => 'Thêm category thành công!']);
                         exit;
                     }
-        
+
                     // Flash message với session
                     $_SESSION['success'] = 'Thêm category thành công!';
                     header('Location: /admin/category');
@@ -104,7 +103,7 @@ class AdminController
             }
         }
 
-    
+
         include BASE_PATH . '/app/views/admin/category/add.php';
     }
 
@@ -128,13 +127,13 @@ class AdminController
             $slug = mb_strtolower($name, 'UTF-8'); // chuyển Unicode sang chữ thường
             $slug = preg_replace('/\s+/', '-', $slug); // thay khoảng trắng bằng '-'
             $slug = preg_replace('/[^\p{L}\p{N}-]+/u', '', $slug); // giữ chữ, số, '-' thôi
-            $slug = trim($slug, '-'); 
+            $slug = trim($slug, '-');
 
 
             if (empty($name)) {
                 $error = 'Tên category không được để trống!';
             } else {
-                if ($this->categoryModel->update($id, $name,$slug)) {
+                if ($this->categoryModel->update($id, $name, $slug)) {
                     if (isset($_POST['ajax'])) {
                         echo json_encode(['success' => true, 'message' => 'Cập nhật category thành công!']);
                         exit;
@@ -186,22 +185,34 @@ class AdminController
     public function productIndex()
     {
         $title = 'Quản lý Sản Phẩm';
-        $pageTitle = 'Sản phẩm';
+        $pageTitle = 'Sản phẩm';  // Để sidebar active
 
-        $products = $this->productModel->getAll(false);  // false: lấy tất cả, bao gồm inactive
+        $search = $_GET['search'] ?? '';
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $perPage = 5; // số dòng mỗi trang
 
-        if (isset($_GET['ajax'])) {
-            ob_start();
-            require __DIR__ . '/../views/admin/product/index.php';
-            echo ob_get_clean();
-            exit;  // Chỉ trả content, không layout
+        // Lấy tất cả sản phẩm từ model (bao gồm inactive)
+        $products = $this->productModel->getAll(false);
+
+        // Lọc theo search (tìm theo tên sản phẩm hoặc tên category)
+        if ($search !== '') {
+            $products = array_filter($products, function ($p) use ($search) {
+                $categoryName = $this->categoryModel->find($p['category_id'])['name'] ?? '';
+                return str_contains(strtolower($p['name']), strtolower($search)) ||
+                    str_contains(strtolower($categoryName), strtolower($search));
+            });
         }
 
-        ob_start();
-        require __DIR__ . '/../views/admin/product/index.php';
-        $content = ob_get_clean();
+        // Pagination (giống category)
+        $total = count($products);
+        $pages = ceil($total / $perPage);
+        $start = ($page - 1) * $perPage;
+        $productsPage = array_slice($products, $start, $perPage);
 
-        require __DIR__ . '/../views/layout/layout-admin.php';
+        // Truyền $categoryModel vào view để dùng find()
+        $categoryModel = $this->categoryModel;
+
+        include BASE_PATH . '/app/views/admin/product/index.php';
     }
 
     public function productCreate()
@@ -210,32 +221,39 @@ class AdminController
         $pageTitle = 'Sản phẩm';
 
         $categories = $this->categoryModel->getAll();
-        $product = null;
         $isEdit = false;
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = trim($_POST['name'] ?? '');
+            $name        = trim($_POST['name'] ?? '');
             $description = trim($_POST['description'] ?? '');
-            $price = floatval($_POST['price'] ?? 0);
+            $price       = floatval($_POST['price'] ?? 0);
             $category_id = intval($_POST['category_id'] ?? 0);
-            $stock = intval($_POST['stock'] ?? 0);
-            $status = $_POST['status'] ?? 'active';
-
-            $data = compact('name', 'description', 'price', 'category_id', 'stock', 'status');  // Định nghĩa $data trước validation
+            $stock       = intval($_POST['stock'] ?? 0);
+            $status      = $_POST['status'] ?? 'active';
 
             $errors = [];
-            if (empty($name)) $errors[] = 'Tên sản phẩm không được để trống!';
-            if ($price <= 0) $errors[] = 'Giá phải lớn hơn 0!';
-            if ($category_id <= 0) $errors[] = 'Vui lòng chọn category!';
+            if (empty($name))        $errors[] = 'Tên sản phẩm không được để trống!';
+            if ($price <= 0)         $errors[] = 'Giá phải lớn hơn 0!';
+            if ($category_id <= 0)   $errors[] = 'Vui lòng chọn danh mục!';
 
             if (empty($errors)) {
-                $data['image'] = $this->uploadImage($_FILES['image'] ?? [], '');
+                $image = $this->uploadImage($_FILES['image'] ?? [], '');
+
+                $data = [
+                    'name'        => $name,
+                    'description' => $description,
+                    'price'       => $price,
+                    'category_id' => $category_id,
+                    'stock'       => $stock,
+                    'status'      => $status,
+                    'image'       => $image,
+                ];
 
                 if ($this->productModel->create($data)) {
                     if (isset($_POST['ajax'])) {
                         echo json_encode(['success' => true, 'message' => 'Thêm sản phẩm thành công!']);
                         exit;
                     }
+
                     $_SESSION['success'] = 'Thêm sản phẩm thành công!';
                     header('Location: /admin/product');
                     exit;
@@ -244,28 +262,17 @@ class AdminController
                 }
             } else {
                 $error = implode('<br>', $errors);
-                $product = $data;  // Giữ data để fill form lại
             }
         }
 
-        // Hỗ trợ AJAX load form
-        if (isset($_GET['ajax'])) {
-            ob_start();
-            require __DIR__ . '/../views/admin/product/form.php';
-            echo ob_get_clean();
-            exit;
-        }
-
-        ob_start();
-        require __DIR__ . '/../views/admin/product/form.php';  // Form chung
-        $content = ob_get_clean();
-
-        require __DIR__ . '/../views/layout/layout-admin.php';
+        // Load view riêng cho thêm mới
+        include BASE_PATH . '/app/views/admin/product/create_product.php';
     }
+
 
     public function productEdit($id)
     {
-        $title = 'Sửa Sản Phẩm';
+        $title = 'Chỉnh Sửa Sản Phẩm';
         $pageTitle = 'Sản phẩm';
 
         $product = $this->productModel->find($id);
@@ -276,38 +283,35 @@ class AdminController
         }
 
         $categories = $this->categoryModel->getAll();
-        $isEdit = true;
-
-        // AJAX load form data (JSON cho JS fill modal)
-        if (isset($_GET['ajax'])) {
-            header('Content-Type: application/json');
-            echo json_encode($product);
-            exit;
-        }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = trim($_POST['name'] ?? '');
+            $name        = trim($_POST['name'] ?? '');
             $description = trim($_POST['description'] ?? '');
-            $price = floatval($_POST['price'] ?? 0);
+            $price       = str_replace('.', '', $_POST['price'] ?? '0'); // Xóa dấu chấm định dạng
+            $price       = floatval($price);
             $category_id = intval($_POST['category_id'] ?? 0);
-            $stock = intval($_POST['stock'] ?? 0);
-            $status = $_POST['status'] ?? 'active';
-
-            $data = compact('name', 'description', 'price', 'category_id', 'stock', 'status');  // Định nghĩa $data trước validation
+            $stock       = intval($_POST['stock'] ?? 0);
+            $status      = $_POST['status'] ?? 'active';
 
             $errors = [];
-            if (empty($name)) $errors[] = 'Tên sản phẩm không được để trống!';
-            if ($price <= 0) $errors[] = 'Giá phải lớn hơn 0!';
-            if ($category_id <= 0) $errors[] = 'Vui lòng chọn category!';
+            if (empty($name))              $errors[] = 'Tên sản phẩm không được để trống!';
+            if ($price <= 0)               $errors[] = 'Giá phải lớn hơn 0!';
+            if ($category_id <= 0)         $errors[] = 'Vui lòng chọn danh mục!';
 
             if (empty($errors)) {
-                $data['image'] = $this->uploadImage($_FILES['image'] ?? [], $product['image']);
+                $image = $this->uploadImage($_FILES['image'] ?? [], $product['image']);
+
+                $data = [
+                    'name'        => $name,
+                    'description' => $description,
+                    'price'       => $price,
+                    'category_id' => $category_id,
+                    'stock'       => $stock,
+                    'status'      => $status === 'active' ? 'active' : 'inactive', 
+                    'image'       => $image,
+                ];
 
                 if ($this->productModel->update($id, $data)) {
-                    if (isset($_POST['ajax'])) {
-                        echo json_encode(['success' => true, 'message' => 'Cập nhật sản phẩm thành công!']);
-                        exit;
-                    }
                     $_SESSION['success'] = 'Cập nhật sản phẩm thành công!';
                     header('Location: /admin/product');
                     exit;
@@ -316,23 +320,20 @@ class AdminController
                 }
             } else {
                 $error = implode('<br>', $errors);
-                $product = array_merge($product, $data);  // Update với POST data để fill form
+                // Gán lại dữ liệu POST vào $product để form giữ giá trị khi lỗi
+                $product = array_merge($product, [
+                    'name'        => $name,
+                    'description' => $description,
+                    'price'       => $price,
+                    'category_id' => $category_id,
+                    'stock'       => $stock,
+                    'status'      => $status,
+                ]);
             }
         }
 
-        // Hỗ trợ AJAX load form HTML (nếu không dùng JSON)
-        if (isset($_GET['form_ajax'])) {
-            ob_start();
-            require __DIR__ . '/../views/admin/product/form.php';
-            echo ob_get_clean();
-            exit;
-        }
-
-        ob_start();
-        require __DIR__ . '/../views/admin/product/form.php';
-        $content = ob_get_clean();
-
-        require __DIR__ . '/../views/layout/layout-admin.php';
+        // Include view edit - giống hệt create_product.php về cấu trúc
+        include BASE_PATH . '/app/views/admin/product/edit.php';
     }
 
     public function productDelete($id)

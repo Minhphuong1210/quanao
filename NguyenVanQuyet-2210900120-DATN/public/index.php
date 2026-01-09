@@ -13,8 +13,6 @@ require_once BASE_PATH . '/app/controllers/user/UserController.php';
 require_once BASE_PATH . '/app/controllers/admin/AdminController.php';
 require_once BASE_PATH . '/app/controllers/admin/AuthController.php';
 
-
-
 $requestUri = $_SERVER['REQUEST_URI'];
 $scriptName = $_SERVER['SCRIPT_NAME'];
 $url = trim(str_replace($scriptName, '', $requestUri), '/');
@@ -38,13 +36,8 @@ if (isset($parts[0]) && $parts[0] === 'admin') {
         exit();
     }
 
-
-
-
     // /admin/category/...
     if (isset($parts[1]) && $parts[1] === 'category') {
-
-    
         if (!isset($parts[2]) || $parts[2] === '/index') {
             $adminController->categoryIndex();
         } elseif ($parts[2] === 'create') {
@@ -61,23 +54,23 @@ if (isset($parts[0]) && $parts[0] === 'admin') {
         exit();
     }
 
+    // /admin/product/...
     if (isset($parts[1]) && $parts[1] === 'product') {
-
-    
         if (!isset($parts[2]) || $parts[2] === '') {
             $adminController->productIndex();
         } elseif ($parts[2] === 'create') {
-            $adminController->categoryCreate();
+            $adminController->productCreate();
         } elseif ($parts[2] === 'edit'){
-            $adminController->categoryEdit($parts[3]);
+            $adminController->productEdit($parts[3]);
+        } elseif ($parts[2] === 'delete'){
+            $adminController->productDelete($parts[3]);
         }
         
         else {
-            die('404 Admin Category!');
+            die('404 Admin Product!');  // Sửa từ 'Category' thành 'Product'
         }
         exit();
     }
-
 
     // /admin (mặc định)
     if (!isset($parts[1]) || $parts[1] === '') {
@@ -89,7 +82,6 @@ if (isset($parts[0]) && $parts[0] === 'admin') {
     die('404 Admin!');
 }
 
-
 // --- Kiểm tra category dynamic ---
 if (isset($parts[0]) && $parts[0] === 'category' && isset($parts[1])) {
     $slug = $parts[1]; // Lấy slug động
@@ -99,7 +91,6 @@ if (isset($parts[0]) && $parts[0] === 'category' && isset($parts[1])) {
 }
 
 // đây là của mua-sac
-
 if (isset($parts[0]) && $parts[0] === 'mau-sac' && isset($parts[1])) {
     $slug = $parts[1];
     $homeController = new HomeController();
@@ -114,45 +105,37 @@ if (isset($parts[0]) && $parts[0] === 'nha-cung-cap' && isset($parts[1])) {
     exit;
 }
 
-
 // đây là các đường dẫn tính k chỉ fix cứng thế này 
+$isAdmin = strpos($url, 'admin/') === 0;
+$path = $isAdmin ? str_replace('admin/', '', $url) : $url;
 
-    $isAdmin = strpos($url, 'admin/') === 0;
-    $path = $isAdmin ? str_replace('admin/', '', $url) : $url;
-    
-    switch ($path) {
-        // case '/':
-        case '':
-            $homeController = new HomeController();
-            $homeController->index();
-            break;
-    
-        case 'tat-ca-san-pham':
-            $homeController = new HomeController();
-            $homeController->tatCaSanPham();
-            break;
-    
-    
-        
-        case 'shop':
-        case 'shop/index':
-            $controller->shopIndex();
-            break;
-        case 'cart':
-            $controller->cart();
-            break;
-    
-        case 'postLogin':
-            $authController =new AuthController ();
+switch ($path) {
+    // case '/':
+    case '':
+        $homeController = new HomeController();
+        $homeController->index();
+        break;
 
-            $authController->postLogin();
-            break;
+    case 'tat-ca-san-pham':
+        $homeController = new HomeController();
+        $homeController->tatCaSanPham();
+        break;
 
+    
+    case 'shop':
+    case 'shop/index':
+        $controller->shopIndex();
+        break;
+    case 'cart':
+        $controller->cart();
+        break;
 
-        
+    case 'postLogin':
+        $authController =new AuthController ();
 
-        default:
-            die('404 - Not Found!');
+        $authController->postLogin();
+        break;
+
+    default:
+        die('404 - Not Found!');
 }
-
-
