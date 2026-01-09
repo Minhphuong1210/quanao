@@ -237,12 +237,12 @@ $nha_cung_cap = $nccModel->getAll();
                                                     <div class="product-new">New</div>
                                                 <?php endif; ?>
                                                 <div class="product-details">
-                                                    <a href="<?= BASE_URL ?>product/<?= $product['slug'] ?>"><i class="fa fa-eye fa-1x"></i></a>
+                                                    <a href="<?= BASE_URL ?>chi-tiet-san-pham/<?= $product['slug'] ?>"><i class="fa fa-eye fa-1x"></i></a>
                                                 </div>
                                             </div>
                                             <div class="text-center rounded-bottom p-4">
                                                 <!-- <a href="#!" class="d-block mb-2"><?= htmlspecialchars($product['category_name'] ?? 'SmartPhone') ?></a> -->
-                                                <a href="<?= BASE_URL ?>product/<?= $product['slug'] ?>" class="d-block h4"><?= htmlspecialchars($product['name']) ?></a>
+                                                <a href="<?= BASE_URL ?>chi-tiet-san-pham/<?= $product['slug'] ?>" class="d-block h4"><?= htmlspecialchars($product['name']) ?></a>
                                                 <?php if (!empty($product['old_price'])): ?>
                                                     <del class="me-2 fs-5">$<?= number_format($product['old_price'], 2) ?></del>
                                                 <?php endif; ?>

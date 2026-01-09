@@ -389,4 +389,15 @@ public function getByColorSlug($slug, $page = 1, $limit = 9)
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['total'] ?? 0;
     }
+
+    public function saveView($id, $currentView)
+    {
+        $sql = "UPDATE products SET view = :view WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'view' => $currentView
+        ]);
+    }
+
 }
