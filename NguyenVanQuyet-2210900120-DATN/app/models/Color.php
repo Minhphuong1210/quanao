@@ -70,4 +70,39 @@ class Color
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getByIds($ids)
+    {
+        if (empty($ids)) return [];
+    
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+    
+        $sql = "
+            SELECT id, name, ma_mau, slug
+            FROM colors
+            WHERE id IN ($placeholders)
+            AND active = 1
+        ";
+    
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($ids);
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function find($id)
+    {
+        $sql = "
+            SELECT id, name, ma_mau
+            FROM colors
+            WHERE id = :id AND active = 1
+            LIMIT 1
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 }
