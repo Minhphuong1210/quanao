@@ -1,23 +1,20 @@
 <?php
 require_once BASE_PATH . '/app/models/Product.php';
 require_once BASE_PATH . '/app/models/category.php';
-
+require_once BASE_PATH . '/app/helpers/admin_auth.php';
 
 class AdminController
 {
-    private CategoryModel $categoryModel;
-    private ProductModel $productModel;
+    private category $categoryModel;
+    private Product $productModel;
 
     public function __construct()
     {
         // Kiểm tra đăng nhập admin nghiêm ngặt
-        if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
-            header('Location: /admin/login');
-            exit;
-        }
+        checkAdminLogin();
 
-        $this->categoryModel = new CategoryModel();
-        $this->productModel = new ProductModel();
+        $this->categoryModel = new category();
+        $this->productModel = new Product();
     }
 
     /* ================= DASHBOARD ================= */
@@ -36,20 +33,8 @@ class AdminController
 
         // Giả lập recent orders cho dashboard
         $recentOrders = $this->getRecentOrders(5);
+        include BASE_PATH . '/app/views/admin/layout/layout-admin.php';
 
-        // Hỗ trợ AJAX load snippet
-        if (isset($_GET['ajax'])) {
-            ob_start();
-            require __DIR__ . '/../views/admin/dashboard-content.php';
-            echo ob_get_clean();
-            exit;
-        }
-
-        ob_start();
-        require __DIR__ . '/../views/admin/dashboard-content.php';
-        $content = ob_get_clean();
-
-        require __DIR__ . '/../views/layout/layout-admin.php';
     }
 
     /* ================= CATEGORY ================= */
@@ -59,21 +44,29 @@ class AdminController
         $title = 'Quản lý Category';
         $pageTitle = 'Quản lý Category';
 
+        // $categories = $this->categoryModel->getAll();
+        $search = $_GET['search'] ?? '';
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $perPage = 5; // số dòng mỗi trang
+    
+        // Lấy tất cả danh mục từ model
         $categories = $this->categoryModel->getAll();
-
-        // Hỗ trợ AJAX load table snippet
-        if (isset($_GET['ajax'])) {
-            ob_start();
-            require __DIR__ . '/../views/category/index-content.php';
-            echo ob_get_clean();
-            exit;
+    
+        // Lọc theo search
+        if ($search !== '') {
+            $categories = array_filter($categories, function($c) use ($search) {
+                return str_contains(strtolower($c['name']), strtolower($search));
+            });
         }
-
-        ob_start();
-        require __DIR__ . '/../views/category/index-content.php';
-        $content = ob_get_clean();
-
-        require __DIR__ . '/../views/layout/layout-admin.php';
+    
+        // Pagination
+        $total = count($categories);
+        $pages = ceil($total / $perPage);
+        $start = ($page - 1) * $perPage;
+        $categoriesPage = array_slice($categories, $start, $perPage);
+    
+    
+        include BASE_PATH . '/app/views/admin/category/category.php';
     }
 
     public function categoryCreate()
@@ -86,17 +79,21 @@ class AdminController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = trim($_POST['name'] ?? '');
-            $description = trim($_POST['description'] ?? '');
+            $slug = mb_strtolower($name, 'UTF-8'); // chuyển Unicode sang chữ thường
+            $slug = preg_replace('/\s+/', '-', $slug); // thay khoảng trắng bằng '-'
+            $slug = preg_replace('/[^\p{L}\p{N}-]+/u', '', $slug); // giữ chữ, số, '-' thôi
+            $slug = trim($slug, '-'); 
 
             if (empty($name)) {
                 $error = 'Tên category không được để trống!';
             } else {
-                if ($this->categoryModel->create($name, $description)) {
-                    // AJAX response
+                if ($this->categoryModel->create($name, $slug)) {
+                    // Nếu là AJAX request
                     if (isset($_POST['ajax'])) {
                         echo json_encode(['success' => true, 'message' => 'Thêm category thành công!']);
                         exit;
                     }
+        
                     // Flash message với session
                     $_SESSION['success'] = 'Thêm category thành công!';
                     header('Location: /admin/category');
@@ -107,19 +104,8 @@ class AdminController
             }
         }
 
-        // Hỗ trợ AJAX load form
-        if (isset($_GET['ajax'])) {
-            ob_start();
-            require __DIR__ . '/../views/category/form.php';
-            echo ob_get_clean();
-            exit;
-        }
-
-        ob_start();
-        require __DIR__ . '/../views/category/form.php';  // Form chung cho create/edit
-        $content = ob_get_clean();
-
-        require __DIR__ . '/../views/layout/layout-admin.php';
+    
+        include BASE_PATH . '/app/views/admin/category/add.php';
     }
 
     public function categoryEdit($id)
@@ -138,12 +124,17 @@ class AdminController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $name = trim($_POST['name'] ?? '');
-            $description = trim($_POST['description'] ?? '');
+            // $description = trim($_POST['description'] ?? '');
+            $slug = mb_strtolower($name, 'UTF-8'); // chuyển Unicode sang chữ thường
+            $slug = preg_replace('/\s+/', '-', $slug); // thay khoảng trắng bằng '-'
+            $slug = preg_replace('/[^\p{L}\p{N}-]+/u', '', $slug); // giữ chữ, số, '-' thôi
+            $slug = trim($slug, '-'); 
+
 
             if (empty($name)) {
                 $error = 'Tên category không được để trống!';
             } else {
-                if ($this->categoryModel->update($id, $name, $description)) {
+                if ($this->categoryModel->update($id, $name,$slug)) {
                     if (isset($_POST['ajax'])) {
                         echo json_encode(['success' => true, 'message' => 'Cập nhật category thành công!']);
                         exit;
@@ -157,19 +148,7 @@ class AdminController
             }
         }
 
-        // Hỗ trợ AJAX load form
-        if (isset($_GET['ajax'])) {
-            ob_start();
-            require __DIR__ . '/../views/category/form.php';
-            echo ob_get_clean();
-            exit;
-        }
-
-        ob_start();
-        require __DIR__ . '/../views/category/form.php';  // Form chung
-        $content = ob_get_clean();
-
-        require __DIR__ . '/../views/layout/layout-admin.php';
+        include BASE_PATH . '/app/views/admin/category/edit.php';
     }
 
     public function categoryDelete($id)

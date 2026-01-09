@@ -11,6 +11,8 @@ define('BASE_URL', 'http://localhost:8000/');
 require_once BASE_PATH . '/app/controllers/user/HomeController.php';
 require_once BASE_PATH . '/app/controllers/user/UserController.php';
 require_once BASE_PATH . '/app/controllers/admin/AdminController.php';
+require_once BASE_PATH . '/app/controllers/admin/AuthController.php';
+
 
 
 $requestUri = $_SERVER['REQUEST_URI'];
@@ -19,27 +21,74 @@ $url = trim(str_replace($scriptName, '', $requestUri), '/');
 
 $parts = explode('/', $url);
 
+// if(isset($parts[]) && $parts[1] === 'postLogin'){
+//     $authController =new AuthController ();
 
+//     $authController->postLogin();
+//     exit();
+// }
 
 if (isset($parts[0]) && $parts[0] === 'admin') {
     $adminController = new AdminController();
-    
 
+    // /admin/login
+    if (isset($parts[1]) && $parts[1] === 'login') {
+        $authController = new AuthController();
+        $authController->login();
+        exit();
+    }
+
+
+
+
+    // /admin/category/...
     if (isset($parts[1]) && $parts[1] === 'category') {
-        if (!isset($parts[2]) || $parts[2] === 'index') {
+
+    
+        if (!isset($parts[2]) || $parts[2] === '/index') {
             $adminController->categoryIndex();
         } elseif ($parts[2] === 'create') {
             $adminController->categoryCreate();
-        } else {
+        } elseif ($parts[2] === 'edit'){
+            $adminController->categoryEdit($parts[3]);
+        } elseif ($parts[2] === 'delete'){
+            $adminController->categoryDelete($parts[3]);
+        }
+        
+        else {
             die('404 Admin Category!');
         }
-    } elseif (isset($parts[1]) && $parts[1] === 'login') {
-        $adminController->login();
-    } else {
-        die('404 Admin!');
+        exit();
     }
-    exit;
+
+    if (isset($parts[1]) && $parts[1] === 'product') {
+
+    
+        if (!isset($parts[2]) || $parts[2] === '') {
+            $adminController->productIndex();
+        } elseif ($parts[2] === 'create') {
+            $adminController->categoryCreate();
+        } elseif ($parts[2] === 'edit'){
+            $adminController->categoryEdit($parts[3]);
+        }
+        
+        else {
+            die('404 Admin Category!');
+        }
+        exit();
+    }
+
+
+    // /admin (mặc định)
+    if (!isset($parts[1]) || $parts[1] === '') {
+        $adminController->index();
+        exit();
+    }
+
+    // Nếu không match gì
+    die('404 Admin!');
 }
+
 
 // --- Kiểm tra category dynamic ---
 if (isset($parts[0]) && $parts[0] === 'category' && isset($parts[1])) {
@@ -84,14 +133,7 @@ if (isset($parts[0]) && $parts[0] === 'nha-cung-cap' && isset($parts[1])) {
             break;
     
     
-        case 'admin':
-    
-            $adminController = new AdminController();
-            $adminController->categoryIndex();
-            break;
-        case 'admin/login':
-            $controller->categoryCreate();
-            break;
+        
         case 'shop':
         case 'shop/index':
             $controller->shopIndex();
@@ -100,6 +142,15 @@ if (isset($parts[0]) && $parts[0] === 'nha-cung-cap' && isset($parts[1])) {
             $controller->cart();
             break;
     
+        case 'postLogin':
+            $authController =new AuthController ();
+
+            $authController->postLogin();
+            break;
+
+
+        
+
         default:
             die('404 - Not Found!');
 }

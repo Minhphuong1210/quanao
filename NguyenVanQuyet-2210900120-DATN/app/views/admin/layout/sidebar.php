@@ -13,8 +13,8 @@
             href="/admin" data-load="/admin?ajax=1">
             <i class="fas fa-chart-line me-2"></i> Dashboard
         </a>
-        <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/category') !== false) ? 'active' : '' ?>"
-            href="/admin/category" data-load="/admin/category?ajax=1">
+        <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/category/index') !== false) ? 'active' : '' ?>"
+            href="/admin/category/index" data-load="/admin/category?ajax=1">
             <i class="fas fa-tags me-2"></i> Quản lý Category
         </a>
         <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/product') !== false) ? 'active' : '' ?>"
