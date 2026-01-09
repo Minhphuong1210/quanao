@@ -3,13 +3,13 @@
 session_start(); // Bắt đầu session cho auth
 
 // Định nghĩa constants cho paths
-define('BASE_PATH', dirname(__DIR__)); // Root dự án (app/, public/)
+define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
 define('PUBLIC_PATH', __DIR__);
 define('VIEWS_PATH', APP_PATH . '/views');
 define('BASE_URL', 'http://localhost:8000/');
 require_once BASE_PATH . '/app/controllers/user/HomeController.php';
-require_once BASE_PATH . '/app/controllers/user/UserController.php';
+require_once BASE_PATH . '/app/controllers/user/CartController.php';
 require_once BASE_PATH . '/app/controllers/admin/AdminController.php';
 require_once BASE_PATH . '/app/controllers/admin/AuthController.php';
 
@@ -18,13 +18,6 @@ $scriptName = $_SERVER['SCRIPT_NAME'];
 $url = trim(str_replace($scriptName, '', $requestUri), '/');
 
 $parts = explode('/', $url);
-
-// if(isset($parts[]) && $parts[1] === 'postLogin'){
-//     $authController =new AuthController ();
-
-//     $authController->postLogin();
-//     exit();
-// }
 
 if (isset($parts[0]) && $parts[0] === 'admin') {
     $adminController = new AdminController();
@@ -42,13 +35,11 @@ if (isset($parts[0]) && $parts[0] === 'admin') {
             $adminController->categoryIndex();
         } elseif ($parts[2] === 'create') {
             $adminController->categoryCreate();
-        } elseif ($parts[2] === 'edit'){
+        } elseif ($parts[2] === 'edit') {
             $adminController->categoryEdit($parts[3]);
-        } elseif ($parts[2] === 'delete'){
+        } elseif ($parts[2] === 'delete') {
             $adminController->categoryDelete($parts[3]);
-        }
-        
-        else {
+        } else {
             die('404 Admin Category!');
         }
         exit();
@@ -60,14 +51,12 @@ if (isset($parts[0]) && $parts[0] === 'admin') {
             $adminController->productIndex();
         } elseif ($parts[2] === 'create') {
             $adminController->productCreate();
-        } elseif ($parts[2] === 'edit'){
+        } elseif ($parts[2] === 'edit') {
             $adminController->productEdit($parts[3]);
-        } elseif ($parts[2] === 'delete'){
+        } elseif ($parts[2] === 'delete') {
             $adminController->productDelete($parts[3]);
-        }
-        
-        else {
-            die('404 Admin Product!');  // Sửa từ 'Category' thành 'Product'
+        } else {
+            die('404 Admin Product!'); // Sửa từ 'Category' thành 'Product'
         }
         exit();
     }
@@ -99,15 +88,33 @@ if (isset($parts[0]) && $parts[0] === 'mau-sac' && isset($parts[1])) {
 }
 
 if (isset($parts[0]) && $parts[0] === 'nha-cung-cap' && isset($parts[1])) {
-    $id = (int)$parts[1]; // Lấy id động
+    $id = (int) $parts[1]; // Lấy id động
     $homeController = new HomeController();
     $homeController->sanPhamTheoNhaCungCap($id);
     exit;
 }
+if (isset($parts[0]) && $parts[0] === 'chi-tiet-san-pham' && isset($parts[1])) {
+    $slug = $parts[1]; // Lấy id động
+    $homeController = new HomeController();
+    $homeController->xemChiTietSanPham($slug);
+    exit;
+}
 
-// đây là các đường dẫn tính k chỉ fix cứng thế này 
+// đây là các đường dẫn tính k chỉ fix cứng thế này
 $isAdmin = strpos($url, 'admin/') === 0;
 $path = $isAdmin ? str_replace('admin/', '', $url) : $url;
+
+// switch ($path) {
+//     // case '/':
+//     case '':
+//         $homeController = new HomeController();
+//         $homeController->index();
+//         break;
+
+//     case 'tat-ca-san-pham':
+//         $homeController = new HomeController();
+//         $homeController->tatCaSanPham();
+//         break;
 
 switch ($path) {
     // case '/':
@@ -120,22 +127,32 @@ switch ($path) {
         $homeController = new HomeController();
         $homeController->tatCaSanPham();
         break;
-
-    
-    case 'shop':
-    case 'shop/index':
-        $controller->shopIndex();
-        break;
-    case 'cart':
-        $controller->cart();
-        break;
-
     case 'postLogin':
-        $authController =new AuthController ();
+        $authController = new AuthController();
 
         $authController->postLogin();
         break;
-
+    case 'postCart':
+        $cartController = new CartController();
+        $cartController->addTocart();
+        break;
     default:
         die('404 - Not Found!');
 }
+
+//     case 'shop':
+//     case 'shop/index':
+//         $controller->shopIndex();
+//         break;
+//     case 'cart':
+//         $controller->cart();
+//         break;
+
+//     case 'postLogin':
+//         $authController =new AuthController ();
+//         $authController->postLogin();
+//         break;
+
+//     default:
+//         die('404 - Not Found!');
+// }
