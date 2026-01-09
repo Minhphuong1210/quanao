@@ -1,4 +1,3 @@
-
 <?php include BASE_PATH . '/app/views/user/layout/header.php'; ?>
     <!-- Carousel Start -->
     <div class="container-fluid carousel bg-light px-0">
@@ -37,13 +36,10 @@
             </div>
             <div class="col-12 col-lg-5 col-xl-3 wow fadeInRight" data-wow-delay="0.1s">
                 <div class="carousel-header-banner h-100">
-                    <img src="img/header-img.jpg" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="Image">
-                   
+                    <img src="img/header-img.jpg" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="Image">                  
                     <div class="carousel-banner">
-                        <div class="carousel-banner-content text-center p-4">
-                           
-                            <a href="#!" class="d-block text-white fs-3"><?= isset($product_banner['name']) ? $product_banner['name'] : 'Không có sản phẩm' ?></a>
-                           
+                        <div class="carousel-banner-content text-center p-4">                           
+                            <a href="<?= isset($product_banner['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product_banner['slug']) : '#!' ?>" class="d-block text-white fs-3"><?= isset($product_banner['name']) ? $product_banner['name'] : 'Không có sản phẩm' ?></a>                           
                             <span class="text-primary fs-5"><?= isset($product_banner['price']) ? $product_banner['price'] : 'Không có giá sản phẩm' ?></span>
                         </div>
                         <a href="#!" class="btn btn-primary rounded-pill py-2 px-4"><i
@@ -112,13 +108,13 @@
         <div class="product-item-inner border rounded">
             <div class="product-item-inner-item">
                 <!-- Ảnh sản phẩm -->
-                <img src="<?= isset($product_featured_item['image']) ? 'upload/'.$product_featured_item['image'] : 'img/product-3.png' ?>" class="img-fluid w-100 rounded-top" alt="<?= htmlspecialchars($product_featured_item['name']) ?>">
+                <a href="<?= isset($product_featured_item['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product_featured_item['slug']) : '#!' ?>"><img src="<?= isset($product_featured_item['image']) ? 'upload/'.$product_featured_item['image'] : 'img/product-3.png' ?>" class="img-fluid w-100 rounded-top" alt="<?= htmlspecialchars($product_featured_item['name']) ?>"></a>
             </div>
             <div class="text-center rounded-bottom p-4">
                 <!-- Tên sản phẩm -->
-                <a href="#!" class="d-block mb-2"><?= htmlspecialchars($product_featured_item['name']) ?></a>
+                <a href="<?= isset($product_featured_item['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product_featured_item['slug']) : '#!' ?>" class="d-block mb-2"><?= htmlspecialchars($product_featured_item['name']) ?></a>
                 <!-- Slug / Tiêu đề -->
-                <a href="#!" class="d-block h4"><?= htmlspecialchars($product_featured_item['name']) ?> <br> <?= htmlspecialchars($product_featured_item['slug']) ?></a>
+                <a href="<?= isset($product_featured_item['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product_featured_item['slug']) : '#!' ?>" class="d-block h4"><?= htmlspecialchars($product_featured_item['name']) ?> <br> <?= htmlspecialchars($product_featured_item['slug']) ?></a>
                 <!-- Giá cũ / giá mới -->
                 <?php if(isset($product_featured_item['old_price']) && $product_featured_item['old_price'] > 0): ?>
                     <del class="me-2 fs-5">$<?= number_format($product_featured_item['old_price'], 2) ?></del>
@@ -139,7 +135,7 @@
                     <i class="fas fa-star"></i>
                 </div>
                 <div class="d-flex">
-                    <a href="#!" class="text-primary d-flex align-items-center justify-content-center me-3">
+                    <a href="<?= isset($product_featured_item['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product_featured_item['slug']) : '#!' ?>" class="text-primary d-flex align-items-center justify-content-center me-3">
                         <span class="rounded-circle btn-sm-square border"><i class="fas fa-random"></i></span>
                     </a>
                     <a href="#!" class="text-primary d-flex align-items-center justify-content-center me-0">
@@ -213,18 +209,18 @@
         <div class="row g-0">
             <div class="col-5">
                 <div class="products-mini-img border-end h-100">
-                    <img src="<?= isset($product['image']) ? 'upload/'.$product['image'] : 'img/product-4.png' ?>" 
+                    <a href="<?= isset($product['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product['slug']) : '#!' ?>"><img src="<?= isset($product['image']) ? 'upload/'.$product['image'] : 'img/product-4.png' ?>" 
                          class="img-fluid w-100 h-100" 
-                         alt="<?= htmlspecialchars($product['name']) ?>">
+                         alt="<?= htmlspecialchars($product['name']) ?>"></a>
                     <div class="products-mini-icon rounded-circle bg-primary">
-                        <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
+                        <a href="<?= isset($product['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product['slug']) : '#!' ?>"><i class="fa fa-eye fa-1x text-white"></i></a>
                     </div>
                 </div>
             </div>
             <div class="col-7">
                 <div class="products-mini-content p-3">
-                    <a href="#!" class="d-block mb-2"><?= htmlspecialchars($product['name']) ?></a>
-                    <a href="#!" class="d-block h4"><?= htmlspecialchars($product['name']) ?> <br> <?= htmlspecialchars($product['slug']) ?></a>
+                    <a href="<?= isset($product['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product['slug']) : '#!' ?>" class="d-block mb-2"><?= htmlspecialchars($product['name']) ?></a>
+                    <a href="<?= isset($product['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product['slug']) : '#!' ?>" class="d-block h4"><?= htmlspecialchars($product['name']) ?> <br> <?= htmlspecialchars($product['slug']) ?></a>
                     <?php if(isset($product['old_price']) && $product['old_price'] > 0): ?>
                         <del class="me-2 fs-5">$<?= number_format($product['old_price'],2) ?></del>
                     <?php endif; ?>
@@ -237,7 +233,7 @@
                 <i class="fas fa-shopping-cart me-2"></i> Add To Cart
             </a>
             <div class="d-flex">
-                <a href="#!" class="text-primary d-flex align-items-center justify-content-center me-3">
+                <a href="<?= isset($product['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product['slug']) : '#!' ?>" class="text-primary d-flex align-items-center justify-content-center me-3">
                     <span class="rounded-circle btn-sm-square border"><i class="fas fa-random"></i></span>
                 </a>
                 <a href="#!" class="text-primary d-flex align-items-center justify-content-center me-0">
@@ -271,18 +267,18 @@ foreach($product_active as $product):
         <div class="row g-0">
             <div class="col-5">
                 <div class="products-mini-img border-end h-100">
-                    <img src="<?= isset($product['image']) ? 'upload/'.$product['image'] : 'img/product-3.png' ?>" 
-                         class="img-fluid w-100 h-100" 
-                         alt="<?= htmlspecialchars($product['name']) ?>">
+                    <a href="<?= isset($product['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product['slug']) : '#!' ?>"><img src="<?= isset($product['image']) ? 'upload/'.$product['image'] : 'img/product-3.png' ?>" 
+                        class="img-fluid w-100 h-100" 
+                        alt="<?= htmlspecialchars($product['name']) ?>"></a>
                     <div class="products-mini-icon rounded-circle bg-primary">
-                        <a href="#!"><i class="fa fa-eye fa-1x text-white"></i></a>
+                        <a href="<?= isset($product['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product['slug']) : '#!' ?>"><i class="fa fa-eye fa-1x text-white"></i></a>
                     </div>
                 </div>
             </div>
             <div class="col-7">
                 <div class="products-mini-content p-3">
-                    <a href="#!" class="d-block mb-2"><?= htmlspecialchars($product['name']) ?></a>
-                    <a href="#!" class="d-block h4"><?= htmlspecialchars($product['name']) ?> <br> <?= htmlspecialchars($product['slug']) ?></a>
+                    <a href="<?= isset($product['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product['slug']) : '#!' ?>" class="d-block mb-2"><?= htmlspecialchars($product['name']) ?></a>
+                    <a href="<?= isset($product['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product['slug']) : '#!' ?>" class="d-block h4"><?= htmlspecialchars($product['name']) ?> <br> <?= htmlspecialchars($product['slug']) ?></a>
                     <?php if(isset($product['old_price']) && $product['old_price'] > 0): ?>
                         <del class="me-2 fs-5">$<?= number_format($product['old_price'],2) ?></del>
                     <?php endif; ?>
@@ -295,7 +291,7 @@ foreach($product_active as $product):
                 <i class="fas fa-shopping-cart me-2"></i> Add To Cart
             </a>
             <div class="d-flex">
-                <a href="#!" class="text-primary d-flex align-items-center justify-content-center me-3">
+                <a href="<?= isset($product['slug']) ? 'xemChiTietSanPham.php?slug=' . htmlspecialchars($product['slug']) : '#!' ?>" class="text-primary d-flex align-items-center justify-content-center me-3">
                     <span class="rounded-circle btn-sm-square border"><i class="fas fa-random"></i></span>
                 </a>
                 <a href="#!" class="text-primary d-flex align-items-center justify-content-center me-0">

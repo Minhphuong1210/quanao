@@ -52,16 +52,16 @@ if (isset($parts[0]) && $parts[0] === 'category' && isset($parts[1])) {
 // đây là của mua-sac
 
 if (isset($parts[0]) && $parts[0] === 'mau-sac' && isset($parts[1])) {
-    $slug = $parts[1]; // Lấy slug động
+    $slug = $parts[1];
     $homeController = new HomeController();
-    $homeController->sanPhamTheoDanhMuc($slug); 
+    $homeController->sanPhamTheoMauSac($slug);
     exit;
 }
 
 if (isset($parts[0]) && $parts[0] === 'nha-cung-cap' && isset($parts[1])) {
-    $slug = $parts[1]; // Lấy slug động
+    $id = (int)$parts[1]; // Lấy id động
     $homeController = new HomeController();
-    $homeController->sanPhamTheoDanhMuc($slug); 
+    $homeController->sanPhamTheoNhaCungCap($id);
     exit;
 }
 
