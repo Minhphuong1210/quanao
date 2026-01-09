@@ -132,6 +132,12 @@ switch ($path) {
 
         $authController->postLogin();
         break;
+
+
+    case 'cart':
+        $cartController = new CartController();
+        $cartController->showCart();
+        break;
     case 'postCart':
         $cartController = new CartController();
         $cartController->addTocart();

@@ -1,5 +1,12 @@
 <?php
 require_once BASE_PATH . '/app/models/Product.php';
+require_once BASE_PATH . '/app/models/Color.php';
+require_once BASE_PATH . '/app/models/Size.php';
+require_once BASE_PATH . '/app/models/category.php';
+require_once BASE_PATH . '/app/models/Product_Detail.php';
+
+
+
 class HomeController
 {
     public function index()
@@ -85,7 +92,10 @@ class HomeController
     public function xemChiTietSanPham($slug)
     {
         $productModel = new Product();
-$categoryModel = new category;
+        $categoryModel = new category;
+        $colorModel = new Color();
+        $sizeModel = new Size();
+        $productDetailModel = new Product_Detail();
         $product = $productModel->getBySlug($slug);
 
         if (!$product) {
@@ -96,19 +106,26 @@ $categoryModel = new category;
         // sau khi ấn vào đây thì view sản phẩm cũng sẽ tăng lên
         $product['view']++;
 
-     
-        // echo '<pre>';
-        // print_r($product); // hiển thị mảng hoặc object
-        // echo '</pre>';
-        // die(); // dừng để xem kết quả
 
         $productModel->saveView($product['id'], $product['view']);
         $category = $categoryModel->find($product['category_id']);
-        // var_dump($slug_category);
-        // $categorySlug = $product['category_slug'] ?? ''; 
         $related = $productModel->getByCategorySlug($category['slug'], 1, 4); // lấy 4 sản phẩm
         $relatedProducts = $related['products'];
+        $variants = $productDetailModel->getByProduct($product['id']);
 
+        $unique_sizes = [];
+        $unique_colors = [];
+        
+        foreach ($variants as $variant) {
+            $unique_sizes[]  = $variant['size_id'];
+            $unique_colors[] = $variant['color_id'];
+        }
+        
+        $unique_sizes  = array_unique($unique_sizes);
+        $unique_colors = array_unique($unique_colors);
+
+        $sizes  = $sizeModel->getByIds($unique_sizes);
+$colors = $colorModel->getByIds($unique_colors);
 
         include BASE_PATH . '/app/views/user/home/chiTietSanPham.php';
     }
