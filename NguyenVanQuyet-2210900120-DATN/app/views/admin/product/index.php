@@ -100,6 +100,35 @@
         }
     </style>
 </head>
+<?php
+function product_image_url($image_path)
+{
+    if (empty($image_path)) {
+        return BASE_URL . '/assets/img/no-image.png';
+    }
+
+    if (strpos($image_path, 'public/uploads/products/') === 0) {
+        return BASE_URL . '/' . ltrim($image_path, '/');
+    }
+
+    // Fallback (trường hợp dữ liệu cũ)
+    return BASE_URL . '/public/uploads/products/' . basename($image_path);
+}
+
+function product_image_exists($image_path)
+{
+    if (empty($image_path)) return false;
+
+    // File vật lý tương ứng
+    if (strpos($image_path, 'public/uploads/products/') === 0) {
+        $full_path = BASE_PATH . '/' . ltrim($image_path, '/');
+    } else {
+        $full_path = BASE_PATH . '/public/uploads/products/' . basename($image_path);
+    }
+
+    return file_exists($full_path);
+}
+?>
 
 <body class="d-flex flex-column h-100">
 
@@ -117,7 +146,6 @@
         <div class="content-placeholder flex-grow-1">
 
             <!-- Nội dung của product index -->
-
             <h4><?= $pageTitle ?></h4>
 
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
@@ -195,12 +223,28 @@
                                 <td><?= $product['id'] ?? 'N/A' ?></td>
                                 <td>
                                     <?php if (!empty($image)): ?>
-                                        <img
-                                            src="<?= BASE_URL . htmlspecialchars($image) ?>"
-                                            alt="<?= htmlspecialchars($name) ?>"
-                                            width="50"
-                                            height="50"
-                                            class="img-thumbnail rounded">
+                                        <?php
+                                        // Lấy URL ảnh
+                                        $image_url = product_image_url($image);
+                                        $image_exists = product_image_exists($image);
+                                        ?>
+
+                                        <?php if ($image_exists): ?>
+                                            <img src="<?= $image_url ?>"
+                                                alt="<?= htmlspecialchars($name) ?>"
+                                                width="50"
+                                                height="50"
+                                                class="img-thumbnail rounded"
+                                                title="<?= htmlspecialchars($name) ?>">
+                                        <?php else: ?>
+                                            <img src="<?= BASE_URL; ?>/assets/img/no-image.png"
+                                                alt="Ảnh không tồn tại"
+                                                width="50"
+                                                height="50"
+                                                class="img-thumbnail rounded"
+                                                title="File: <?= htmlspecialchars($image) ?> không tồn tại">
+                                            <small class="d-block text-warning">File mất</small>
+                                        <?php endif; ?>
                                     <?php else: ?>
                                         <span class="text-muted">Chưa có ảnh</span>
                                     <?php endif; ?>
@@ -217,7 +261,7 @@
                                     <span class="badge <?= ($status === 'active') ? 'bg-success' : 'bg-secondary' ?>">
                                         <?= ucfirst($status) ?>
                                     </span>
-                                </td>   
+                                </td>
                                 <td>
                                     <a href="<?= BASE_URL ?>/admin/product/edit/<?= $product['id'] ?? 0 ?>" class="btn btn-sm btn-warning">Sửa</a>
                                     <form method="POST" action="<?= BASE_URL ?>/admin/product/delete/<?= $product['id'] ?? 0 ?>" style="display: inline;" onsubmit="return confirm('Bạn chắc chắn xóa sản phẩm này?');">

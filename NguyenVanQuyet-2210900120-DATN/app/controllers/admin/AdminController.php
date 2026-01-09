@@ -332,7 +332,6 @@ class AdminController
             }
         }
 
-        // Include view edit - giống hệt create_product.php về cấu trúc
         include BASE_PATH . '/app/views/admin/product/edit.php';
     }
 
