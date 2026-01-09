@@ -103,16 +103,8 @@
 <?php
 function product_image_url($image_path)
 {
-    if (empty($image_path)) {
-        return BASE_URL . '/assets/img/no-image.png';
-    }
 
-    if (strpos($image_path, 'public/uploads/products/') === 0) {
-        return BASE_URL . '/' . ltrim($image_path, '/');
-    }
-
-    // Fallback (trường hợp dữ liệu cũ)
-    return BASE_URL . '/public/uploads/products/' . basename($image_path);
+    return BASE_URL . $image_path ;
 }
 
 function product_image_exists($image_path)
@@ -198,7 +190,7 @@ function product_image_exists($image_path)
                         <th>Tên sản phẩm</th>
                         <th>Danh mục</th>
                         <th>Giá (VNĐ)</th>
-                        <th>Tồn kho</th>
+                        <!-- <th>Tồn kho</th> -->
                         <th>Trạng thái</th>
                         <th>Hành động</th>
                     </tr>
@@ -228,6 +220,8 @@ function product_image_exists($image_path)
                                         $image_url = product_image_url($image);
                                         $image_exists = product_image_exists($image);
                                         ?>
+
+
 
                                         <?php if ($image_exists): ?>
                                             <img src="<?= $image_url ?>"

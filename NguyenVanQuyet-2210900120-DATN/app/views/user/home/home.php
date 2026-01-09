@@ -109,7 +109,8 @@
                                     <div class="product-item-inner border rounded">
                                         <div class="product-item-inner-item">
                                             <!-- Ảnh sản phẩm -->
-                                            <a href="<?= isset($product_featured_item['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product_featured_item['slug']) : '#!' ?>"><img src="<?= isset($product_featured_item['image']) ? 'upload/' . $product_featured_item['image'] : 'img/product-3.png' ?>" class="img-fluid w-100 rounded-top" alt="<?= htmlspecialchars($product_featured_item['name']) ?>"></a>
+                                            <a href="<?= isset($product_featured_item['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product_featured_item['slug']) : '#!' ?>">
+                                            <img src="<?=  BASE_URL . $product_featured_item['image'] ?>" class="img-fluid w-100 rounded-top" alt="<?= htmlspecialchars($product_featured_item['name']) ?>"></a>
                                         </div>
                                         <div class="text-center rounded-bottom p-4">
                                             <!-- Tên sản phẩm -->

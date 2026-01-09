@@ -377,7 +377,8 @@ class AdminController
             return $oldImage;
         }
 
-        $uploadDir = __DIR__ . '/../../uploads/products/';
+        // $uploadDir = __DIR__ . '/../../uploads/products/';
+        $uploadDir = BASE_PATH . '/public/uploads/products/';
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0755, true);
         }
@@ -387,8 +388,11 @@ class AdminController
 
         if (move_uploaded_file($file['tmp_name'], $targetPath)) {
             // Xóa ảnh cũ nếu có
-            if ($oldImage && file_exists(__DIR__ . '/../../' . $oldImage)) {
-                unlink(__DIR__ . '/../../' . $oldImage);
+            if ($oldImage) {
+                $oldPath = BASE_PATH . '/public/' . $oldImage;
+                if (file_exists($oldPath)) {
+                    unlink($oldPath);
+                }
             }
             return 'uploads/products/' . $fileName;
         }

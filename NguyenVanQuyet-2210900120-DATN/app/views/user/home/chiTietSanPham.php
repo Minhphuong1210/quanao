@@ -263,7 +263,8 @@ input[name="quantity"] {
             <!-- Gallery ảnh -->
             <div class="col-lg-6 mb-4">
                 <div class="sticky-top" style="top: 20px;">
-                    <img id="mainImage" src="uploads/products/<?=htmlspecialchars($main_image)?>"
+                    <img id="mainImage" src="<?=  BASE_URL . $product['image'] ?>"
+                   
                         alt="<?=htmlspecialchars($product['name'])?>" class="img-fluid rounded mb-3">
                         <?php if (count($imageArray) > 0): ?>
     <div class="row g-2">
