@@ -195,7 +195,12 @@
                                 <td><?= $product['id'] ?? 'N/A' ?></td>
                                 <td>
                                     <?php if (!empty($image)): ?>
-                                        <img src="/<?= htmlspecialchars($image) ?>" alt="<?= htmlspecialchars($name) ?>" width="50" height="50" class="img-thumbnail rounded">
+                                        <img
+                                            src="<?= BASE_URL . htmlspecialchars($image) ?>"
+                                            alt="<?= htmlspecialchars($name) ?>"
+                                            width="50"
+                                            height="50"
+                                            class="img-thumbnail rounded">
                                     <?php else: ?>
                                         <span class="text-muted">Chưa có ảnh</span>
                                     <?php endif; ?>
