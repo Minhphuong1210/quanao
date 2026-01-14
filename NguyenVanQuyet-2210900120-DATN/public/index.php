@@ -10,6 +10,8 @@ define('VIEWS_PATH', APP_PATH . '/views');
 define('BASE_URL', 'http://localhost:8000/');
 require_once BASE_PATH . '/app/controllers/user/HomeController.php';
 require_once BASE_PATH . '/app/controllers/user/CartController.php';
+require_once BASE_PATH . '/app/controllers/user/CheckoutController.php';
+require_once BASE_PATH . '/app/controllers/user/AuthControllerUser.php';
 require_once BASE_PATH . '/app/controllers/admin/AdminController.php';
 require_once BASE_PATH . '/app/controllers/admin/AuthController.php';
 
@@ -104,17 +106,7 @@ if (isset($parts[0]) && $parts[0] === 'chi-tiet-san-pham' && isset($parts[1])) {
 $isAdmin = strpos($url, 'admin/') === 0;
 $path = $isAdmin ? str_replace('admin/', '', $url) : $url;
 
-// switch ($path) {
-//     // case '/':
-//     case '':
-//         $homeController = new HomeController();
-//         $homeController->index();
-//         break;
 
-//     case 'tat-ca-san-pham':
-//         $homeController = new HomeController();
-//         $homeController->tatCaSanPham();
-//         break;
 
 switch ($path) {
     // case '/':
@@ -127,6 +119,7 @@ switch ($path) {
         $homeController = new HomeController();
         $homeController->tatCaSanPham();
         break;
+        // cái này là để check đăng nhập của admin 
     case 'postLogin':
         $authController = new AuthController();
 
@@ -142,23 +135,38 @@ switch ($path) {
         $cartController = new CartController();
         $cartController->addTocart();
         break;
+
+    case 'updateCart':
+        $cartController = new CartController();
+        $cartController->updateCart();
+        break;
+
+    case 'deleteCart':
+        $cartController = new CartController();
+        $cartController->deleteCart();
+        break;
+    case "checkout":
+        $checkOutController = new CheckoutController();
+        $checkOutController->getOrder();
+        break;
+
+    case "postCheckout":
+        $checkOutController = new CheckoutController();
+        $checkOutController->postCheckout();
+        break;
+    case "loginUser":
+        $authController = new AuthControllerUser();
+        $authController->loginUser();
+        break;
+    case "register":
+        $authController = new AuthControllerUser();
+        $authController->register();
+        break;
+
+    case "forgotPassword":
+        $authController = new AuthControllerUser();
+        $authController->forgotPassword();
+        break;
     default:
         die('404 - Not Found!');
 }
-
-//     case 'shop':
-//     case 'shop/index':
-//         $controller->shopIndex();
-//         break;
-//     case 'cart':
-//         $controller->cart();
-//         break;
-
-//     case 'postLogin':
-//         $authController =new AuthController ();
-//         $authController->postLogin();
-//         break;
-
-//     default:
-//         die('404 - Not Found!');
-// }

@@ -125,4 +125,72 @@ class CartController
 
     }
 
+    public function updateCart()
+    {
+        // lấy số lượng post lên
+        $quantity = isset($_POST['quantity']) ? (int) $_POST['quantity'] : 1;
+
+
+// die($quantity);
+
+// lấy key của sản phẩm
+        $key = isset($_POST['key']) ?  $_POST['key'] : 1;
+// nếu sản phẩm ở trong mảng key đã tồn tại thì sẽ update vào đây còn nếu k có thì sẽ hủy đi 
+
+
+
+        $_SESSION['cart'][$key]['quantity'] = $quantity;
+
+   
+
+        $total_items = 0;
+        foreach ($_SESSION['cart'] as $item) {
+            $total_items += $item['quantity'];
+        }
+
+        $response = [
+            'success' => true,
+            'message' => 'Đã cập nhật sản phẩm thành công',
+            'total_items' => $total_items,
+            'cart' => $_SESSION['cart'] 
+        ];
+        echo json_encode($response);
+        exit;
+
+    }
+
+    public function deleteCart()
+    {
+    
+        // Lấy key từ POST
+      (int)  $key = isset($_POST['key']) ? $_POST['key'] : null;
+
+        if (!$key || !isset($_SESSION['cart'][$key])) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Sản phẩm không tồn tại trong giỏ hàng',
+                'total_items' => 0
+            ]);
+            exit;
+        }
+    
+        // Xóa sản phẩm
+        unset($_SESSION['cart'][$key]);
+    
+        // Tính lại tổng số lượng còn lại
+        $total_items = 0;
+        foreach ($_SESSION['cart'] as $item) {
+            $total_items += $item['quantity'];
+        }
+    
+        echo json_encode([
+            'success' => true,
+            'message' => 'Đã xóa sản phẩm khỏi giỏ hàng',
+            'total_items' => $total_items,
+            'cart' => $_SESSION['cart']
+        ]);
+        exit;
+    }
+    
+
 }
