@@ -19,7 +19,7 @@ class OrderDetail
         $sql = "SELECT od.*, 
                        c.name AS color_name,
                        s.name AS size_name
-                FROM order_detail od
+                FROM order_details od
                 LEFT JOIN colors c ON od.color_id = c.id
                 LEFT JOIN sizes s ON od.size_id = s.id
                 WHERE od.order_id = :order_id
@@ -36,7 +36,7 @@ class OrderDetail
         $sql = "SELECT od.*, 
                        o.order_code,
                        p.name AS current_product_name
-                FROM order_detail od
+                FROM order_details od
                 LEFT JOIN orders o ON od.order_id = o.id
                 LEFT JOIN products p ON od.product_id = p.id
                 WHERE od.id = :id LIMIT 1";
@@ -51,12 +51,33 @@ class OrderDetail
     // Thêm chi tiết đơn hàng (khi khách đặt hàng)
     public function create($data)
     {
-        $sql = "INSERT INTO order_detail 
-                (order_id, product_id, color_id, size_id, image_product, name_product, price_product) 
+        $sql = "INSERT INTO order_details 
+                (
+                    order_id,
+                    product_id,
+                    color_id,
+                    size_id,
+                    image_product,
+                    name_product,
+                    price_product,
+                    quantity,
+                    total
+                ) 
                 VALUES 
-                (:order_id, :product_id, :color_id, :size_id, :image_product, :name_product, :price_product)";
-
+                (
+                    :order_id,
+                    :product_id,
+                    :color_id,
+                    :size_id,
+                    :image_product,
+                    :name_product,
+                    :price_product,
+                    :quantity,
+                    :total
+                )";
+    
         $stmt = $this->conn->prepare($sql);
+    
         return $stmt->execute([
             ':order_id'       => $data['order_id'],
             ':product_id'     => $data['product_id'],
@@ -64,10 +85,12 @@ class OrderDetail
             ':size_id'        => $data['size_id'] ?? null,
             ':image_product'  => $data['image_product'] ?? '',
             ':name_product'   => $data['name_product'],
-            ':price_product'  => $data['price_product']
+            ':price_product'  => $data['price_product'],
+            ':quantity'       => $data['quantity'],
+            ':total'          => $data['total'],
         ]);
     }
-
+    
     // Thêm nhiều chi tiết cùng lúc (khi tạo đơn hàng từ giỏ hàng)
     public function createMultiple($orderId, $items)
     {
@@ -76,7 +99,7 @@ class OrderDetail
         //     ...
         // ]
 
-        $sql = "INSERT INTO order_detail 
+        $sql = "INSERT INTO order_details 
                 (order_id, product_id, color_id, size_id, image_product, name_product, price_product) 
                 VALUES ";
 
@@ -105,7 +128,7 @@ class OrderDetail
     // Xóa chi tiết đơn hàng (admin chỉnh sửa đơn - hiếm dùng)
     public function deleteByOrderId($orderId)
     {
-        $sql = "DELETE FROM order_detail WHERE order_id = :order_id";
+        $sql = "DELETE FROM order_details WHERE order_id = :order_id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([':order_id' => $orderId]);
     }
@@ -113,7 +136,7 @@ class OrderDetail
     // Xóa một dòng chi tiết
     public function delete($id)
     {
-        $sql = "DELETE FROM order_detail WHERE id = :id";
+        $sql = "DELETE FROM order_details WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
@@ -123,7 +146,7 @@ class OrderDetail
     // Đếm số lượng sản phẩm đã bán theo product_id
     public function getSoldQuantity($productId)
     {
-        $sql = "SELECT SUM(1) FROM order_detail od
+        $sql = "SELECT SUM(1) FROM order_details od
                 JOIN orders o ON od.order_id = o.id
                 WHERE od.product_id = :product_id 
                   AND o.status IN ('completed', 'delivered')"; // chỉ tính đơn hoàn thành
@@ -137,7 +160,7 @@ class OrderDetail
     public function getBestSellers($limit = 10)
     {
         $sql = "SELECT od.product_id, od.name_product, od.image_product, od.price_product, COUNT(*) as sold_count
-                FROM order_detail od
+                FROM order_details od
                 JOIN orders o ON od.order_id = o.id
                 WHERE o.status IN ('completed', 'delivered')
                 GROUP BY od.product_id

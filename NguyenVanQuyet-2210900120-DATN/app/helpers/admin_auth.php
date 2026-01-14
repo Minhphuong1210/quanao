@@ -27,3 +27,24 @@
         exit;
     }
 }
+
+
+function checkUserLogin($currentUrl = null)
+{
+    if ($currentUrl === null) {
+        $currentUrl = $_SERVER['REQUEST_URI'];
+    }
+
+    $currentUrl = strtok($currentUrl, '?');
+
+    // Trang login thì không check
+    if ($currentUrl === '/loginUser') {
+        return;
+    }
+
+    if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] !== true) {
+        header('Location: /loginUser');
+        exit;
+    }
+}
+
