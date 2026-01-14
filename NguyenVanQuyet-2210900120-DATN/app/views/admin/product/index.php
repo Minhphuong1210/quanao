@@ -1,3 +1,12 @@
+<?php
+if (isset($_SESSION['success_message'])) {
+    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">';
+    echo '<i class="fas fa-check-circle me-2"></i>' . htmlspecialchars($_SESSION['success_message']);
+    echo '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
+    echo '</div>';
+    unset($_SESSION['success_message']);
+}
+?>
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -72,9 +81,7 @@
             background: var(--card-bg);
             border-radius: 16px;
             padding: 40px;
-            text-align: center;
             border: 1px solid var(--border-light);
-            min-height: 400px;
         }
 
         .footer {
@@ -98,29 +105,39 @@
                 transform: translateX(0);
             }
         }
+
+        /* Custom table styles */
+        .table-dark {
+            background-color: rgba(30, 41, 59, 0.8) !important;
+        }
+
+        .table-dark th {
+            border-color: rgba(255, 255, 255, 0.1) !important;
+            background-color: rgba(15, 23, 42, 0.9) !important;
+        }
+
+        .table-dark td {
+            border-color: rgba(255, 255, 255, 0.05) !important;
+            vertical-align: middle;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(99, 102, 241, 0.1) !important;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: nowrap;
+        }
+
+        .action-buttons .btn {
+            padding: 4px 8px;
+            font-size: 12px;
+            min-width: 60px;
+        }
     </style>
 </head>
-<?php
-function product_image_url($image_path)
-{
-
-    return BASE_URL . $image_path ;
-}
-
-function product_image_exists($image_path)
-{
-    if (empty($image_path)) return false;
-
-    // File vật lý tương ứng
-    if (strpos($image_path, 'public/uploads/products/') === 0) {
-        $full_path = BASE_PATH . '/' . ltrim($image_path, '/');
-    } else {
-        $full_path = BASE_PATH . '/public/uploads/products/' . basename($image_path);
-    }
-
-    return file_exists($full_path);
-}
-?>
 
 <body class="d-flex flex-column h-100">
 
@@ -129,172 +146,199 @@ function product_image_exists($image_path)
 
     <main class="main-content flex-grow-1 d-flex flex-column">
         <?php if (isset($error)): ?>
-            <div class="alert alert-danger rounded-3 mb-4"><?= $error ?></div>
+            <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <?= $error ?>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            </div>
         <?php endif; ?>
         <?php if (isset($success)): ?>
-            <div class="alert alert-success rounded-3 mb-4"><?= $success ?></div>
+            <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <?= $success ?>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            </div>
         <?php endif; ?>
 
         <div class="content-placeholder flex-grow-1">
-
-            <!-- Nội dung của product index -->
-            <h4><?= $pageTitle ?></h4>
-
-            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-
-                <!-- Search form cho sản phẩm -->
-                <div class="d-flex flex-grow-1 gap-2">
-                    <input type="text" id="searchInput" class="form-control" placeholder="Tìm theo tên sản phẩm hoặc danh mục..." value="<?= htmlspecialchars($search ?? '') ?>">
-                    <button class="btn btn-primary" id="searchBtn"><i class="fas fa-search me-1"></i> Tìm</button>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="text-light mb-2"><?= $pageTitle ?? 'Quản lý Sản phẩm' ?></h4>
+                    <p class="text-muted mb-0">Danh sách sản phẩm trong cửa hàng</p>
                 </div>
-
-                <!-- Add product button -->
                 <a href="/admin/product/create" class="btn btn-success">
-                    <i class="fas fa-plus me-1"></i> Thêm sản phẩm
+                    <i class="fas fa-plus me-2"></i>Thêm sản phẩm
                 </a>
-
             </div>
 
-            <style>
-                /* Đảm bảo search input và button gọn đẹp */
-                #searchInput {
-                    min-width: 200px;
-                    flex-grow: 1;
-                }
+            <!-- Search box -->
+            <div class="card bg-dark border-0 mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" id="searchInput" class="form-control"
+                                    placeholder="Tìm kiếm theo tên sản phẩm..."
+                                    value="<?= htmlspecialchars($search ?? '') ?>">
+                                <button class="btn btn-primary" type="button" id="searchBtn">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                #searchBtn {
-                    white-space: nowrap;
-                }
-
-                /* Responsive: khi màn hình nhỏ, stack dọc */
-                @media (max-width: 576px) {
-                    .d-flex.flex-wrap.justify-content-between {
-                        flex-direction: column;
-                        align-items: stretch;
-                        gap: 0.5rem;
-                    }
-
-                    #searchInput,
-                    #searchBtn,
-                    a.btn-success {
-                        width: 100%;
-                    }
-                }
-            </style>
-
-            <table class="table table-hover table-dark table-striped rounded-3 text-light">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Hình ảnh</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Danh mục</th>
-                        <th>Giá (VNĐ)</th>
-                        <!-- <th>Tồn kho</th> -->
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (empty($productsPage ?? [])): ?>
+            <!-- Products table -->
+            <div class="table-responsive rounded-3 overflow-hidden">
+                <table class="table table-hover table-dark table-striped mb-0">
+                    <thead>
                         <tr>
-                            <td colspan="8" class="text-center">Không có dữ liệu sản phẩm</td>
+                            <th width="60">ID</th>
+                            <th width="100">Hình ảnh</th>
+                            <th>Tên sản phẩm</th>
+                            <th width="150">Danh mục</th>
+                            <th width="120">Giá (VNĐ)</th>
+                            <th width="100">Trạng thái</th>
+                            <th width="140" class="text-center">Hành động</th>
                         </tr>
-                    <?php else: ?>
-                        <?php foreach ($productsPage as $product):
-                            // Handle missing keys an toàn
-                            $stock = $product['stock'] ?? 0;
-                            $price = $product['price'] ?? 0;
-                            $status = $product['status'] ?? 'inactive';
-                            $image = $product['image'] ?? '';
-                            $name = $product['name'] ?? 'N/A';
-                            $category_id = $product['category_id'] ?? 0;
-                            $category = $categoryModel->find($category_id) ?? ['name' => 'N/A'];
-                        ?>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($productsPage ?? [])): ?>
                             <tr>
-                                <td><?= $product['id'] ?? 'N/A' ?></td>
-                                <td>
-                                    <?php if (!empty($image)): ?>
-                                        <?php
-                                        // Lấy URL ảnh
-                                        $image_url = product_image_url($image);
-                                        $image_exists = product_image_exists($image);
-                                        ?>
-
-
-
-                                        <?php if ($image_exists): ?>
-                                            <img src="<?= $image_url ?>"
-                                                alt="<?= htmlspecialchars($name) ?>"
-                                                width="50"
-                                                height="50"
-                                                class="img-thumbnail rounded"
-                                                title="<?= htmlspecialchars($name) ?>">
-                                        <?php else: ?>
-                                            <img src="<?= BASE_URL; ?>/assets/img/no-image.png"
-                                                alt="Ảnh không tồn tại"
-                                                width="50"
-                                                height="50"
-                                                class="img-thumbnail rounded"
-                                                title="File: <?= htmlspecialchars($image) ?> không tồn tại">
-                                            <small class="d-block text-warning">File mất</small>
-                                        <?php endif; ?>
-                                    <?php else: ?>
-                                        <span class="text-muted">Chưa có ảnh</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?= htmlspecialchars($name) ?></td>
-                                <td><?= htmlspecialchars($category['name']) ?></td>
-                                <td class="text-end"><?= number_format($price) ?></td>
-                                <td>
-                                    <span class="badge <?= ($stock > 0) ? 'bg-success' : 'bg-warning text-dark' ?>">
-                                        <?= $stock ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="badge <?= ($status === 'active') ? 'bg-success' : 'bg-secondary' ?>">
-                                        <?= ucfirst($status) ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <a href="<?= BASE_URL ?>/admin/product/edit/<?= $product['id'] ?? 0 ?>" class="btn btn-sm btn-warning">Sửa</a>
-                                    <form method="POST" action="<?= BASE_URL ?>/admin/product/delete/<?= $product['id'] ?? 0 ?>" style="display: inline;" onsubmit="return confirm('Bạn chắc chắn xóa sản phẩm này?');">
-                                        <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
-                                    </form>
+                                <td colspan="7" class="text-center py-5">
+                                    <div class="text-muted">
+                                        <i class="fas fa-box-open fa-3x mb-3"></i>
+                                        <h5 class="mb-2">Không có sản phẩm nào</h5>
+                                        <p class="mb-0">Hãy thêm sản phẩm đầu tiên của bạn</p>
+                                    </div>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+                        <?php else: ?>
+                            <?php foreach ($productsPage as $product):
+                                $price = $product['price'] ?? 0;
 
+                                // SỬA: Lấy giá trị cột 'active' thay vì 'status'
+                                $active = isset($product['active']) ? (int)$product['active'] : 1;
+
+                                $image = $product['image'] ?? '';
+                                $name = $product['name'] ?? 'N/A';
+                                $category_id = $product['category_id'] ?? 0;
+                                $category = $categoryModel->find($category_id) ?? ['name' => 'N/A'];
+                            ?>
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-secondary">#<?= $product['id'] ?? 'N/A' ?></span>
+                                    </td>
+                                    <td>
+                                        <?php if (!empty($image)): ?>
+                                            <?php
+                                            $image_url = BASE_URL . $image;
+                                            $image_exists = file_exists($_SERVER['DOCUMENT_ROOT'] . parse_url($image_url, PHP_URL_PATH));
+                                            ?>
+                                            <?php if ($image_exists): ?>
+                                                <img src="<?= $image_url ?>"
+                                                    alt="<?= htmlspecialchars($name) ?>"
+                                                    width="60"
+                                                    height="60"
+                                                    class="img-thumbnail rounded"
+                                                    style="object-fit: cover;">
+                                            <?php else: ?>
+                                                <div class="text-center">
+                                                    <i class="fas fa-image fa-2x text-muted"></i>
+                                                    <div class="text-warning small">File mất</div>
+                                                </div>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <div class="text-center">
+                                                <i class="fas fa-image fa-2x text-muted"></i>
+                                                <div class="text-muted small">Chưa có ảnh</div>
+                                            </div>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold mb-1"><?= htmlspecialchars($name) ?></div>
+                                        <?php if (!empty($product['description'])): ?>
+                                            <small class="text-muted" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                                <?= htmlspecialchars($product['description']) ?>
+                                            </small>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">
+                                            <?= htmlspecialchars($category['name']) ?>
+                                        </span>
+                                    </td>
+                                    <td class="fw-bold text-success">
+                                        <?= number_format($price) ?> ₫
+                                    </td>
+                                    <td>
+                                        <!-- SỬA: Kiểm tra $active (0/1) thay vì $status -->
+                                        <span class="badge <?= $active == 1 ? 'bg-success' : 'bg-secondary' ?>">
+                                            <?= $active == 1 ? 'Hoạt động' : 'Không hoạt động' ?>
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="action-buttons justify-content-center">
+                                            <!-- Sửa link này -->
+                                            <a href="<?= BASE_URL ?>admin/product/edit/<?= htmlspecialchars($product['slug'] ?? '') ?>"
+                                                class="btn btn-sm btn-warning"
+                                                title="Chỉnh sửa">
+                                                <i class="fas fa-edit"></i> Sửa
+                                            </a>
+
+                                            <form method="POST"
+                                                action="<?= BASE_URL ?>/admin/product/delete/<?= $product['id'] ?? 0 ?>"
+                                                class="d-inline"
+                                                onsubmit="return confirmDelete(this, '<?= htmlspecialchars(addslashes($name)) ?>')">
+                                                <button type="submit"
+                                                    class="btn btn-sm btn-danger"
+                                                    title="Xóa sản phẩm">
+                                                    <i class="fas fa-trash"></i> Xóa
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
             <?php if (($pages ?? 1) > 1): ?>
-                <nav>
+                <nav class="mt-4">
                     <ul class="pagination justify-content-center">
+                        <?php if (($page ?? 1) > 1): ?>
+                            <li class="page-item">
+                                <a href="?page=<?= ($page ?? 1) - 1 ?>&search=<?= urlencode($search ?? '') ?>"
+                                    class="page-link bg-dark text-light border-secondary">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+
                         <?php for ($i = 1; $i <= ($pages ?? 1); $i++): ?>
                             <li class="page-item <?= $i == ($page ?? 1) ? 'active' : '' ?>">
-                                <a href="?page=<?= $i ?>&search=<?= urlencode($search ?? '') ?>" class="page-link"><?= $i ?></a>
+                                <a href="?page=<?= $i ?>&search=<?= urlencode($search ?? '') ?>"
+                                    class="page-link <?= $i == ($page ?? 1) ? 'bg-primary border-primary' : 'bg-dark text-light border-secondary' ?>">
+                                    <?= $i ?>
+                                </a>
                             </li>
                         <?php endfor; ?>
+
+                        <?php if (($page ?? 1) < ($pages ?? 1)): ?>
+                            <li class="page-item">
+                                <a href="?page=<?= ($page ?? 1) + 1 ?>&search=<?= urlencode($search ?? '') ?>"
+                                    class="page-link bg-dark text-light border-secondary">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </nav>
             <?php endif; ?>
-
-            <script>
-                // Search cho product
-                document.getElementById('searchBtn').addEventListener('click', function() {
-                    const search = document.getElementById('searchInput').value;
-                    window.location.href = window.location.pathname + '?search=' + encodeURIComponent(search);
-                });
-
-                // Enter key để search
-                document.getElementById('searchInput').addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        document.getElementById('searchBtn').click();
-                    }
-                });
-            </script>
-
         </div>
     </main>
 
@@ -302,65 +346,53 @@ function product_image_exists($image_path)
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('show');
+        // Search functionality
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            const search = document.getElementById('searchInput').value.trim();
+            const url = new URL(window.location);
+
+            if (search) {
+                url.searchParams.set('search', search);
+                url.searchParams.set('page', '1'); // Reset về trang 1 khi search
+            } else {
+                url.searchParams.delete('search');
+            }
+
+            window.location.href = url.toString();
+        });
+
+        // Enter key để search
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('searchBtn').click();
+            }
+        });
+
+        // Xác nhận xóa
+        function confirmDelete(form, productName) {
+            if (confirm(`Bạn có chắc chắn muốn xóa sản phẩm:\n\n"${productName}"\n\n⚠️ Hành động này không thể hoàn tác!`)) {
+                // Thêm hiệu ứng loading
+                const deleteBtn = form.querySelector('button[type="submit"]');
+                const originalHtml = deleteBtn.innerHTML;
+                deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xóa...';
+                deleteBtn.disabled = true;
+
+                return true;
+            }
+            return false;
         }
 
-        // JS cho SPA-like: Load content động từ sidebar (không chuyển trang)
-        document.addEventListener('DOMContentLoaded', function() {
-            const contentPlaceholder = document.querySelector('.content-placeholder');
-            const navLinks = document.querySelectorAll('.load-content');
-            const alertsContainer = document.querySelector('.main-content');
-
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const loadUrl = this.getAttribute('data-load');
-                    if (!loadUrl) return;
-
-                    // Show loading spinner
-                    contentPlaceholder.innerHTML = '<div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-3x text-primary mb-3"></i><h4>Đang tải...</h4></div>';
-
-                    // Fetch content via AJAX
-                    fetch(loadUrl)
-                        .then(response => {
-                            if (!response.ok) throw new Error('Lỗi tải nội dung');
-                            return response.text();
-                        })
-                        .then(html => {
-                            // Inject HTML vào placeholder
-                            contentPlaceholder.innerHTML = html;
-
-                            // Update active class
-                            navLinks.forEach(l => l.classList.remove('active'));
-                            this.classList.add('active');
-
-                            // Re-init Bootstrap components (modals, tables, etc.)
-                            const modals = document.querySelectorAll('[data-bs-toggle="modal"], .modal');
-                            modals.forEach(m => {
-                                const modal = bootstrap.Modal.getInstance(m) || new bootstrap.Modal(m);
-                                // Không show modal tự động, chỉ re-init
-                            });
-
-                            // Clear old alerts
-                            document.querySelectorAll('.alert').forEach(alert => alert.remove());
-
-                            // Scroll to top
-                            window.scrollTo(0, 0);
-                        })
-                        .catch(error => {
-                            console.error('Lỗi AJAX:', error);
-                            contentPlaceholder.innerHTML = '<div class="alert alert-danger text-center py-5"><i class="fas fa-exclamation-triangle me-2"></i>Lỗi tải nội dung. <a href="' + this.href + '" class="alert-link">Thử lại</a></div>';
-                        });
-                });
-            });
-
-            // Auto-load default content nếu placeholder trống (ví dụ: dashboard)
-            if (contentPlaceholder.innerHTML.includes('Nội dung sẽ được load') || contentPlaceholder.innerHTML.includes('Đang tải nội dung')) {
-                const defaultLink = document.querySelector('.load-content[href="/admin"]');
-                if (defaultLink) {
-                    defaultLink.click();
-                }
+        // Xử lý khi form xóa bị cancel (restore button state)
+        document.addEventListener('submit', function(e) {
+            if (e.target.matches('form[onsubmit*="confirmDelete"]')) {
+                const form = e.target;
+                setTimeout(() => {
+                    const deleteBtn = form.querySelector('button[type="submit"]');
+                    if (deleteBtn && deleteBtn.disabled) {
+                        deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Xóa';
+                        deleteBtn.disabled = false;
+                    }
+                }, 1000);
             }
         });
     </script>
