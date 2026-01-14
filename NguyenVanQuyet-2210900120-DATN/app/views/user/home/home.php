@@ -116,7 +116,7 @@
                                             <!-- Tên sản phẩm -->
                                             <a href="<?= isset($product_featured_item['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product_featured_item['slug']) : '#!' ?>" class="d-block mb-2"><?= htmlspecialchars($product_featured_item['name']) ?></a>
                                             <!-- Slug / Tiêu đề -->
-                                            <a href="<?= isset($product_featured_item['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product_featured_item['slug']) : '#!' ?>" class="d-block h4"><?= htmlspecialchars($product_featured_item['name']) ?> <br> <?= htmlspecialchars($product_featured_item['slug']) ?></a>
+                                            <!-- <a href="<?= isset($product_featured_item['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product_featured_item['slug']) : '#!' ?>" class="d-block h4"><?= htmlspecialchars($product_featured_item['name']) ?> <br> <?= htmlspecialchars($product_featured_item['slug']) ?></a> -->
                                             <!-- Giá cũ / giá mới -->
                                             <?php if (isset($product_featured_item['old_price']) && $product_featured_item['old_price'] > 0): ?>
                                                 <del class="me-2 fs-5">$<?= number_format($product_featured_item['old_price'], 2) ?></del>
@@ -214,15 +214,15 @@
                                 <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>"><img src="<?= isset($product['image']) ? 'upload/' . $product['image'] : 'img/product-4.png' ?>"
                                         class="img-fluid w-100 h-100"
                                         alt="<?= htmlspecialchars($product['name']) ?>"></a>
-                                <div class="products-mini-icon rounded-circle bg-primary">
-                                    <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>"><i class="fa fa-eye fa-1x text-white"></i></a>
-                                </div>
+                                    <!-- <div class="products-mini-icon rounded-circle bg-primary">
+                                        <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>"><i class="fa fa-eye fa-1x text-white"></i></a>
+                                    </div> -->
                             </div>
                         </div>
                         <div class="col-7">
                             <div class="products-mini-content p-3">
                                 <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>" class="d-block mb-2"><?= htmlspecialchars($product['name']) ?></a>
-                                <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>" class="d-block h4"><?= htmlspecialchars($product['name']) ?> <br> <?= htmlspecialchars($product['slug']) ?></a>
+                                <!-- <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>" class="d-block h4"><?= htmlspecialchars($product['name']) ?> <br> <?= htmlspecialchars($product['slug']) ?></a> -->
                                 <?php if (isset($product['old_price']) && $product['old_price'] > 0): ?>
                                     <del class="me-2 fs-5">$<?= number_format($product['old_price'], 2) ?></del>
                                 <?php endif; ?>
@@ -280,7 +280,7 @@
                             <div class="col-7">
                                 <div class="products-mini-content p-3">
                                     <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>" class="d-block mb-2"><?= htmlspecialchars($product['name']) ?></a>
-                                    <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>" class="d-block h4"><?= htmlspecialchars($product['name']) ?> <br> <?= htmlspecialchars($product['slug']) ?></a>
+                                    <!-- <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>" class="d-block h4"><?= htmlspecialchars($product['name']) ?> <br> <?= htmlspecialchars($product['slug']) ?></a> -->
                                     <?php if (isset($product['old_price']) && $product['old_price'] > 0): ?>
                                         <del class="me-2 fs-5">$<?= number_format($product['old_price'], 2) ?></del>
                                     <?php endif; ?>

@@ -170,3 +170,4 @@ switch ($path) {
     default:
         die('404 - Not Found!');
 }
+
