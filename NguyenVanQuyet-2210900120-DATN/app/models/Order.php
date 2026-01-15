@@ -18,7 +18,7 @@ class Order
         $user_id,
         $status,
         $payment,
-        $total, 
+        $total,
         $voucher_id = null,
         $email = null,
         $phone = null,
@@ -59,7 +59,7 @@ class Order
 
         $stmt = $this->pdo->prepare($sql);
 
-         $stmt->execute([
+        $stmt->execute([
             ':name' => $name,
             ':ma_don_hang' => $ma_don_hang,
             ':address' => $address,
@@ -89,13 +89,108 @@ class Order
         return $ma_don_hang . $date . $random;
     }
 
-
     public function findById($orderId)
     {
         $sql = "SELECT * FROM orders WHERE id = :id LIMIT 1";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $orderId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getOrdersByUserPaginate($userId, $limit, $offset)
+    {
+        $sql = "
+            SELECT
+                id,
+                ma_don_hang,
+                status,
+                payment,
+                tong_tien,
+                ngay_tao
+            FROM orders
+            WHERE user_id = :user_id
+            ORDER BY ngay_tao DESC
+            LIMIT :limit OFFSET :offset
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countOrdersByUser($userId)
+    {
+        $sql = "SELECT COUNT(*) FROM orders WHERE user_id = :user_id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':user_id' => $userId,
+        ]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getByIdAndUser($orderId, $userId)
+    {
+        $sql = "SELECT * FROM orders
+            WHERE id = :id AND user_id = :user_id
+            LIMIT 1";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':id' => $orderId,
+            ':user_id' => $userId,
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function cancelOrder($orderId, $userId)
+    {
+        $sql = "
+        UPDATE orders
+        SET status = :status
+        WHERE id = :id
+          AND user_id = :user_id
+          AND status = :pending
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        return $stmt->execute([
+            ':status' => OrderStatus::CANCELLED,
+            ':id' => $orderId,
+            ':user_id' => $userId,
+            ':pending' => OrderStatus::PENDING,
+        ]);
+    }
+
+// tạo đơn hàng của admin xem đươc hết
+
+    public function getOrder()
+    {
+        $sql = "
+        SELECT
+            id,
+            ma_don_hang,
+            status,
+            payment,
+            tong_tien,
+            ngay_tao
+        FROM orders
+        ORDER BY ngay_tao DESC
+        LIMIT :limit OFFSET :offset
+    ";
+
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 }

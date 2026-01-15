@@ -149,4 +149,77 @@ $total +=  $item['quantity'] * $item['price'];
 
     }
 
+// xem tất cả các đơn hàng 
+public function theoDoiDonHang()
+{
+    if (!isset($_SESSION['user_logged_in'])) {
+        header('Location: ' . BASE_URL . 'login');
+        exit;
+    }
+
+    $orderModel = new Order();
+    $userId = $_SESSION['user_id'];
+
+    // PHÂN TRANG
+    $limit = 5;
+    $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+    $offset = ($page - 1) * $limit;
+
+    $orders = $orderModel->getOrdersByUserPaginate($userId, $limit, $offset);
+
+    $totalOrders = $orderModel->countOrdersByUser($userId);
+    $totalPages = ceil($totalOrders / $limit);
+
+    include BASE_PATH . '/app/views/user/account/don_hang.php';
+}
+
+
+public function xemDonHang($id)
+{
+  
+    if (!isset($_SESSION['user_logged_in'])) {
+        header('Location: ' . BASE_URL . 'login');
+        exit;
+    }
+
+    $userId = $_SESSION['user_id'];
+    $orderModel = new Order();
+    $orderDetailModel = new OrderDetail();
+
+   
+    $order = $orderModel->getByIdAndUser($id, $userId);
+
+    if (!$order) {
+        die('404 - Đơn hàng không tồn tại');
+    }
+
+ 
+    $orderDetails = $orderDetailModel->getByOrderId($id);
+
+    include BASE_PATH . '/app/views/user/account/chi_tiet_don_hang.php';
+}
+
+
+
+
+public function huyDonHang($id)
+{
+    if (!isset($_SESSION['user_logged_in'])) {
+        header('Location: ' . BASE_URL . 'login');
+        exit;
+    }
+
+    $userId = $_SESSION['user_id'];
+    $orderModel = new Order();
+
+    $success = $orderModel->cancelOrder($id, $userId);
+
+    if ($success) {
+        header('Location: ' . BASE_URL . 'theo-doi-don-hang');
+        exit;
+    }
+
+    die('Không thể huỷ đơn hàng');
+}
+
 }

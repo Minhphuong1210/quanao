@@ -42,8 +42,7 @@
                         <a href="<?= isset($product_banner['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product_banner['slug']) : '#!' ?>" class="d-block text-white fs-3"><?= isset($product_banner['name']) ? $product_banner['name'] : 'Không có sản phẩm' ?></a>
                         <span class="text-primary fs-5"><?= isset($product_banner['price']) ? $product_banner['price'] : 'Không có giá sản phẩm' ?></span>
                     </div>
-                    <a href="#!" class="btn btn-primary rounded-pill py-2 px-4"><i
-                            class="fas fa-shopping-cart me-2"></i> Add To Cart</a>
+                   
                 </div>
             </div>
         </div>
@@ -124,28 +123,18 @@
                                             <span class="text-primary fs-5">$<?= number_format($product_featured_item['price'], 2) ?></span>
                                         </div>
                                     </div>
-                                    <div class="product-item-add border border-top-0 rounded-bottom text-center p-4 pt-0">
-                                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4 mb-4">
-                                            <i class="fas fa-shopping-cart me-2"></i> Add To Cart
-                                        </a>
+                                    <!-- <div class="product-item-add border border-top-0 rounded-bottom text-center p-4 pt-0">
+                                       
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <div class="d-flex">
-                                                <i class="fas fa-star text-primary"></i>
-                                                <i class="fas fa-star text-primary"></i>
-                                                <i class="fas fa-star text-primary"></i>
-                                                <i class="fas fa-star text-primary"></i>
-                                                <i class="fas fa-star"></i>
-                                            </div>
+                                           
                                             <div class="d-flex">
                                                 <a href="<?= isset($product_featured_item['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product_featured_item['slug']) : '#!' ?>" class="text-primary d-flex align-items-center justify-content-center me-3">
                                                     <span class="rounded-circle btn-sm-square border"><i class="fas fa-random"></i></span>
                                                 </a>
-                                                <a href="#!" class="text-primary d-flex align-items-center justify-content-center me-0">
-                                                    <span class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></span>
-                                                </a>
+                                               
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -231,16 +220,12 @@
                         </div>
                     </div>
                     <div class="products-mini-add border p-3">
-                        <a href="#!" class="btn btn-primary border-secondary rounded-pill py-2 px-4">
-                            <i class="fas fa-shopping-cart me-2"></i> Add To Cart
-                        </a>
+                        
                         <div class="d-flex">
                             <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>" class="text-primary d-flex align-items-center justify-content-center me-3">
                                 <span class="rounded-circle btn-sm-square border"><i class="fas fa-random"></i></span>
                             </a>
-                            <a href="#!" class="text-primary d-flex align-items-center justify-content-center me-0">
-                                <span class="rounded-circle btn-sm-square border"><i class="fas fa-heart"></i></span>
-                            </a>
+                            
                         </div>
                     </div>
                 </div>

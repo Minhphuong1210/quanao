@@ -545,14 +545,14 @@ function createSlug($string)
                 </div>
             <?php endif; ?>
 
-            <?php if (DEBUG_MODE): ?>
+            <!-- <?php if (DEBUG_MODE): ?>
                 <div class="debug-info">
                     <strong>DEBUG INFO:</strong> Check PHP error_log for detailed information<br>
                     <?php
                     if (!empty($error)) echo "Error: " . htmlspecialchars($error) . "<br>";
                     ?>
                 </div>
-            <?php endif; ?>
+            <?php endif; ?> -->
 
             <div class="card bg-dark border-0 rounded-3 shadow-lg p-4 p-lg-5">
                 <form method="POST" enctype="multipart/form-data" id="productForm">
