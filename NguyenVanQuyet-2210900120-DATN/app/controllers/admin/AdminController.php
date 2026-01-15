@@ -319,15 +319,9 @@ class AdminController
                             $this->productModel->addVariants($productId, $variantData);
                         }
 
-                        $success = "Thêm sản phẩm thành công!<br>";
-                        $success .= "ID sản phẩm: <strong>$productId</strong><br>";
-                        $success .= "Danh mục ID: <strong>$category_id</strong><br>";
-                        $success .= "Nhà cung cấp ID: <strong>$nha_cung_cap_id</strong><br>";
-                        $success .= "Đã thêm <strong>" . count($variantData) . "</strong> biến thể.";
-
-                        // Reset form sau khi thành công
-                        $_POST = [];
-                        $variants = [];
+                        $_SESSION['success'] = "Thêm sản phẩm thành công! ID: $productId";
+                        header('Location: /admin/product');
+                        exit;
                     } else {
                         $error = 'Lỗi khi tạo sản phẩm.';
                         // Xóa ảnh đã upload nếu có lỗi
@@ -350,92 +344,215 @@ class AdminController
 
     public function productEdit($slug)
     {
-        $product = $this->productModel->findBySlug($slug);
+        $title = 'Chỉnh Sửa Sản Phẩm';
+        $pageTitle = 'Sản phẩm';
 
+        // Lấy sản phẩm theo slug
+        $product = $this->productModel->findBySlug($slug);
         if (!$product) {
             $_SESSION['error'] = 'Không tìm thấy sản phẩm với slug: ' . htmlspecialchars($slug);
             header('Location: /admin/product');
             exit;
         }
 
-        // Xử lý POST (submit form update)
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Lấy dữ liệu từ form
-            $data = [
-                'name'              => trim($_POST['name'] ?? $product['name']),
-                'price'             => (int)($_POST['price'] ?? $product['price']),
-                'description'       => trim($_POST['description'] ?? $product['description']),
-                'content'           => trim($_POST['content'] ?? $product['content']),
-                'category_id'       => (int)($_POST['category_id'] ?? $product['category_id']),
-                'nha_cung_cap_id'   => (int)($_POST['nha_cung_cap_id'] ?? $product['nha_cung_cap_id']),
-                'active'            => (int)($_POST['active'] ?? $product['active']),
-                'hien_trang_chu'    => (int)($_POST['hien_trang_chu'] ?? $product['hien_trang_chu']),
-                'san_pham_noi_bat'  => (int)($_POST['san_pham_noi_bat'] ?? $product['san_pham_noi_bat']),
-            ];
+        // Dữ liệu hỗ trợ cho form
+        $categories = $this->categoryModel->getAll();
+        $sizes      = $this->getSizes();
+        $colors     = $this->getColors();
+        $suppliers  = $this->getSuppliers();
 
-            // Nếu tên thay đổi → tạo slug mới
-            if ($data['name'] !== $product['name']) {
-                $data['slug'] = $this->productModel->generateSlug($data['name']);
+        // Lấy biến thể hiện tại
+        $variants = $this->productModel->getVariants($product['id']);
+
+        $error   = '';
+        $success = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Lấy dữ liệu từ form (ưu tiên POST, fallback về giá trị hiện tại)
+            $name             = trim($_POST['name']             ?? $product['name']);
+            $price            = floatval($_POST['price']        ?? $product['price']);
+            $description      = trim($_POST['description']      ?? $product['description']);
+            $content          = trim($_POST['content']          ?? $product['content']);
+            $category_id      = (int)($_POST['category_id']     ?? $product['category_id']);
+            $nha_cung_cap_id  = (int)($_POST['nha_cung_cap_id'] ?? $product['nha_cung_cap_id']);
+            $active           = (int)($_POST['active']          ?? $product['active']);
+            $hien_trang_chu   = (int)($_POST['hien_trang_chu']  ?? $product['hien_trang_chu']);
+            $san_pham_noi_bat = (int)($_POST['san_pham_noi_bat'] ?? $product['san_pham_noi_bat']);
+
+            // Xử lý biến thể
+            $postVariants = $_POST['variants'] ?? [];
+            $newVariants = [];
+            foreach ($postVariants as $v) {
+                $size_id  = (int)($v['size_id']  ?? 0);
+                $color_id = (int)($v['color_id'] ?? 0);
+                $stock    = (int)($v['stock']    ?? 0);
+                if ($size_id > 0 && $color_id > 0) {
+                    $newVariants[] = [
+                        'size_id'  => $size_id,
+                        'color_id' => $color_id,
+                        'stock'    => $stock
+                    ];
+                }
             }
 
-            // Xử lý variants từ form
-            $variants = [];
-            if (!empty($_POST['variants'])) {
-                foreach ($_POST['variants'] as $v) {
-                    if (!empty($v['size_id']) && !empty($v['color_id'])) {
-                        $variants[] = [
-                            'size_id' => (int)$v['size_id'],
-                            'color_id' => (int)$v['color_id'],
-                            'stock'   => (int)($v['stock'] ?? 0),
-                        ];
+            // Validation
+            $errors = [];
+            if (mb_strlen($name) < 3 || mb_strlen($name) > 225) {
+                $errors[] = 'Tên sản phẩm phải từ 3 đến 225 ký tự.';
+            }
+            if ($price <= 0) {
+                $errors[] = 'Giá sản phẩm phải lớn hơn 0.';
+            }
+            if ($category_id <= 0) {
+                $errors[] = 'Vui lòng chọn danh mục.';
+            }
+            if ($nha_cung_cap_id <= 0) {
+                $errors[] = 'Vui lòng chọn nhà cung cấp.';
+            }
+            if (empty($newVariants)) {
+                $errors[] = 'Phải có ít nhất 1 biến thể (size + màu) hợp lệ.';
+            }
+
+            if (!empty($errors)) {
+                $error = implode('<br>', $errors);
+            } else {
+                // ─────────────────────────────────────────────────────
+                // SỬA PHẦN NÀY: XỬ LÝ ẢNH CHÍNH
+                // ─────────────────────────────────────────────────────
+                $main_image = $product['image']; // giữ mặc định
+
+                // DEBUG: Kiểm tra file upload
+                error_log("DEBUG - Image upload check:");
+                error_log("File name: " . ($_FILES['image']['name'] ?? 'empty'));
+                error_log("File error: " . ($_FILES['image']['error'] ?? 'no file'));
+                error_log("File size: " . ($_FILES['image']['size'] ?? 0));
+
+                // Kiểm tra xem có upload ảnh mới không
+                if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                    $uploadedMain = $this->uploadMainImage($_FILES['image'], $product['image']);
+                    error_log("DEBUG - uploadMainImage returned: " . $uploadedMain);
+
+                    if ($uploadedMain && $uploadedMain !== $product['image']) {
+                        $main_image = $uploadedMain;
+                        error_log("DEBUG - Main image updated to: " . $main_image);
+                    } else {
+                        error_log("DEBUG - Main image NOT updated, using old: " . $product['image']);
                     }
                 }
-            }
 
-            // Xử lý ảnh chính (nếu upload mới)
-            if (!isset($_POST['keepMainImage']) || $_POST['keepMainImage'] != '1') {
-                if (!empty($_FILES['image']['name'])) {
-                    $data['image'] = $this->uploadMainImage($_FILES['image'], $product['image']);
-                } else {
-                    $data['image'] = $product['image']; // giữ nguyên nếu không upload
+                // ─────────────────────────────────────────────────────
+                // SỬA PHẦN NÀY: XỬ LÝ ẢNH PHỤ
+                // ─────────────────────────────────────────────────────
+                $image_array_str = $product['image_array'] ?: '';
+
+                // Kiểm tra xem có upload ảnh phụ mới không
+                if (!empty($_FILES['image_array']['name'][0]) && $_FILES['image_array']['error'][0] === UPLOAD_ERR_OK) {
+                    // Upload ảnh phụ mới
+                    $uploadedExtras = $this->uploadExtraImages($_FILES['image_array']);
+                    error_log("DEBUG - uploadExtraImages count: " . count($uploadedExtras));
+
+                    if (!empty($uploadedExtras)) {
+                        // Nếu có ảnh cũ, ghép với ảnh mới (thay vì xóa)
+                        if (!empty($product['image_array'])) {
+                            $oldExtras = explode(',', $product['image_array']);
+                            $uploadedExtras = array_merge($oldExtras, $uploadedExtras);
+                        }
+                        $image_array_str = implode(',', array_filter($uploadedExtras));
+                        error_log("DEBUG - Image array updated to: " . $image_array_str);
+                    }
                 }
-            } else {
-                $data['image'] = $product['image'];
+
+                // Chuẩn bị dữ liệu cập nhật
+                $data = [
+                    'name'             => $name,
+                    'price'            => $price,
+                    'description'      => $description,
+                    'content'          => $content,
+                    'category_id'      => $category_id,
+                    'nha_cung_cap_id'  => $nha_cung_cap_id,
+                    'active'           => $active,
+                    'hien_trang_chu'   => $hien_trang_chu,
+                    'san_pham_noi_bat' => $san_pham_noi_bat,
+                    'image'            => $main_image,
+                    'image_array'      => $image_array_str,
+                    'slug'             => $product['slug'], // Giữ slug cũ nếu không thay đổi tên
+                ];
+
+                // Nếu tên thay đổi, cần tạo slug mới
+                if ($name !== $product['name']) {
+                    // Gọi phương thức tạo slug từ Product model
+                    $newSlug = $this->generateSlugFromName($name, $product['id']);
+                    $data['slug'] = $newSlug;
+                    error_log("DEBUG - Name changed, new slug: " . $newSlug);
+                }
+
+                try {
+                    // DEBUG: Kiểm tra dữ liệu trước khi cập nhật
+                    error_log("DEBUG - Data to update: " . print_r($data, true));
+
+                    // Sử dụng phương thức update của Product model
+                    $updated = $this->productModel->update($product['id'], $data);
+
+                    if ($updated) {
+                        // Xóa biến thể cũ → thêm biến thể mới
+                        $this->productModel->deleteAllVariants($product['id']);
+                        if (!empty($newVariants)) {
+                            $this->productModel->addVariants($product['id'], $newVariants);
+                        }
+
+                        $_SESSION['success'] = 'Cập nhật sản phẩm thành công!';
+
+                        // Redirect theo slug mới (nếu có thay đổi)
+                        header('Location: /admin/product');
+
+                        exit;
+                    } else {
+                        $error = 'Cập nhật sản phẩm thất bại. Vui lòng thử lại.';
+                        error_log("ERROR - Product update failed");
+                    }
+                } catch (Exception $e) {
+                    $error = 'Lỗi hệ thống: ' . $e->getMessage();
+                    error_log("Product edit error: " . $e->getMessage());
+                }
             }
 
-            // Tương tự cho image_array nếu cần
-
-            // Gọi edit trong model
-            $success = $this->productModel->edit($product['id'], $data, $variants);
-
-            if ($success) {
-                $_SESSION['success'] = 'Cập nhật sản phẩm thành công!';
-            } else {
-                $_SESSION['error'] = 'Cập nhật thất bại. Kiểm tra log.';
+            // Nếu có lỗi → giữ lại dữ liệu form để hiển thị lại
+            if ($error) {
+                $product = array_merge($product, [
+                    'name'             => $name,
+                    'price'            => $price,
+                    'description'      => $description,
+                    'content'          => $content,
+                    'category_id'      => $category_id,
+                    'nha_cung_cap_id'  => $nha_cung_cap_id,
+                    'active'           => $active,
+                    'hien_trang_chu'   => $hien_trang_chu,
+                    'san_pham_noi_bat' => $san_pham_noi_bat,
+                    'image'            => $main_image,
+                    'image_array'      => $image_array_str,
+                ]);
+                $variants = $newVariants; // dùng biến thể từ POST
             }
-
-            // Redirect về chính trang edit để xem kết quả mới
-            header('Location: /admin/product/edit/' . $data['slug'] ?? $product['slug']);
-            exit;
         }
 
-        // Nếu là GET: hiển thị form (code cũ của bạn)
-        $variants   = $this->productModel->getVariants($product['id']);
-        $categories = $this->categoryModel->getAll();
-        $sizes      = $this->productModel->getAllSizes();
-        $colors     = $this->productModel->getAllColors();
-        $suppliers  = $this->productModel->getAllSuppliers();
-
-        $data = [
-            'product'    => $product,
-            'variants'   => $variants,
-            'categories' => $categories,
-            'sizes'      => $sizes,
-            'colors'     => $colors,
-            'suppliers'  => $suppliers,
-        ];
-
+        // Truyền dữ liệu cho view
         include BASE_PATH . '/app/views/admin/product/edit_product.php';
+    }
+    private function generateSlugFromName($name, $excludeId = 0)
+    {
+        // Tạo slug từ tên
+        $slug = $this->productModel->generateSlug($name);
+
+        // Kiểm tra slug có tồn tại không (trừ sản phẩm hiện tại)
+        $counter = 1;
+        $originalSlug = $slug;
+
+        while ($this->productModel->slugExists($slug, $excludeId)) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
     }
     public function productDelete($id)
     {

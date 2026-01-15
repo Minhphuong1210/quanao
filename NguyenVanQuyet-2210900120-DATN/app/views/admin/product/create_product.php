@@ -269,18 +269,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $pdo->commit();
 
+                debug_log("=== SAU KHI COMMIT THÀNH CÔNG ===");
+                debug_log("Product ID: " . $product_id);
+                debug_log("Product Name: " . $name);
+                debug_log("Main Image: " . $main_image);
+                debug_log("Variant Count: " . $variant_count);
+
                 // Lưu thông báo flash
                 $_SESSION['success_message'] = "Thêm sản phẩm thành công! ID: $product_id - " . htmlspecialchars($name);
 
                 // Đóng kết nối
                 $pdo = null;
 
-                // REDIRECT về danh sách sản phẩm
-                debug_log("=== REDIRECT TO /admin/product ===");
-                if (ob_get_length()) {
-                    debug_log("WARNING: Output buffer có nội dung trước redirect: " . ob_get_length() . " bytes");
+                // XÓA OUTPUT BUFFER TRƯỚC KHI REDIRECT
+                if (ob_get_length() > 0) {
+                    debug_log("WARNING: Có output trong buffer (" . ob_get_length() . " bytes) - đang xóa...");
+                    ob_clean();
                 }
-                header('Location: /admin/product');
+
+                debug_log("=== CHUYỂN HƯỚNG ĐẾN /admin/product ===");
+
+                // REDIRECT BẰNG PHP HEADER - SỬA THÀNH ABSOLUTE URL
+                $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+                $host = $_SERVER['HTTP_HOST'];
+                $redirect_url = $protocol . $host . '/admin/product';
+                debug_log("Redirect URL: " . $redirect_url);
+
+                header('Location: ' . $redirect_url);
                 exit();
             } catch (Exception $e) {
                 $pdo->rollBack();
@@ -312,10 +327,10 @@ function createSlug($string)
         '#(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)#',
         '#(ỳ|ý|ỵ|ỷ|ỹ)#',
         '#(đ)#',
-        '#(À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ)#',
+        '#(À|Á|Ạ|Ả|ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ)#',
         '#(È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ)#',
         '#(Ì|Í|Ị|Ỉ|Ĩ)#',
-        '#(Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|ỡ)#',
+        '#(Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ)#',
         '#(Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ)#',
         '#(Ỳ|Ý|Ỵ|Ỷ|Ỹ)#',
         '#(Đ)#',
@@ -516,6 +531,40 @@ function createSlug($string)
         .required-star {
             color: #ff6b6b;
         }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(99, 102, 241, 0.3);
+            border-top: 5px solid #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
@@ -523,6 +572,13 @@ function createSlug($string)
 
     <?php include BASE_PATH . '/app/views/admin/layout/sidebar.php'; ?>
     <?php include BASE_PATH . '/app/views/admin/layout/header.php'; ?>
+
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <h4 class="text-light">Đang xử lý...</h4>
+        <p class="text-muted">Vui lòng chờ trong giây lát</p>
+    </div>
 
     <main class="main-content flex-grow-1 d-flex flex-column">
 
@@ -585,11 +641,11 @@ function createSlug($string)
                                 <input type="number" name="price" id="price"
                                     class="form-control form-control-lg"
                                     placeholder="0"
-                                    min="0"
+                                    min="1"
                                     step="1"
                                     value="<?= htmlspecialchars($_POST['price'] ?? '') ?>"
                                     required>
-                                <small class="text-muted mt-1">Nhập số nguyên</small>
+                                <small class="text-muted mt-1">Nhập số nguyên, lớn hơn 0</small>
                             </div>
                         </div>
                     </div>
@@ -794,31 +850,13 @@ function createSlug($string)
                                 </div>
                             </div>
                         </div>
-
-                        <div class="mt-4 pt-3 border-top border-secondary">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-center">
-                                        <i class="fas fa-cubes fs-4 text-primary me-3"></i>
-                                        <div>
-                                            <h6 class="text-light mb-1">Tổng số lượng tồn kho</h6>
-                                            <p class="text-muted mb-0">Tổng từ tất cả các biến thể</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 text-end">
-                                    <div class="display-4 fw-bold text-success" id="totalStock">0</div>
-                                    <input type="hidden" name="stock" id="totalStockInput" value="0">
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="d-flex flex-wrap justify-content-end gap-3 mt-5 pt-4 border-top" style="border-color: rgba(255,255,255,0.1) !important;">
-                        <button type="reset" class="btn btn-secondary btn-lg px-5 py-3" onclick="resetForm()">
+                        <button type="reset" class="btn btn-secondary btn-lg px-5 py-3">
                             <i class="fas fa-redo me-2"></i>Nhập lại
                         </button>
-                        <button type="submit" class="btn btn-success btn-lg px-5 py-3">
+                        <button type="submit" class="btn btn-success btn-lg px-5 py-3" id="submitBtn">
                             <i class="fas fa-save me-2"></i>Lưu Sản Phẩm
                         </button>
                     </div>
@@ -917,19 +955,6 @@ function createSlug($string)
             });
 
             document.getElementById('name').focus();
-            calculateTotalStock();
-
-            document.querySelectorAll('.variant-stock').forEach(input => {
-                input.addEventListener('input', calculateTotalStock);
-            });
-
-            // Hiển thị màu sắc trong dropdown
-            initColorSelects();
-
-            // Debug form values
-            console.log('=== DEBUG FORM VALUES ===');
-            console.log('nha_cung_cap_id element:', document.getElementById('nha_cung_cap_id'));
-            console.log('category_id element:', document.getElementById('category_id'));
         });
 
         let variantIndex = <?php echo isset($_POST['variants']) ? count($_POST['variants']) : 1; ?>;
@@ -988,43 +1013,20 @@ function createSlug($string)
 
             document.getElementById('variantsContainer').insertAdjacentHTML('beforeend', template);
 
-            const newStockInput = document.querySelector(`[name="variants[${variantIndex}][stock]"]`);
-            newStockInput.addEventListener('input', calculateTotalStock);
-
-            // Khởi tạo màu cho dropdown mới
-            initColorSelects();
-
             variantIndex++;
-            calculateTotalStock();
         });
 
         function removeVariant(button) {
             const variantRow = button.closest('.variant-row');
             if (document.querySelectorAll('.variant-row').length > 1) {
                 variantRow.remove();
-                calculateTotalStock();
             } else {
                 alert('Phải có ít nhất một biến thể!');
             }
         }
 
-        function calculateTotalStock() {
-            let total = 0;
-            const stockInputs = document.querySelectorAll('.variant-stock');
-
-            stockInputs.forEach(input => {
-                const value = parseInt(input.value) || 0;
-                total += value;
-            });
-
-            document.getElementById('totalStock').textContent = total;
-            document.getElementById('totalStockInput').value = total;
-        }
-
-        function resetForm() {
-            calculateTotalStock();
-        }
-
+        // TẠM THỜI COMMENT HÀM initColorSelects ĐỂ TEST
+        /*
         function initColorSelects() {
             document.querySelectorAll('.color-select').forEach(select => {
                 // Giữ lại giá trị đã chọn
@@ -1035,26 +1037,26 @@ function createSlug($string)
                 select.innerHTML = '';
                 select.appendChild(firstOption);
 
-                // Thêm lại các option với màu sắc
+                // SỬA LỖI: ĐỔI TÊN BIẾN 'option' THÀNH 'colorOption'
                 <?php foreach ($colors as $color): ?>
-                    const option = document.createElement('option');
-                    option.value = '<?= $color['id'] ?>';
-                    option.textContent = '<?= htmlspecialchars($color['name']) ?>';
+                    const colorOption = document.createElement('option');
+                    colorOption.value = '<?= $color['id'] ?>';
+                    colorOption.textContent = '<?= htmlspecialchars($color['name']) ?>';
 
                     // Thêm màu nền nếu có mã màu
                     const maMau = '<?= $color['ma_mau'] ?>';
                     if (maMau && maMau !== 'NULL' && maMau !== 'null') {
-                        option.style.backgroundColor = maMau;
-                        option.style.color = getContrastColor(maMau);
-                        option.title = 'Mã màu: ' + maMau;
+                        colorOption.style.backgroundColor = maMau;
+                        colorOption.style.color = getContrastColor(maMau);
+                        colorOption.title = 'Mã màu: ' + maMau;
                     }
 
                     // Chọn lại giá trị đã chọn trước đó
-                    if (option.value === selectedValue) {
-                        option.selected = true;
+                    if (colorOption.value === selectedValue) {
+                        colorOption.selected = true;
                     }
 
-                    select.appendChild(option);
+                    select.appendChild(colorOption);
                 <?php endforeach; ?>
             });
         }
@@ -1077,10 +1079,14 @@ function createSlug($string)
 
             return brightness > 128 ? '#000000' : '#FFFFFF';
         }
+        */
 
         document.getElementById('productForm').addEventListener('submit', function(e) {
+            // TẠM BỎ QUA VALIDATION ĐỂ TEST REDIRECT
+            // return true; // Bỏ comment dòng này để test redirect
+
             const name = document.getElementById('name').value.trim();
-            const price = document.getElementById('price').value;
+            const price = parseFloat(document.getElementById('price').value);
             const category = document.getElementById('category_id').value;
             const nhaCungCap = document.getElementById('nha_cung_cap_id').value;
             const image = document.getElementById('image').value;
@@ -1093,16 +1099,16 @@ function createSlug($string)
             console.log('nha_cung_cap:', nhaCungCap);
             console.log('image:', image);
 
-            if (!name) {
+            if (!name || name.length < 3) {
                 e.preventDefault();
-                alert('Vui lòng nhập tên sản phẩm');
+                alert('Tên sản phẩm phải từ 3 ký tự trở lên');
                 document.getElementById('name').focus();
                 return false;
             }
 
-            if (!price || parseInt(price) <= 0) {
+            if (!price || price <= 0) {
                 e.preventDefault();
-                alert('Vui lòng nhập giá sản phẩm hợp lệ');
+                alert('Giá sản phẩm phải lớn hơn 0');
                 document.getElementById('price').focus();
                 return false;
             }
@@ -1142,6 +1148,12 @@ function createSlug($string)
                 alert('Phải có ít nhất 1 biến thể (size + màu) hợp lệ');
                 return false;
             }
+
+            // Hiển thị loading overlay nếu validation pass
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+            submitBtn.disabled = true;
 
             return true;
         });

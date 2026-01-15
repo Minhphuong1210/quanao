@@ -1,11 +1,4 @@
-<?php
-$product   = $data['product']   ?? null;
-$variants  = $data['variants']  ?? [];
-$categories = $data['categories'] ?? [];
-$sizes     = $data['sizes']     ?? [];
-$colors    = $data['colors']    ?? [];
-$suppliers = $data['suppliers'] ?? [];
-?>
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -272,18 +265,6 @@ $suppliers = $data['suppliers'] ?? [];
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
                 </div>
             <?php else: ?>
-                <!-- Hiển thị thông tin slug -->
-                <div class="slug-display mb-4">
-                    <div class="slug-label">
-                        <i class="fas fa-link me-2"></i>Slug sản phẩm
-                    </div>
-                    <div class="slug-value">
-                        <?= htmlspecialchars($product['slug']) ?>
-                    </div>
-                    <div class="slug-url">
-                        URL: /admin/product/edit/<?= htmlspecialchars($product['slug']) ?>
-                    </div>
-                </div>
 
                 <div class="card bg-dark border-0 rounded-3 shadow-lg p-4 p-lg-5">
                     <form method="POST"
@@ -437,95 +418,103 @@ $suppliers = $data['suppliers'] ?? [];
 
                         <!-- Ảnh chính -->
                         <div class="mb-5">
-                            <label class="form-label text-light fw-semibold">
+                            <label for="image" class="form-label text-light fw-semibold">
                                 <i class="fas fa-image me-2"></i>Ảnh sản phẩm chính
                             </label>
 
-                            <!-- Hiển thị ảnh hiện tại -->
+                            <!-- Hiển thị ảnh hiện tại nếu có -->
                             <?php if (!empty($product['image'])): ?>
-                                <div class="mb-3 current-image">
-                                    <span class="current-image-info">Ảnh hiện tại</span>
-                                    <img src="/<?= htmlspecialchars(ltrim($product['image'], '/')) ?>"
-                                        class="img-fluid rounded-3 shadow"
-                                        style="max-height: 300px;"
-                                        alt="Ảnh hiện tại"
-                                        onerror="this.src='https://placehold.co/600x400/1e293b/94a3b8?text=Ảnh+không+tồn+tại'">
+                                <div class="mb-3">
+                                    <p class="text-muted">Ảnh hiện tại:</p>
+                                    <div class="current-image">
+                                        <img src="/<?= htmlspecialchars(ltrim($product['image'], '/')) ?>"
+                                            class="img-fluid rounded-3 shadow"
+                                            style="max-height: 200px; border: 2px solid #6366f1;"
+                                            alt="Ảnh hiện tại"
+                                            onerror="this.src='https://placehold.co/400x300/1e293b/94a3b8?text=Ảnh+không+tồn+tại'">
+                                        <p class="text-muted mt-2 small"><?= basename($product['image']) ?></p>
+                                    </div>
                                 </div>
+                                <p class="text-warning small mb-3">
+                                    <i class="fas fa-info-circle me-2"></i>Upload ảnh mới sẽ thay thế ảnh hiện tại
+                                </p>
                             <?php endif; ?>
 
-                            <!-- Checkbox giữ ảnh cũ -->
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="keepMainImage" name="keepMainImage" value="1" checked>
-                                <label class="form-check-label text-light" for="keepMainImage">
-                                    Giữ lại ảnh hiện tại
-                                </label>
-                                <div class="form-text text-muted">Bỏ chọn nếu muốn upload ảnh mới</div>
-                            </div>
-
-                            <!-- Input upload ảnh mới -->
-                            <div id="newImageContainer" style="display: none;">
-                                <input type="file" name="image" id="image"
-                                    class="form-control form-control-lg"
-                                    accept="image/*">
-                                <div class="form-text text-muted mt-1">Chỉ chấp nhận JPG, PNG, GIF, WEBP. Tối đa 5MB.</div>
-                                <div id="imagePreviewContainer" class="mt-3">
+                            <input type="file" name="image" id="image"
+                                class="form-control form-control-lg"
+                                accept="image/*">
+                            <div class="form-text text-muted mt-1">Chỉ chấp nhận JPG, PNG, GIF, WEBP. Tối đa 5MB.</div>
+                            <div id="imagePreviewContainer" class="mt-3">
+                                <?php if (!empty($product['image'])): ?>
+                                    <div class="text-center">
+                                        <img src="/<?= htmlspecialchars(ltrim($product['image'], '/')) ?>"
+                                            class="img-fluid rounded-3 shadow"
+                                            style="max-height: 300px; border: 2px solid #6366f1;"
+                                            alt="Ảnh hiện tại"
+                                            onerror="this.src='https://placehold.co/600x400/1e293b/94a3b8?text=Ảnh+không+tồn+tại'">
+                                        <p class="text-muted mt-2">Ảnh hiện tại</p>
+                                    </div>
+                                <?php else: ?>
                                     <div class="border rounded-3 p-4 text-center" style="border-color: rgba(255,255,255,0.1) !important;">
                                         <i class="fas fa-image fs-1 text-muted mb-3"></i>
                                         <p class="text-muted mb-0">Ảnh preview sẽ hiển thị tại đây</p>
                                     </div>
-                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
 
                         <!-- Ảnh phụ -->
                         <div class="mb-5">
-                            <label class="form-label text-light fw-semibold">
-                                <i class="fas fa-images me-2"></i>Ảnh sản phẩm phụ
+                            <label for="image_array" class="form-label text-light fw-semibold">
+                                <i class="fas fa-images me-2"></i>Ảnh sản phẩm phụ (image_array)
                             </label>
 
-                            <!-- Hiển thị ảnh hiện tại -->
+                            <!-- Hiển thị ảnh phụ hiện tại nếu có -->
                             <?php if (!empty($product['image_array'])): ?>
                                 <div class="mb-3">
-                                    <span class="badge bg-primary mb-2">Ảnh hiện tại</span>
-                                    <div class="image-preview-container">
+                                    <p class="text-muted">Ảnh phụ hiện tại:</p>
+                                    <div class="image-preview-container mb-3">
                                         <?php
                                         $existingImages = explode(',', $product['image_array']);
                                         foreach ($existingImages as $img):
                                             if (trim($img)): ?>
-                                                <div class="current-image">
-                                                    <img src="/<?= htmlspecialchars(ltrim($img, '/')) ?>"
-                                                        class="image-preview"
-                                                        alt="Ảnh phụ hiện tại"
-                                                        onerror="this.style.display='none'">
-                                                </div>
+                                                <img src="/<?= htmlspecialchars(ltrim($img, '/')) ?>"
+                                                    class="image-preview"
+                                                    alt="Ảnh phụ hiện tại"
+                                                    onerror="this.style.display='none'"
+                                                    style="border-color: #8b5cf6;">
                                         <?php endif;
                                         endforeach; ?>
                                     </div>
                                 </div>
+                                <p class="text-warning small mb-3">
+                                    <i class="fas fa-info-circle me-2"></i>Upload ảnh mới sẽ thêm vào danh sách ảnh hiện tại
+                                </p>
                             <?php endif; ?>
 
-                            <!-- Checkbox giữ ảnh cũ -->
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="keepImageArray" name="keepImageArray" value="1" checked>
-                                <label class="form-check-label text-light" for="keepImageArray">
-                                    Giữ lại ảnh hiện tại
-                                </label>
-                                <div class="form-text text-muted">Bỏ chọn nếu muốn upload ảnh mới (ảnh cũ sẽ bị xóa)</div>
-                            </div>
-
-                            <!-- Input upload ảnh mới -->
-                            <div id="newImageArrayContainer" style="display: none;">
-                                <input type="file" name="image_array[]" id="image_array"
-                                    class="form-control form-control-lg"
-                                    accept="image/*"
-                                    multiple>
-                                <div class="form-text text-muted mt-1">Có thể chọn nhiều ảnh. Chỉ chấp nhận JPG, PNG, GIF, WEBP. Mỗi ảnh tối đa 5MB.</div>
-                                <div id="imageArrayPreviewContainer" class="mt-3 image-preview-container">
+                            <input type="file" name="image_array[]" id="image_array"
+                                class="form-control form-control-lg"
+                                accept="image/*"
+                                multiple>
+                            <div class="form-text text-muted mt-1">Có thể chọn nhiều ảnh. Chỉ chấp nhận JPG, PNG, GIF, WEBP. Mỗi ảnh tối đa 5MB.</div>
+                            <div id="imageArrayPreviewContainer" class="mt-3 image-preview-container">
+                                <?php if (!empty($product['image_array'])): ?>
+                                    <?php
+                                    $existingImages = explode(',', $product['image_array']);
+                                    foreach ($existingImages as $img):
+                                        if (trim($img)): ?>
+                                            <img src="/<?= htmlspecialchars(ltrim($img, '/')) ?>"
+                                                class="image-preview"
+                                                alt="Ảnh phụ hiện tại"
+                                                onerror="this.style.display='none'">
+                                    <?php endif;
+                                    endforeach; ?>
+                                <?php else: ?>
                                     <div class="border rounded-3 p-4 text-center" style="border-color: rgba(255,255,255,0.1) !important;">
                                         <i class="fas fa-images fs-1 text-muted mb-3"></i>
-                                        <p class="text-muted mb-0">Ảnh phụ mới sẽ hiển thị tại đây</p>
+                                        <p class="text-muted mb-0">Ảnh phụ sẽ hiển thị tại đây</p>
                                     </div>
-                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
 
@@ -768,38 +757,27 @@ $suppliers = $data['suppliers'] ?? [];
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            let variantIndex = <?= $variantIndex ?>;
+            let variantIndex = <?= isset($variantIndex) ? (int)$variantIndex : 0 ?>;
+            document.getElementById('name')?.focus();
+            calculateTotalStock();
 
-            // Toggle hiển thị input upload ảnh chính
-            const keepMainImageCheckbox = document.getElementById('keepMainImage');
-            const newImageContainer = document.getElementById('newImageContainer');
+            document.querySelectorAll('.variant-stock').forEach(input => {
+                input.addEventListener('input', calculateTotalStock);
+            });
 
-            if (keepMainImageCheckbox) {
-                keepMainImageCheckbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        newImageContainer.style.display = 'none';
-                    } else {
-                        newImageContainer.style.display = 'block';
-                    }
-                });
-            }
+            // Hiển thị màu sắc trong dropdown
+            initColorSelects();
 
-            // Toggle hiển thị input upload ảnh phụ
-            const keepImageArrayCheckbox = document.getElementById('keepImageArray');
-            const newImageArrayContainer = document.getElementById('newImageArrayContainer');
+            console.log('=== DEBUG FORM VALUES ===');
+            console.log('Product ID: <?= $product ? $product['id'] : '' ?>');
+            console.log('Product Slug: <?= $product ? $product['slug'] : '' ?>');
+            console.log('Variant Index:', variantIndex);
+        });
 
-            if (keepImageArrayCheckbox) {
-                keepImageArrayCheckbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        newImageArrayContainer.style.display = 'none';
-                    } else {
-                        newImageArrayContainer.style.display = 'block';
-                    }
-                });
-            }
-
-            // Preview ảnh chính
-            document.getElementById('image')?.addEventListener('change', function(e) {
+        // Preview ảnh chính
+        const imageInput = document.getElementById('image');
+        if (imageInput) {
+            imageInput.addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 const container = document.getElementById('imagePreviewContainer');
 
@@ -820,82 +798,95 @@ $suppliers = $data['suppliers'] ?? [];
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         container.innerHTML = `
-                            <div class="text-center">
-                                <img src="${e.target.result}" 
-                                     class="img-fluid rounded-3 shadow" 
-                                     style="max-height: 300px; border: 2px solid #6366f1;"
-                                     alt="Preview ảnh sản phẩm">
-                                <p class="text-muted mt-2">${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)</p>
-                            </div>
-                        `;
+                        <div class="text-center">
+                            <img src="${e.target.result}" 
+                                 class="img-fluid rounded-3 shadow" 
+                                 style="max-height: 300px; border: 2px solid #6366f1;"
+                                 alt="Preview ảnh sản phẩm">
+                            <p class="text-muted mt-2">${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)</p>
+                        </div>
+                    `;
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    container.innerHTML = `
+                    <?php if (!empty($product['image'])): ?>
+                        container.innerHTML = `
+                        <div class="text-center">
+                            <img src="/<?= htmlspecialchars(ltrim($product['image'], '/')) ?>"
+                                 class="img-fluid rounded-3 shadow" 
+                                 style="max-height: 300px; border: 2px solid #6366f1;"
+                                 alt="Ảnh hiện tại"
+                                 onerror="this.src='https://placehold.co/600x400/1e293b/94a3b8?text=Ảnh+không+tồn+tại'">
+                            <p class="text-muted mt-2">Ảnh hiện tại</p>
+                        </div>
+                    `;
+                    <?php else: ?>
+                        container.innerHTML = `
                         <div class="border rounded-3 p-4 text-center" style="border-color: rgba(255,255,255,0.1) !important;">
                             <i class="fas fa-image fs-1 text-muted mb-3"></i>
                             <p class="text-muted mb-0">Ảnh preview sẽ hiển thị tại đây</p>
                         </div>
                     `;
+                    <?php endif; ?>
                 }
             });
+        }
+        // Preview ảnh phụ (image_array)
+        document.getElementById('image_array').addEventListener('change', function(e) {
+            const files = e.target.files;
+            const container = document.getElementById('imageArrayPreviewContainer');
 
-            // Preview ảnh phụ (image_array)
-            document.getElementById('image_array')?.addEventListener('change', function(e) {
-                const files = e.target.files;
-                const container = document.getElementById('imageArrayPreviewContainer');
+            if (files.length > 0) {
+                container.innerHTML = '';
 
-                if (files.length > 0) {
-                    container.innerHTML = '';
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
 
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-
-                        if (file.size > 5 * 1024 * 1024) {
-                            alert(`Ảnh ${file.name} vượt quá 5MB!`);
-                            continue;
-                        }
-
-                        const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-                        if (!validTypes.includes(file.type)) {
-                            alert(`Ảnh ${file.name} không đúng định dạng!`);
-                            continue;
-                        }
-
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const img = document.createElement('img');
-                            img.src = e.target.result;
-                            img.className = 'image-preview';
-                            img.title = file.name;
-                            container.appendChild(img);
-                        };
-                        reader.readAsDataURL(file);
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert(`Ảnh ${file.name} vượt quá 5MB!`);
+                        continue;
                     }
-                } else {
+
+                    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                    if (!validTypes.includes(file.type)) {
+                        alert(`Ảnh ${file.name} không đúng định dạng!`);
+                        continue;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'image-preview';
+                        img.title = file.name;
+                        container.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            } else {
+                <?php if (!empty($product['image_array'])): ?>
+                    container.innerHTML = '';
+                    <?php
+                    $existingImages = explode(',', $product['image_array']);
+                    foreach ($existingImages as $img):
+                        if (trim($img)): ?>
+                            container.innerHTML += `
+                                <img src="/<?= htmlspecialchars(ltrim($img, '/')) ?>"
+                                     class="image-preview"
+                                     alt="Ảnh phụ hiện tại"
+                                     onerror="this.style.display='none'">
+                            `;
+                    <?php endif;
+                    endforeach; ?>
+                <?php else: ?>
                     container.innerHTML = `
                         <div class="border rounded-3 p-4 text-center" style="border-color: rgba(255,255,255,0.1) !important;">
                             <i class="fas fa-images fs-1 text-muted mb-3"></i>
-                            <p class="text-muted mb-0">Ảnh phụ mới sẽ hiển thị tại đây</p>
+                            <p class="text-muted mb-0">Ảnh phụ sẽ hiển thị tại đây</p>
                         </div>
                     `;
-                }
-            });
-
-            document.getElementById('name')?.focus();
-            calculateTotalStock();
-
-            document.querySelectorAll('.variant-stock').forEach(input => {
-                input.addEventListener('input', calculateTotalStock);
-            });
-
-            // Hiển thị màu sắc trong dropdown
-            initColorSelects();
-
-            console.log('=== DEBUG FORM VALUES ===');
-            console.log('Product ID: <?= $product ? $product['id'] : '' ?>');
-            console.log('Product Slug: <?= $product ? $product['slug'] : '' ?>');
-            console.log('Variant Index:', variantIndex);
+                <?php endif; ?>
+            }
         });
 
         document.getElementById('addVariant')?.addEventListener('click', function() {
@@ -1042,13 +1033,11 @@ $suppliers = $data['suppliers'] ?? [];
             return brightness > 128 ? '#000000' : '#FFFFFF';
         }
 
-        document.getElementById('productForm')?.addEventListener('submit', function(e) {
+        document.getElementById('productForm').addEventListener('submit', function(e) {
             const name = document.getElementById('name').value.trim();
             const price = document.getElementById('price').value;
             const category = document.getElementById('category_id').value;
             const nhaCungCap = document.getElementById('nha_cung_cap_id').value;
-            const keepMainImage = document.getElementById('keepMainImage')?.checked;
-            const image = document.getElementById('image');
 
             // Debug values trước khi submit
             console.log('Form submit validation:');
@@ -1056,8 +1045,6 @@ $suppliers = $data['suppliers'] ?? [];
             console.log('price:', price);
             console.log('category:', category);
             console.log('nha_cung_cap:', nhaCungCap);
-            console.log('keepMainImage:', keepMainImage);
-            console.log('image value:', image?.value);
 
             if (!name) {
                 e.preventDefault();
@@ -1084,13 +1071,6 @@ $suppliers = $data['suppliers'] ?? [];
                 e.preventDefault();
                 alert('Vui lòng chọn nhà cung cấp');
                 document.getElementById('nha_cung_cap_id').focus();
-                return false;
-            }
-
-            // Kiểm tra ảnh chính nếu không giữ ảnh cũ
-            if (keepMainImage === false && (!image || !image.value)) {
-                e.preventDefault();
-                alert('Vui lòng chọn ảnh sản phẩm chính mới hoặc giữ ảnh cũ');
                 return false;
             }
 

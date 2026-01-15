@@ -326,7 +326,6 @@ class Product
 
     public function findBySlug($slug)
     {
-        // Debug để biết chính xác slug nhận được
         error_log("findBySlug called | slug received: '" . $slug . "' | length: " . strlen($slug) . " | hex: " . bin2hex($slug));
 
         $sql = "
@@ -338,9 +337,6 @@ class Product
         LEFT JOIN nha_cung_cap ncc ON p.nha_cung_cap_id = ncc.id
         WHERE p.slug = :slug
     ";
-
-        // KHÔNG thêm LIMIT 1 nếu bạn muốn an toàn hơn khi slug trùng (dù giờ chỉ còn 1)
-        // Nhưng nếu giữ LIMIT 1 thì ổn vì giờ không trùng nữa
 
         try {
             $stmt = $this->conn->prepare($sql);
@@ -360,11 +356,11 @@ class Product
         }
     }
 
-    // Tạo mới sản phẩm - ĐÃ SỬA: XÓA CỘT stock từ products
+    // Tạo mới sản phẩm
     public function create($data)
     {
         try {
-            $slug = $this->generateSlug($data['name']);
+            $slug = $this->generateUniqueSlug($data['name']);
 
             $sql = "INSERT INTO products (
                 name, slug, price, description, content, 
@@ -396,7 +392,6 @@ class Product
 
             $stmt->execute($params);
 
-            // Trả về ID sản phẩm vừa tạo
             return $this->conn->lastInsertId();
         } catch (PDOException $e) {
             error_log("Product create error: " . $e->getMessage());
@@ -404,12 +399,10 @@ class Product
         }
     }
 
-    // Cập nhật sản phẩm - ĐÃ SỬA: XÓA CỘT stock từ products
+    // Cập nhật sản phẩm
     public function update($id, $data)
     {
         try {
-            $slug = $this->generateSlug($data['name']);
-
             $sql = "UPDATE products SET 
                 name = :name, 
                 slug = :slug, 
@@ -430,7 +423,7 @@ class Product
             $params = [
                 'id' => $id,
                 'name' => $data['name'],
-                'slug' => $slug,
+                'slug' => $data['slug'],
                 'price' => $data['price'] ?? 0,
                 'description' => $data['description'] ?? '',
                 'content' => $data['content'] ?? '',
@@ -454,7 +447,21 @@ class Product
     public function delete($id)
     {
         try {
-            // Xóa tất cả biến thể trước
+            // Lấy thông tin sản phẩm để xóa ảnh
+            $product = $this->find($id);
+            if ($product) {
+                // Xóa ảnh chính
+                if ($product['image']) {
+                    $this->deleteImageFile($product['image']);
+                }
+
+                // Xóa ảnh phụ
+                if ($product['image_array']) {
+                    $this->deleteAllAdditionalImages($id);
+                }
+            }
+
+            // Xóa tất cả biến thể
             $this->deleteAllVariants($id);
 
             // Xóa sản phẩm
@@ -467,27 +474,310 @@ class Product
         }
     }
 
+    // ==================== XỬ LÝ ẢNH SẢN PHẨM ====================
+
+    /**
+     * Upload và thay thế ảnh chính
+     * @param int $productId ID sản phẩm
+     * @param array $imageFile File ảnh từ $_FILES['image']
+     * @param string $currentImage Ảnh hiện tại (nếu có)
+     * @return string|false Đường dẫn ảnh mới hoặc false nếu lỗi
+     */
+    public function uploadMainImage($productId, $imageFile, $currentImage = '')
+    {
+        try {
+            // Kiểm tra file upload
+            if (!isset($imageFile['error']) || $imageFile['error'] !== UPLOAD_ERR_OK) {
+                throw new Exception('Lỗi upload file: ' . ($imageFile['error'] ?? 'unknown'));
+            }
+
+            // Kiểm tra kích thước (max 5MB)
+            if ($imageFile['size'] > 5 * 1024 * 1024) {
+                throw new Exception('Ảnh quá lớn (tối đa 5MB)');
+            }
+
+            // Kiểm tra định dạng
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            $fileType = mime_content_type($imageFile['tmp_name']);
+            if (!in_array($fileType, $allowedTypes)) {
+                throw new Exception('Định dạng ảnh không hỗ trợ. Chỉ chấp nhận JPG, PNG, GIF, WEBP');
+            }
+
+            // Tạo tên file mới
+            $extension = pathinfo($imageFile['name'], PATHINFO_EXTENSION);
+            $newFileName = 'product_' . $productId . '_' . time() . '_main.' . strtolower($extension);
+
+            // Đường dẫn lưu file
+            $uploadDir = $this->getUploadDir();
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            $uploadPath = $uploadDir . $newFileName;
+            $publicPath = '/uploads/products/' . $newFileName;
+
+            // Di chuyển file upload
+            if (!move_uploaded_file($imageFile['tmp_name'], $uploadPath)) {
+                throw new Exception('Không thể lưu file ảnh');
+            }
+
+            // Nếu có ảnh cũ, xóa ảnh cũ
+            if ($currentImage && $currentImage !== $publicPath) {
+                $this->deleteImageFile($currentImage);
+            }
+
+            return $publicPath;
+        } catch (Exception $e) {
+            error_log("Upload main image error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Upload và thay thế ảnh phụ (image_array)
+     * @param int $productId ID sản phẩm
+     * @param array $imageFiles Mảng file ảnh từ $_FILES['image_array']
+     * @param string $currentImages Ảnh hiện tại (chuỗi phân cách bởi dấu phẩy)
+     * @return string|false Chuỗi image_array mới hoặc false nếu lỗi
+     */
+    public function uploadAdditionalImages($productId, $imageFiles, $currentImages = '')
+    {
+        try {
+            $uploadedImages = [];
+
+            // Xử lý từng file ảnh
+            if (isset($imageFiles['name']) && is_array($imageFiles['name'])) {
+                for ($i = 0; $i < count($imageFiles['name']); $i++) {
+                    if ($imageFiles['error'][$i] === UPLOAD_ERR_OK) {
+
+                        // Kiểm tra kích thước
+                        if ($imageFiles['size'][$i] > 5 * 1024 * 1024) {
+                            error_log("Ảnh {$imageFiles['name'][$i]} quá lớn (tối đa 5MB)");
+                            continue;
+                        }
+
+                        // Kiểm tra định dạng
+                        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                        $fileType = mime_content_type($imageFiles['tmp_name'][$i]);
+                        if (!in_array($fileType, $allowedTypes)) {
+                            error_log("Định dạng ảnh {$imageFiles['name'][$i]} không hỗ trợ");
+                            continue;
+                        }
+
+                        // Tạo tên file mới
+                        $extension = pathinfo($imageFiles['name'][$i], PATHINFO_EXTENSION);
+                        $newFileName = 'product_' . $productId . '_' . time() . '_' . $i . '.' . strtolower($extension);
+
+                        // Đường dẫn lưu file
+                        $uploadDir = $this->getUploadDir();
+                        if (!is_dir($uploadDir)) {
+                            mkdir($uploadDir, 0755, true);
+                        }
+
+                        $uploadPath = $uploadDir . $newFileName;
+                        $publicPath = '/uploads/products/' . $newFileName;
+
+                        // Di chuyển file
+                        if (move_uploaded_file($imageFiles['tmp_name'][$i], $uploadPath)) {
+                            $uploadedImages[] = $publicPath;
+                        }
+                    }
+                }
+            }
+
+            // Nếu không có ảnh mới upload, giữ ảnh cũ
+            if (empty($uploadedImages)) {
+                return $currentImages;
+            }
+
+            // Nếu có ảnh cũ, ghép với ảnh mới
+            $currentImageArray = $currentImages ? explode(',', $currentImages) : [];
+            $allImages = array_merge($currentImageArray, $uploadedImages);
+            $imageArrayString = implode(',', array_filter($allImages));
+
+            return $imageArrayString;
+        } catch (Exception $e) {
+            error_log("Upload additional images error: " . $e->getMessage());
+            return $currentImages;
+        }
+    }
+
+    /**
+     * Xóa ảnh phụ cụ thể
+     * @param int $productId ID sản phẩm
+     * @param string $imageToDelete Đường dẫn ảnh cần xóa
+     * @return bool Thành công hay không
+     */
+    public function deleteAdditionalImage($productId, $imageToDelete)
+    {
+        try {
+            // Lấy danh sách ảnh hiện tại
+            $sql = "SELECT image_array FROM products WHERE id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(['id' => $productId]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$result) return false;
+
+            $currentImages = $result['image_array'];
+            if (empty($currentImages)) return true;
+
+            // Xóa ảnh khỏi danh sách
+            $imageArray = explode(',', $currentImages);
+            $newImageArray = array_filter($imageArray, function ($img) use ($imageToDelete) {
+                return trim($img) !== trim($imageToDelete);
+            });
+
+            $newImageString = implode(',', $newImageArray);
+
+            // Cập nhật database
+            $sql = "UPDATE products SET image_array = :image_array WHERE id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $result = $stmt->execute(['id' => $productId, 'image_array' => $newImageString]);
+
+            // Xóa file vật lý
+            if ($result) {
+                $this->deleteImageFile($imageToDelete);
+            }
+
+            return $result;
+        } catch (Exception $e) {
+            error_log("Delete additional image error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Xóa tất cả ảnh phụ
+     * @param int $productId ID sản phẩm
+     * @return bool Thành công hay không
+     */
+    public function deleteAllAdditionalImages($productId)
+    {
+        try {
+            // Lấy danh sách ảnh hiện tại
+            $sql = "SELECT image_array FROM products WHERE id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute(['id' => $productId]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$result) return false;
+
+            $currentImages = $result['image_array'];
+
+            // Xóa tất cả file vật lý
+            if ($currentImages) {
+                $imageArray = explode(',', $currentImages);
+                foreach ($imageArray as $image) {
+                    if (trim($image)) {
+                        $this->deleteImageFile($image);
+                    }
+                }
+            }
+
+            // Cập nhật database
+            $sql = "UPDATE products SET image_array = '' WHERE id = :id";
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute(['id' => $productId]);
+        } catch (Exception $e) {
+            error_log("Delete all additional images error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Xóa file ảnh vật lý
+     * @param string $imagePath Đường dẫn ảnh (relative hoặc absolute)
+     * @return bool Thành công hay không
+     */
+    private function deleteImageFile($imagePath)
+    {
+        try {
+            // Nếu là đường dẫn tương đối (bắt đầu bằng /)
+            if (strpos($imagePath, '/') === 0) {
+                $imagePath = $_SERVER['DOCUMENT_ROOT'] . $imagePath;
+            }
+
+            // Kiểm tra file tồn tại và có thể xóa
+            if (file_exists($imagePath) && is_writable($imagePath)) {
+                return unlink($imagePath);
+            }
+
+            return false;
+        } catch (Exception $e) {
+            error_log("Delete image file error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Lấy đường dẫn thư mục upload
+     * @return string Đường dẫn thư mục upload
+     */
+    private function getUploadDir()
+    {
+        return $_SERVER['DOCUMENT_ROOT'] . '/uploads/products/';
+    }
+
     // ==================== CHỈNH SỬA TOÀN DIỆN (EDIT) ====================
 
     /**
-     * Chỉnh sửa sản phẩm với xử lý transaction và biến thể
+     * Chỉnh sửa sản phẩm với xử lý ảnh và biến thể
      * @param int $id ID sản phẩm
      * @param array $data Dữ liệu cần cập nhật
+     * @param array $files File ảnh từ $_FILES
      * @param array $variants Danh sách biến thể
      * @return bool Thành công hay không
      */
-    public function edit($id, $data, $variants = [])
+    public function edit($id, $data, $files = [], $variants = [])
     {
         try {
             $this->conn->beginTransaction();
 
-            // 1. Cập nhật thông tin sản phẩm
+            // Lấy thông tin sản phẩm hiện tại
+            $currentProduct = $this->find($id);
+            if (!$currentProduct) {
+                throw new Exception("Không tìm thấy sản phẩm");
+            }
+
+            // 1. Xử lý ảnh chính nếu có upload
+            if (!empty($files['image']['name'])) {
+                $newMainImage = $this->uploadMainImage($id, $files['image'], $currentProduct['image']);
+                if ($newMainImage) {
+                    $data['image'] = $newMainImage;
+                } else {
+                    $data['image'] = $currentProduct['image']; // Giữ ảnh cũ nếu upload lỗi
+                }
+            } else {
+                $data['image'] = $currentProduct['image']; // Giữ ảnh cũ
+            }
+
+            // 2. Xử lý ảnh phụ nếu có upload
+            if (!empty($files['image_array']['name'][0])) {
+                $newImageArray = $this->uploadAdditionalImages($id, $files['image_array'], $currentProduct['image_array']);
+                if ($newImageArray) {
+                    $data['image_array'] = $newImageArray;
+                } else {
+                    $data['image_array'] = $currentProduct['image_array']; // Giữ ảnh cũ
+                }
+            } else {
+                $data['image_array'] = $currentProduct['image_array']; // Giữ ảnh cũ
+            }
+
+            // 3. Tạo slug mới nếu tên thay đổi
+            if ($data['name'] !== $currentProduct['name']) {
+                $data['slug'] = $this->generateUniqueSlug($data['name'], $id);
+            } else {
+                $data['slug'] = $currentProduct['slug'];
+            }
+
+            // 4. Cập nhật thông tin sản phẩm
             $result = $this->update($id, $data);
             if (!$result) {
                 throw new Exception("Cập nhật thông tin sản phẩm thất bại");
             }
 
-            // 2. Xử lý biến thể nếu có
+            // 5. Xử lý biến thể nếu có
             if (!empty($variants)) {
                 // Xóa biến thể cũ
                 $this->deleteAllVariants($id);
@@ -837,6 +1127,26 @@ class Product
         $slug = strtolower(trim($slug));
         $slug = preg_replace('/\s+/', '-', $slug);
         $slug = preg_replace('/-+/', '-', $slug);
+
+        return $slug;
+    }
+
+    /**
+     * Tạo slug duy nhất (kiểm tra trùng)
+     * @param string $name Tên sản phẩm
+     * @param int $excludeId ID cần loại trừ
+     * @return string Slug duy nhất
+     */
+    private function generateUniqueSlug($name, $excludeId = 0)
+    {
+        $slug = $this->generateSlug($name);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while ($this->slugExists($slug, $excludeId)) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
 
         return $slug;
     }
