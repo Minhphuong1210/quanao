@@ -243,7 +243,7 @@ class AdminController
 
             // Validation
             $errors = [];
-            if (strlen($name) < 3 || strlen($name) > 225) {
+            if (strlen($name) < 1 || strlen($name) > 225) {
                 $errors[] = 'Tên sản phẩm phải từ 3 đến 225 ký tự.';
             }
             if ($price <= 0) {

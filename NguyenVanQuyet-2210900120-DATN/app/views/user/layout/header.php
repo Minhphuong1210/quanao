@@ -82,6 +82,49 @@
                 <a href="#!" class="text-muted">(+012) 1234 567890</a>
             </div>
 
+            <div class="col-lg-4 d-flex justify-content-end align-items-center">
+            <?php
+$isLogin = isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true;
+?>
+
+<?php if (!$isLogin): ?>
+    <!-- CHƯA ĐĂNG NHẬP -->
+    <a href="<?= BASE_URL ?>loginUser" class="nav-item nav-link">
+        <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập
+    </a>
+
+    <a href="<?= BASE_URL ?>register" class="nav-item nav-link">
+        <i class="fas fa-user-plus me-1"></i> Đăng ký
+    </a>
+
+<?php else: ?>
+    <!-- ĐÃ ĐĂNG NHẬP -->
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle"
+           data-bs-toggle="dropdown">
+            <i class="fas fa-user-circle me-1"></i>
+            <?= htmlspecialchars($_SESSION['user_name']) ?>
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-end m-0">
+            <a href="<?= BASE_URL ?>account/profile" class="dropdown-item">
+                <i class="fas fa-id-card me-2"></i> Thông tin cá nhân
+            </a>
+
+            <a href="<?= BASE_URL ?>theo-doi-don-hang" class="dropdown-item">
+                <i class="fas fa-box me-2"></i> Đơn hàng của tôi
+            </a>
+
+            <div class="dropdown-divider"></div>
+
+            <a href="<?= BASE_URL ?>logout" class="dropdown-item text-danger">
+                <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+            </a>
+        </div>
+    </div>
+<?php endif; ?>
+   
+            </div>
            
         </div>
     </div>
@@ -108,9 +151,30 @@
             </div>
             <div class="col-md-4 col-lg-3 text-center text-lg-end">
                 <div class="d-inline-flex align-items-center">
-                    <a href="<?= BASE_URL ?>cart" class="text-muted d-flex align-items-center justify-content-center"><span
-                            class="rounded-circle btn-md-square border"><i class="fas fa-shopping-cart"></i></span>
-                        <span class="text-dark ms-2">$0.00</span></a>
+
+                <?php
+$cart = $_SESSION['cart'] ?? [];
+$totalCart = 0;
+
+if (!empty($cart)) {
+    foreach ($cart as $item) {
+        $qty   = (int) ($item['quantity'] ?? 0);
+        $price = (int) ($item['price'] ?? 0);
+        $totalCart += $qty * $price;
+    }
+}
+?>
+
+<a href="<?= BASE_URL ?>cart"
+   class="text-muted d-flex align-items-center justify-content-center">
+    <span class="rounded-circle btn-md-square border">
+        <i class="fas fa-shopping-cart"></i>
+    </span>
+
+    <span class="text-dark ms-2">
+        <?= number_format($totalCart, 0, ',', '.') ?>₫
+    </span>
+</a>
                 </div>
             </div>
         </div>
@@ -237,6 +301,48 @@ $danh_muc = $categoryModel->getAll();
         </div>
 
     </div>
+
+    <?php
+$isLogin = isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true;
+?>
+
+<?php if (!$isLogin): ?>
+    <!-- CHƯA ĐĂNG NHẬP -->
+    <a href="<?= BASE_URL ?>login" class="nav-item nav-link">
+        <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập
+    </a>
+
+    <a href="<?= BASE_URL ?>register" class="nav-item nav-link">
+        <i class="fas fa-user-plus me-1"></i> Đăng ký
+    </a>
+
+<?php else: ?>
+    <!-- ĐÃ ĐĂNG NHẬP -->
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle"
+           data-bs-toggle="dropdown">
+            <i class="fas fa-user-circle me-1"></i>
+            <?= htmlspecialchars($_SESSION['user_name']) ?>
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-end m-0">
+            <a href="<?= BASE_URL ?>account/profile" class="dropdown-item">
+                <i class="fas fa-id-card me-2"></i> Thông tin cá nhân
+            </a>
+
+            <a href="<?= BASE_URL ?>account/orders" class="dropdown-item">
+                <i class="fas fa-box me-2"></i> Đơn hàng của tôi
+            </a>
+
+            <div class="dropdown-divider"></div>
+
+            <a href="<?= BASE_URL ?>logout" class="dropdown-item text-danger">
+                <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+            </a>
+        </div>
+    </div>
+<?php endif; ?>
+
 
     <!-- Hotline -->
     <a href="tel:+01234567890"

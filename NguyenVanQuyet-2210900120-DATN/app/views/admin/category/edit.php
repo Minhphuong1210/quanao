@@ -133,7 +133,7 @@
     </div>
 
     <button type="submit" class="btn btn-warning"><i class="fas fa-edit"></i> Cập nhật</button>
-    <a href="<?= BASE_URL ?>/admin/category" class="btn btn-secondary ms-2"><i class="fas fa-arrow-left"></i> Quay lại</a>
+    <a href="<?= BASE_URL ?>admin/category/index" class="btn btn-secondary ms-2"><i class="fas fa-arrow-left"></i> Quay lại</a>
 </form>
 
 <script>
@@ -156,7 +156,7 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
+    <!-- <script>
         function toggleSidebar() {
             document.querySelector('.sidebar').classList.toggle('show');
         }
@@ -218,7 +218,7 @@
                 }
             }
         });
-    </script>
+    </script> -->
 </body>
 
 </html>

@@ -132,7 +132,7 @@
     </div>
 
     <!-- Add category button -->
-    <a href="<?= BASE_URL ?>/admin/category/create" class="btn btn-success">
+    <a href="<?= BASE_URL ?>admin/category/create" class="btn btn-success">
         <i class="fas fa-plus me-1"></i> Thêm danh mục
     </a>
 
@@ -170,6 +170,7 @@
             <th>ID</th>
             <th>Tên danh mục</th>
             <th>Mô tả</th>
+            <th>Thao tác</th>
         </tr>
     </thead>
     <tbody>
@@ -183,6 +184,15 @@
                 <td><?= $cat['id'] ?></td>
                 <td><?= htmlspecialchars($cat['name']) ?></td>
                 <td><?= htmlspecialchars($cat['slug'] ?? '') ?></td>
+
+                <td>
+    <a href="<?= BASE_URL ?>admin/category/edit/<?= $cat['id'] ?>">Sửa</a>
+    <a href="<?= BASE_URL ?>admin/category/delete/<?= $cat['id'] ?>"
+       onclick="return confirm('Bạn có chắc muốn xóa không?')">
+        Xóa
+    </a>
+</td>
+
             </tr>
             <?php endforeach; ?>
         <?php endif; ?>

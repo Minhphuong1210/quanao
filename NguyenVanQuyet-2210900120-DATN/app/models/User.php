@@ -49,4 +49,61 @@ class User
             ':active' => 1,
         ]);
     }
+
+    public function updateProfile($userId, $data)
+    {
+        $fields = [];
+        $params = [':id' => $userId];
+    
+        // name
+        if (!empty($data['name'])) {
+            $fields[] = "name = :name";
+            $params[':name'] = $data['name'];
+        }
+    
+        // tel
+        if (!empty($data['tel'])) {
+            $fields[] = "tel = :tel";
+            $params[':tel'] = $data['tel'];
+        }
+    
+        // email
+        if (!empty($data['email'])) {
+            $fields[] = "email = :email";
+            $params[':email'] = $data['email'];
+        }
+    
+        // address
+        if (!empty($data['address'])) {
+            $fields[] = "address = :address";
+            $params[':address'] = $data['address'];
+        }
+    
+        // password (nếu có nhập)
+        if (!empty($data['password'])) {
+            $fields[] = "password = :password";
+            $params[':password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
+    
+        // Không có gì để update
+        if (empty($fields)) {
+            return false;
+        }
+    
+        $sql = "UPDATE users SET " . implode(', ', $fields) . " WHERE id = :id";
+    
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($params);
+    }
+    
+    public function findById($id)
+{
+    $stmt = $this->pdo->prepare(
+        "SELECT id, name, tel, email, address FROM users WHERE id = :id LIMIT 1"
+    );
+    $stmt->execute([':id' => $id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+
 }
