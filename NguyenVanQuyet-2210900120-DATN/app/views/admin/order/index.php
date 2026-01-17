@@ -155,13 +155,29 @@
         <div class="content-placeholder flex-grow-1">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h4 class="text-light mb-2"> 'Quản lý Sản phẩm' </h4>
-                    <p class="text-muted mb-0">Danh sách sản phẩm trong cửa hàng</p>
+                <h4 class="text-light mb-2">Quản lý Đơn hàng</h4>
+<p class="text-muted mb-0">Danh sách đơn hàng của khách</p>
+
                 </div>
-                <a href="/admin/product/create" class="btn btn-success">
+                <!-- <a href="/admin/product/create" class="btn btn-success">
                     <i class="fas fa-plus me-2"></i>Thêm sản phẩm
-                </a>
+                </a> -->
             </div>
+
+            <?php if (isset($_SESSION['success'])): ?>
+    <div class="alert alert-success">
+        <?= $_SESSION['success'] ?>
+    </div>
+    <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-danger">
+        <?= $_SESSION['error'] ?>
+    </div>
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>
+
 
             <!-- Search box -->
             <div class="card bg-dark border-0 mb-4">
@@ -186,17 +202,22 @@
                 <table class="table table-hover table-dark table-striped mb-0">
                     <thead>
                         <tr>
-                            <th width="60">ID</th>
-                            <th width="100">Hình ảnh</th>
-                            <th>Tên sản phẩm</th>
-                            <th width="150">Danh mục</th>
-                            <th width="120">Giá (VNĐ)</th>
-                            <th width="100">Trạng thái</th>
-                            <th width="140" class="text-center">Hành động</th>
+                        <th>Mã đơn</th>
+<th>Khách hàng</th>
+<th>SĐT</th>
+<th>Thanh toán</th>
+<th>Tổng tiền</th>
+<th>Trạng thái</th>
+<th>Ngày tạo</th>
+<th>Xem chi tiết</th>
+<th>Thao tác</th>
+
+
+
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (empty($productsPage ?? [])): ?>
+                    <?php if (empty($orders)): ?>
                             <tr>
                                 <td colspan="7" class="text-center py-5">
                                     <div class="text-muted">
@@ -207,91 +228,63 @@
                                 </td>
                             </tr>
                         <?php else: ?>
-                            <?php foreach ($productsPage as $product):
-                                $price = $product['price'] ?? 0;
-
-                                // SỬA: Lấy giá trị cột 'active' thay vì 'status'
-                                $active = isset($product['active']) ? (int)$product['active'] : 1;
-
-                                $image = $product['image'] ?? '';
-                                $name = $product['name'] ?? 'N/A';
-                                $category_id = $product['category_id'] ?? 0;
-                                $category = $categoryModel->find($category_id) ?? ['name' => 'N/A'];
+                            <?php foreach ($orders as $order):
+                              
                             ?>
-                                <tr>
-                                    <td>
-                                        <span class="badge bg-secondary">#<?= $product['id'] ?? 'N/A' ?></span>
-                                    </td>
-                                    <td>
-                                        <?php if (!empty($image)): ?>
-                                            <?php
-                                            $image_url = BASE_URL . $image;
-                                            $image_exists = file_exists($_SERVER['DOCUMENT_ROOT'] . parse_url($image_url, PHP_URL_PATH));
-                                            ?>
-                                            <?php if ($image_exists): ?>
-                                                <img src="<?= $image_url ?>"
-                                                    alt="<?= htmlspecialchars($name) ?>"
-                                                    width="60"
-                                                    height="60"
-                                                    class="img-thumbnail rounded"
-                                                    style="object-fit: cover;">
-                                            <?php else: ?>
-                                                <div class="text-center">
-                                                    <i class="fas fa-image fa-2x text-muted"></i>
-                                                    <div class="text-warning small">File mất</div>
-                                                </div>
-                                            <?php endif; ?>
-                                        <?php else: ?>
-                                            <div class="text-center">
-                                                <i class="fas fa-image fa-2x text-muted"></i>
-                                                <div class="text-muted small">Chưa có ảnh</div>
-                                            </div>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <div class="fw-semibold mb-1"><?= htmlspecialchars($name) ?></div>
-                                        <?php if (!empty($product['description'])): ?>
-                                            <small class="text-muted" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                                                <?= htmlspecialchars($product['description']) ?>
-                                            </small>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-primary">
-                                            <?= htmlspecialchars($category['name']) ?>
-                                        </span>
-                                    </td>
-                                    <td class="fw-bold text-success">
-                                        <?= number_format($price) ?> ₫
-                                    </td>
-                                    <td>
-                                        <!-- SỬA: Kiểm tra $active (0/1) thay vì $status -->
-                                        <span class="badge <?= $active == 1 ? 'bg-success' : 'bg-secondary' ?>">
-                                            <?= $active == 1 ? 'Hoạt động' : 'Không hoạt động' ?>
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="action-buttons justify-content-center">
-                                            <!-- Sửa link này -->
-                                            <a href="<?= BASE_URL ?>admin/product/edit/<?= htmlspecialchars($product['slug'] ?? '') ?>"
-                                                class="btn btn-sm btn-warning"
-                                                title="Chỉnh sửa">
-                                                <i class="fas fa-edit"></i> Sửa
-                                            </a>
+                               <tr>
+    <td>#<?= $order['ma_don_hang'] ?></td>
+    <td><?= htmlspecialchars($order['name']) ?></td>
+    <td><?= htmlspecialchars($order['phone']) ?></td>
+    <td><?= htmlspecialchars($order['payment']) ?></td>
+    <td class="text-success fw-bold">
+        <?= number_format($order['tong_tien']) ?> ₫
+    </td>
+    <td>
+        <span class="badge bg-info">
+            <?= htmlspecialchars($order['status']) ?>
+        </span>
+    </td>
+    <td><?= date('d/m/Y', strtotime($order['ngay_tao'])) ?></td>
+    <td>
+        <a href="<?= BASE_URL ?>admin/order/detail/<?= $order['id'] ?>"
+           class="btn btn-sm btn-primary">
+           Chi tiết
+        </a>
+    </td>
+    <td>
+    <?php
+        $allowedStatuses = OrderStatus::allowedNextStatuses($order['status']);
+    ?>
 
-                                            <form method="POST"
-                                                action="<?= BASE_URL ?>/admin/product/delete/<?= $product['id'] ?? 0 ?>"
-                                                class="d-inline"
-                                                onsubmit="return confirmDelete(this, '<?= htmlspecialchars(addslashes($name)) ?>')">
-                                                <button type="submit"
-                                                    class="btn btn-sm btn-danger"
-                                                    title="Xóa sản phẩm">
-                                                    <i class="fas fa-trash"></i> Xóa
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
+    <?php if (empty($allowedStatuses)): ?>
+        <span class="badge bg-success">
+            <?= htmlspecialchars($order['status']) ?>
+        </span>
+    <?php else: ?>
+        <form method="POST"
+              action="<?= BASE_URL ?>admin/order/update-status">
+            <input type="hidden" name="order_id" value="<?= $order['id'] ?>">
+
+            <select name="status"
+                    class="form-select form-select-sm bg-dark text-light border-secondary"
+                    onchange="this.form.submit()">
+
+                <option disabled selected>
+                    <?= htmlspecialchars($order['status']) ?>
+                </option>
+
+                <?php foreach ($allowedStatuses as $status): ?>
+                    <option value="<?= $status ?>">
+                        <?= ucfirst($status) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </form>
+    <?php endif; ?>
+</td>
+
+</tr>
+
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </tbody>

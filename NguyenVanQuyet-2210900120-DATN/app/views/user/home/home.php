@@ -10,7 +10,7 @@
                     </div>
                     <div class="col-xl-6 carousel-content p-4">
                         <h4 class="text-uppercase fw-bold mb-4 wow fadeInRight" data-wow-delay="0.1s"
-                            style="letter-spacing: 3px;">Save Up To $400</h4>
+                            style="letter-spacing: 3px;">Save Up To 400.000 vnđ</h4>
                         <h1 class="display-3 text-capitalize mb-4 wow fadeInRight" data-wow-delay="0.3s">On Selected
                             Kids' Outfits & Accessories</h1>
                         <p class="text-dark wow fadeInRight" data-wow-delay="0.5s">Terms and Conditions Apply</p>
@@ -200,7 +200,7 @@
                     <div class="row g-0">
                         <div class="col-5">
                             <div class="products-mini-img border-end h-100">
-                                <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>"><img src="<?= isset($product['image']) ? 'upload/' . $product['image'] : 'img/product-4.png' ?>"
+                                <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>"><img src=" <?=  BASE_URL .$product['image'] ?>"
                                         class="img-fluid w-100 h-100"
                                         alt="<?= htmlspecialchars($product['name']) ?>"></a>
                                     <!-- <div class="products-mini-icon rounded-circle bg-primary">
@@ -254,7 +254,9 @@
                         <div class="row g-0">
                             <div class="col-5">
                                 <div class="products-mini-img border-end h-100">
-                                    <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>"><img src="<?= isset($product['image']) ? 'upload/' . $product['image'] : 'img/product-3.png' ?>"
+                                    <a href="<?= isset($product['slug']) ? 'chi-tiet-san-pham/' . htmlspecialchars($product['slug']) : '#!' ?>">
+                                    <img src="<?=  BASE_URL . $product['image'] ?>"
+
                                             class="img-fluid w-100 h-100"
                                             alt="<?= htmlspecialchars($product['name']) ?>"></a>
                                     <div class="products-mini-icon rounded-circle bg-primary">

@@ -65,10 +65,10 @@ class CartController
         }
 
         $image = $product['image'] ?? null;
-        if (!empty($product['image_array'])) {
-            $imgs = array_map('trim', explode('","', trim($product['image_array'], '"')));
-            $image = $imgs[0] ?? $image;
-        }
+        // if (!empty($product['image_array'])) {
+        //     $imgs = array_map('trim', explode('","', trim($product['image_array'], '"')));
+        //     $image = $imgs[0] ?? $image;
+        // }
 
         if (!isset($_SESSION['cart'])) {
             $_SESSION['cart'] = [];
