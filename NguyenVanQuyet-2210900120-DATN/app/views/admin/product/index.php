@@ -1,4 +1,12 @@
-
+<?php
+if (isset($_SESSION['success_message'])) {
+    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">';
+    echo '<i class="fas fa-check-circle me-2"></i>' . htmlspecialchars($_SESSION['success_message']);
+    echo '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
+    echo '</div>';
+    unset($_SESSION['success_message']);
+}
+?>
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -36,7 +44,7 @@
         <div class="content-placeholder flex-grow-1">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h4 class="text-light mb-2"> 'Quản lý Sản phẩm' </h4>
+                    <h4 class="text-light mb-2"><?= $pageTitle ?? 'Quản lý Sản phẩm' ?></h4>
                     <p class="text-muted mb-0">Danh sách sản phẩm trong cửa hàng</p>
                 </div>
                 <a href="/admin/product/create" class="btn btn-success">
@@ -218,7 +226,7 @@
     <?php include BASE_PATH . '/app/views/admin/layout/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- <script>
+    <script>
         // Search functionality
         document.getElementById('searchBtn').addEventListener('click', function() {
             const search = document.getElementById('searchInput').value.trim();
@@ -268,7 +276,7 @@
                 }, 1000);
             }
         });
-    </script> -->
+    </script>
 </body>
 
 </html>
