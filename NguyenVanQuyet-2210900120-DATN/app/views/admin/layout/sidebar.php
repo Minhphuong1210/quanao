@@ -10,28 +10,28 @@
     </div>
     <nav class="nav flex-column flex-grow-1">
         <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin') === 0 && !strpos($_SERVER['REQUEST_URI'], '/category') && !strpos($_SERVER['REQUEST_URI'], '/product')) ? 'active' : '' ?>"
-            href="/admin" >
+            href="/admin" data-load="/admin?ajax=1">
             <i class="fas fa-chart-line me-2"></i> Dashboard
         </a>
-        <a class="nav-link  <?= (strpos($_SERVER['REQUEST_URI'], 'admin/category/index') !== false) ? 'active' : '' ?>"
-            href="/admin/category/index">
+        <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/category/index') !== false) ? 'active' : '' ?>"
+            href="/admin/category/index" data-load="/admin/category?ajax=1">
             <i class="fas fa-tags me-2"></i> Quản lý Category
         </a>
         <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/product') !== false) ? 'active' : '' ?>"
-            href="/admin/product" >
+            href="/admin/product" data-load="/admin/product?ajax=1">
             <i class="fas fa-box me-2"></i> Sản phẩm
         </a>
         <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/order') !== false) ? 'active' : '' ?>"
-            href="/admin/order" >
+            href="/admin/order" data-load="/admin/order?ajax=1">
             <i class="fas fa-shopping-cart me-2"></i> Đơn hàng
         </a>
         <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/user') !== false) ? 'active' : '' ?>"
-            href="/admin/user" >
+            href="/admin/user" data-load="/admin/user?ajax=1">
             <i class="fas fa-users me-2"></i> Người dùng
         </a>
         <hr class="text-muted my-2">
         <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/settings') !== false) ? 'active' : '' ?>"
-            href="/admin/settings" >
+            href="/admin/settings" data-load="/admin/settings?ajax=1">
             <i class="fas fa-cog me-2"></i> Cài đặt
         </a>
         <a class="nav-link text-danger" href="/admin/logout">

@@ -96,7 +96,6 @@ class Product
                     LEFT JOIN category c ON p.category_id = c.id
                     LEFT JOIN nha_cung_cap ncc ON p.nha_cung_cap_id = ncc.id
                     WHERE p.active = 1 
-                    ORDER BY p.id asc
                     LIMIT :limit OFFSET :offset";
 
             $stmt = $this->conn->prepare($sql);

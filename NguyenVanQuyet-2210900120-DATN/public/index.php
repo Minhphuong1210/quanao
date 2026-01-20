@@ -14,8 +14,6 @@ require_once BASE_PATH . '/app/controllers/user/CheckoutController.php';
 require_once BASE_PATH . '/app/controllers/user/AuthControllerUser.php';
 require_once BASE_PATH . '/app/controllers/admin/AdminController.php';
 require_once BASE_PATH . '/app/controllers/admin/AuthController.php';
-require_once BASE_PATH . '/app/controllers/admin/CheckOutAdminController.php';
-
 
 // $requestUri = $_SERVER['REQUEST_URI'];
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -27,7 +25,7 @@ $parts = explode('/', $url);
 if (isset($parts[0]) && $parts[0] === 'admin') {
 
     $adminController = new AdminController();
-    $checkOutAdminController = new CheckOutAdminController();
+    $checkOutController = new CheckOutController();
     // /admin/login
     if (isset($parts[1]) && $parts[1] === 'login') {
         $authController = new AuthController();
@@ -69,30 +67,20 @@ if (isset($parts[0]) && $parts[0] === 'admin') {
     }
 // /admin/order
 
-if (isset($parts[1]) && $parts[1] === 'order') {
-
-    // /admin/order
-    if (!isset($parts[2]) || $parts[2] === '') {
-        $checkOutAdminController->index();
-
-    // /admin/order/detail/5
-    } elseif ($parts[2] === 'detail' && isset($parts[3])) {
-        $checkOutAdminController->detail((int)$parts[3]);
-
-    // POST /admin/order/update-status
-    } elseif ($parts[2] === 'update-status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-        $checkOutAdminController->updateStatus();
-
-    } 
-    elseif ($parts[2] === 'detail' && isset($parts[3])) {
-        $checkOutAdminController->detail($parts[3]);
-    }else {
-        http_response_code(404);
-        die('404 Admin Order!');
+    if (isset($parts[1]) && $parts[1] === 'order') {
+        if (!isset($parts[2]) || $parts[2] === '') {
+            $checkOutController->index();
+        } elseif ($parts[2] === 'create') {
+            $checkOutController->add();
+        } elseif ($parts[2] === 'edit') {
+            $checkOutController->update($parts[3]);
+        } elseif ($parts[2] === 'delete') {
+            $checkOutController->delete($parts[3]);
+        } else {
+            die('404 Admin Ordert!'); // Sửa từ 'Category' thành 'Product'
+        }
+        exit();
     }
-
-    exit();
-}
 
     // /admin (mặc định)
     if (!isset($parts[1]) || $parts[1] === '') {

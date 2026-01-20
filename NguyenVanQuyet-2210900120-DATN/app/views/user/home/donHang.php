@@ -146,7 +146,7 @@ include BASE_PATH . '/app/views/user/layout/header.php';
         <?php endif; ?>
     </div>
 
-    <!-- <div class="form-check my-3">
+    <div class="form-check my-3">
         <input type="checkbox"
                class="form-check-input"
                id="Account-1"
@@ -156,7 +156,7 @@ include BASE_PATH . '/app/views/user/layout/header.php';
         <label class="form-check-label" for="Account-1">
             Tạo tài khoản?
         </label>
-    </div> -->
+    </div>
 
     <hr>
 

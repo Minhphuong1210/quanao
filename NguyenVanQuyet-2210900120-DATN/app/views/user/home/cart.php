@@ -47,20 +47,6 @@ include BASE_PATH . '/app/views/user/layout/header.php';
 
 		                        <td>
 		                            <div class="d-flex align-items-center">
-
-
-<?php 
-
-// // nếu mà ảnh là 1 mảng thì lấy ảnh đầu tiên 
-
-// if(($item['image'])->count()>=2){
-    
-// }
-
-
-
-?>
-
 		                                <img src="<?=BASE_URL?>/<?=$item['image']?>" width="70" class="me-3 rounded">
 
 		                            </div>
