@@ -74,20 +74,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $variants = $_POST['variants'] ?? [];
 
     // Validation
-    $errors = [];
+    // $errors = [];
 
-    if (strlen($name) < 3 || strlen($name) > 225) {
-        $errors[] = 'Tên sản phẩm phải từ 3 đến 225 ký tự.';
-    }
-    if ($price <= 0) {
-        $errors[] = 'Giá sản phẩm phải lớn hơn 0.';
-    }
-    if ($category_id <= 0) {
-        $errors[] = 'Vui lòng chọn danh mục.';
-    }
-    if ($nha_cung_cap_id <= 0) {
-        $errors[] = 'Vui lòng chọn nhà cung cấp.';
-    }
+    // if (strlen($name) < 3 || strlen($name) > 225) {
+    //     $errors[] = 'Tên sản phẩm phải từ 3 đến 225 ký tự.';
+    // }
+    // if ($price <= 0) {
+    //     $errors[] = 'Giá sản phẩm phải lớn hơn 0.';
+    // }
+    // if ($category_id <= 0) {
+    //     $errors[] = 'Vui lòng chọn danh mục.';
+    // }
+    // if ($nha_cung_cap_id <= 0) {
+    //     $errors[] = 'Vui lòng chọn nhà cung cấp.';
+    // }
 
     $valid_variants = 0;
     foreach ($variants as $v) {
@@ -97,9 +97,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $valid_variants++;
         }
     }
-    if ($valid_variants === 0) {
-        $errors[] = 'Phải có ít nhất 1 biến thể (size + màu) hợp lệ.';
-    }
+    // if ($valid_variants === 0) {
+    //     $errors[] = 'Phải có ít nhất 1 biến thể (size + màu) hợp lệ.';
+    // }
 
     if (!empty($errors)) {
         $error = implode('<br>', $errors);
@@ -935,6 +935,9 @@ function createSlug($string)
         let variantIndex = <?php echo isset($_POST['variants']) ? count($_POST['variants']) : 1; ?>;
 
         document.getElementById('addVariant').addEventListener('click', function() {
+
+console.log('123');
+
             const template = `
                 <div class="variant-row" data-index="${variantIndex}">
                     <div class="row">

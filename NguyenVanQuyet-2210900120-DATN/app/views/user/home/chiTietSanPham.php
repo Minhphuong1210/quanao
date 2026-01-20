@@ -562,7 +562,7 @@ $hasSubImages = !empty($image_list);
             btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang thêm...';
 
             try {
-                const res = await fetch('<?= BASE_URL ?>cart/add', {
+                const res = await fetch('<?= BASE_URL ?>postCart', {
                     method: 'POST',
                     body: new FormData(form)
                 });

@@ -152,7 +152,7 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
+    <!-- <script>
         function toggleSidebar() {
             document.querySelector('.sidebar').classList.toggle('show');
         }
@@ -194,7 +194,7 @@
                             });
 
                             // Clear old alerts
-                            document.querySelectorAll('.alert').forEach(alert => alert.remove());
+                            document.querySelectorAll('.alert').forEac(alert => alert.remove());
 
                             // Scroll to top
                             window.scrollTo(0, 0);
@@ -214,7 +214,7 @@
                 }
             }
         });
-    </script>
+    </script> -->
 </body>
 
 </html>
