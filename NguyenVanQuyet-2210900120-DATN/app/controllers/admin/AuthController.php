@@ -25,21 +25,34 @@ class AuthController {
         // Check mật khẩu
         $user = $userModel->checkMatKhau($tel, $password);
     
-        if ($user) {
-            // Nếu đúng, set session
-            $_SESSION['admin_logged_in'] = true;
-            $_SESSION['admin_id'] = $user['id'];
-            $_SESSION['admin_name'] = $user['name'] ?? $user['username'];
-    
-            // Redirect vào dashboard
-            header('Location: ' . BASE_URL . 'admin');
-            exit;
-        } else {
-            // Nếu sai, quay về login
-            $_SESSION['error'] = "Tel hoặc mật khẩu không đúng!";
+        if (!$user) {
+            $_SESSION['error'] = 'Tel hoặc mật khẩu không đúng!';
             header('Location: ' . BASE_URL . 'admin/login');
             exit;
         }
+    
+        
+        if ((int)$user['active'] !== 1) {
+            $_SESSION['error'] = 'Tài khoản đã bị khóa!';
+            header('Location: ' . BASE_URL . 'admin/login');
+            exit;
+        }
+    
+       
+        if ((int)$user['is_admin'] !== 1) {
+            $_SESSION['error'] = 'Bạn không có quyền truy cập trang quản trị!';
+            header('Location: ' . BASE_URL . 'admin/login');
+            exit;
+        }
+
+
+        $_SESSION['admin_logged_in'] = true;
+        $_SESSION['admin_id'] = $user['id'];
+        $_SESSION['admin_name'] = $user['name'];
+        $_SESSION['is_admin'] = 1;
+    
+        header('Location: ' . BASE_URL . 'admin');
+        exit;
     }
     
 

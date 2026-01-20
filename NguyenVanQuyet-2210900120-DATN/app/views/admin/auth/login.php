@@ -54,6 +54,19 @@
 
 <div class="login-card">
     <h2>Admin Login</h2>
+
+
+
+<?php if (!empty($_SESSION['error'])): ?>
+    <div style="color:red;">
+        <?= $_SESSION['error'] ?>
+    </div>
+<?php 
+    unset($_SESSION['error']); // xóa sau khi hiển thị
+endif; 
+?>
+
+
     <form action="<?= BASE_URL ?>postLogin" method="POST">
         <div class="mb-3">
             <label for="tel" class="form-label">Số điện thoại</label>

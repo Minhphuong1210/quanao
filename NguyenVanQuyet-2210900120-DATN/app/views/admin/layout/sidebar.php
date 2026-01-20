@@ -21,6 +21,23 @@
             href="/admin/product" >
             <i class="fas fa-box me-2"></i> Sản phẩm
         </a>
+
+        <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/nha-cung-cap') !== false) ? 'active' : '' ?>"
+            href="/admin/nha_cung_cap" >
+            <i class="fas fa-cog me-2"></i> Nhà cung cấp
+        </a>
+
+        <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/size') !== false) ? 'active' : '' ?>"
+            href="/admin/sizes" >
+            <i class="fas fa-cog me-2"></i> Kích thước
+        </a>
+
+        <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/size') !== false) ? 'active' : '' ?>"
+            href="/admin/colors" >
+            <i class="fas fa-cog me-2"></i> Màu sắc
+        </a>
+
+
         <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/order') !== false) ? 'active' : '' ?>"
             href="/admin/order" >
             <i class="fas fa-shopping-cart me-2"></i> Đơn hàng
@@ -30,10 +47,10 @@
             <i class="fas fa-users me-2"></i> Người dùng
         </a>
         <hr class="text-muted my-2">
-        <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/settings') !== false) ? 'active' : '' ?>"
+        <!-- <a class="nav-link load-content <?= (strpos($_SERVER['REQUEST_URI'], 'admin/settings') !== false) ? 'active' : '' ?>"
             href="/admin/settings" >
             <i class="fas fa-cog me-2"></i> Cài đặt
-        </a>
+        </a> -->
         <a class="nav-link text-danger" href="/admin/logout">
             <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
         </a>

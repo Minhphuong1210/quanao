@@ -187,4 +187,13 @@ class HomeController
         }
         exit();
     }
+
+public function gioiThieuVeChungToi(){
+    include BASE_PATH . '/app/views/user/home/gioiThieuVeChungToi.php';
+}
+
+public function danhMucTinTuc(){
+    include BASE_PATH . '/app/views/user/home/danhMucTinTuc.php';
+}
+
 }

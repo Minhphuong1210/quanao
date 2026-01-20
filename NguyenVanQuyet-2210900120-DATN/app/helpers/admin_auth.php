@@ -29,22 +29,15 @@
 }
 
 
-function checkUserLogin($currentUrl = null)
+function checkUserLogin()
 {
-    if ($currentUrl === null) {
-        $currentUrl = $_SERVER['REQUEST_URI'];
-    }
+// check xem người dùng này đã đăng nhập hay chưa bằng cách là chekc cái user_logged_in
 
-    $currentUrl = strtok($currentUrl, '?');
+   
+if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] !== true) {
+    header('Location: /loginUser');
+    exit;
+}
 
-    // Trang login thì không check
-    if ($currentUrl === '/loginUser') {
-        return;
-    }
-
-    if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] !== true) {
-        header('Location: /loginUser');
-        exit;
-    }
 }
 

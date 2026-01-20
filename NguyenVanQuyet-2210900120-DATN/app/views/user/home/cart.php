@@ -49,18 +49,6 @@ include BASE_PATH . '/app/views/user/layout/header.php';
 		                            <div class="d-flex align-items-center">
 
 
-<?php 
-
-// // nếu mà ảnh là 1 mảng thì lấy ảnh đầu tiên 
-
-// if(($item['image'])->count()>=2){
-    
-// }
-
-
-
-?>
-
 		                                <img src="<?=BASE_URL?>/<?=$item['image']?>" width="70" class="me-3 rounded">
 
 		                            </div>
@@ -71,7 +59,7 @@ include BASE_PATH . '/app/views/user/layout/header.php';
 		<div>
 		                                    <strong><?=htmlspecialchars($item['name'])?></strong><br>
 		                                    <small class="text-muted">
-		                                        Size: <?=$item['name_size'] ?? '-'?> |
+                                            Kích cỡ: <?=$item['name_size'] ?? '-'?> |
 		                                        Màu: <?=$item['name_color'] ?? '-'?>
 		                                    </small>
 		                                </div>

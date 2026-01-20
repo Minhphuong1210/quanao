@@ -3,7 +3,7 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <head>
     <meta charset="utf-8">
-    <title>Electro - Electronics Website Template</title>
+    <title>QUYET-KIDDO FASHION</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -22,15 +22,19 @@
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     <!-- Libraries CSS -->
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/lib/animate/animate.min.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/lib/owlcarousel/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="<?=BASE_URL?>assets/lib/animate/animate.min.css">
+    <link rel="stylesheet" href="<?=BASE_URL?>assets/lib/owlcarousel/assets/owl.carousel.min.css">
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?=BASE_URL?>assets/css/bootstrap.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
+    <link rel="stylesheet" href="<?=BASE_URL?>assets/css/style.css">
+    <link rel="icon" type="image/jpeg"
+      href="<?=BASE_URL?>uploads/logo/logo.jpg">
 
+<link rel="apple-touch-icon"
+      href="<?=BASE_URL?>uploads/logo/logo.jpg">
 <style>
 .nav-custom {
     display: flex;
@@ -59,6 +63,123 @@
 .navbar-nav .nav-link.active {
     color: white !important;
 }
+/* Logo mặc định – Desktop */
+/* Wrapper logo */
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+/* LOGO – Desktop lớn */
+.logo-img {
+    height: 120px;      /* TO HƠN RÕ */
+    width: auto;
+    object-fit: contain;
+}
+
+/* Laptop */
+@media (max-width: 1200px) {
+    .logo-img {
+        height: 100px;
+    }
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+    .logo-img {
+        height: 80px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+    .logo-img {
+        height: 60px;
+    }
+}
+
+/* =========================
+   MOBILE FIX (<= 576px)
+========================= */
+@media (max-width: 576px) {
+
+/* Giảm padding container */
+.container-fluid.px-5 {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+/* Ẩn topbar desktop */
+.container-fluid.border-bottom {
+    display: none !important;
+}
+
+/* Logo mobile */
+.logo-img {
+    height: 55px;
+    max-width: 100%;
+}
+
+/* Header logo + search + cart xếp dọc */
+.container-fluid.py-4 {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+/* Search */
+.container-fluid .col-lg-6 {
+    margin-top: 10px;
+}
+
+.container-fluid input.form-control {
+    padding: 10px 15px;
+    font-size: 14px;
+}
+
+.container-fluid button.btn {
+    padding: 10px 16px;
+}
+
+/* Cart */
+.container-fluid .col-lg-3.text-lg-end {
+    margin-top: 10px;
+    text-align: center !important;
+}
+
+/* Navbar */
+.nav-bar .row {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.navbar {
+    padding: 8px 0;
+}
+
+.navbar-brand h1 {
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+/* Menu mobile */
+.navbar-nav {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+}
+
+.navbar-nav .nav-link {
+    padding: 10px 0;
+    width: 100%;
+}
+
+/* Hotline */
+.btn-secondary {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+}
+}
+
 
 
 </style>
@@ -70,16 +191,16 @@
     <div class="container-fluid px-5 d-none border-bottom d-lg-block">
         <div class="row gx-0 align-items-center">
             <div class="col-lg-4 text-center text-lg-start mb-lg-0">
-                <div class="d-inline-flex align-items-center" style="height: 45px;">
-                    <a href="#!" class="text-muted me-2"> Help</a><small> / </small>
-                    <a href="#!" class="text-muted mx-2"> Support</a><small> / </small>
-                    <a href="#!" class="text-muted ms-2"> Contact</a>
+                <div class="d-inline-flex align-items-center" style="">
+                    <a href="#!" class="text-muted me-2"> Giúp </a><small> / </small>
+                    <a href="#!" class="text-muted mx-2"> Hỗ trợ</a><small> / </small>
+                    <a href="#!" class="text-muted ms-2"> Liên hệ</a>
 
                 </div>
             </div>
             <div class="col-lg-4 text-center d-flex align-items-center justify-content-center">
-                <small class="text-dark">Call Us:</small>
-                <a href="#!" class="text-muted">(+012) 1234 567890</a>
+                <small class="text-dark">Liên hệ:</small>
+                <a href="#!" class="text-muted">0975142461</a>
             </div>
 
             <div class="col-lg-4 d-flex justify-content-end align-items-center">
@@ -89,11 +210,11 @@ $isLogin = isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] ===
 
 <?php if (!$isLogin): ?>
     <!-- CHƯA ĐĂNG NHẬP -->
-    <a href="<?= BASE_URL ?>loginUser" class="nav-item nav-link">
+    <a href="<?=BASE_URL?>loginUser" class="nav-item nav-link">
         <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập
     </a>
 
-    <a href="<?= BASE_URL ?>register" class="nav-item nav-link">
+    <a href="<?=BASE_URL?>register" class="nav-item nav-link">
         <i class="fas fa-user-plus me-1"></i> Đăng ký
     </a>
 
@@ -103,29 +224,29 @@ $isLogin = isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] ===
         <a href="#" class="nav-link dropdown-toggle"
            data-bs-toggle="dropdown">
             <i class="fas fa-user-circle me-1"></i>
-            <?= htmlspecialchars($_SESSION['user_name']) ?>
+            <?=htmlspecialchars($_SESSION['user_name'])?>
         </a>
 
         <div class="dropdown-menu dropdown-menu-end m-0">
-            <a href="<?= BASE_URL ?>account/profile" class="dropdown-item">
+            <a href="<?=BASE_URL?>account/profile" class="dropdown-item">
                 <i class="fas fa-id-card me-2"></i> Thông tin cá nhân
             </a>
 
-            <a href="<?= BASE_URL ?>theo-doi-don-hang" class="dropdown-item">
+            <a href="<?=BASE_URL?>theo-doi-don-hang" class="dropdown-item">
                 <i class="fas fa-box me-2"></i> Đơn hàng của tôi
             </a>
 
             <div class="dropdown-divider"></div>
 
-            <a href="<?= BASE_URL ?>logout" class="dropdown-item text-danger">
+            <a href="<?=BASE_URL?>logout" class="dropdown-item text-danger">
                 <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
             </a>
         </div>
     </div>
 <?php endif; ?>
-   
+
             </div>
-           
+
         </div>
     </div>
     <div class="container-fluid px-5 py-4 d-none d-lg-block">
@@ -133,9 +254,16 @@ $isLogin = isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] ===
             <div class="col-md-4 col-lg-3 text-center text-lg-start">
                 <div class="d-inline-flex align-items-center">
                     <a href="#" class="navbar-brand p-0">
-                        <h1 class="display-5 text-primary m-0"><i
-                                class="fas fa-shopping-bag text-secondary me-2"></i>Electro</h1>
+                        <!-- <h1 class="display-5 text-primary m-0"><i
+                                class="fas fa-shopping-bag text-secondary me-2"></i>Electro</h1> -->
                         <!-- <img src="img/logo.png" alt="Logo"> -->
+
+                        <h1 class="logo m-0">
+    <a href="/">
+        <img src="<?=BASE_URL . '/uploads/logo/logo.jpg'?>" alt="Electro" class="logo-img">
+    </a>
+</h1>
+
                     </a>
                 </div>
             </div>
@@ -158,21 +286,21 @@ $totalCart = 0;
 
 if (!empty($cart)) {
     foreach ($cart as $item) {
-        $qty   = (int) ($item['quantity'] ?? 0);
+        $qty = (int) ($item['quantity'] ?? 0);
         $price = (int) ($item['price'] ?? 0);
         $totalCart += $qty * $price;
     }
 }
 ?>
 
-<a href="<?= BASE_URL ?>cart"
+<a href="<?=BASE_URL?>cart"
    class="text-muted d-flex align-items-center justify-content-center">
     <span class="rounded-circle btn-md-square border">
         <i class="fas fa-shopping-cart"></i>
     </span>
 
     <span class="text-dark ms-2">
-        <?= number_format($totalCart, 0, ',', '.') ?>₫
+        <?=number_format($totalCart, 0, ',', '.')?>₫
     </span>
 </a>
                 </div>
@@ -184,175 +312,117 @@ if (!empty($cart)) {
     <!-- Navbar & Hero Start -->
     <div class="container-fluid nav-bar p-0">
         <div class="row gx-0 bg-primary px-5 align-items-center">
-          
+
             <div class="col-12 col-lg-12">
-                <nav class="navbar navbar-expand-lg navbar-light bg-primary ">
-                    <a href="#" class="navbar-brand d-block d-lg-none">
-                        <h1 class="display-5 text-secondary m-0"><i
-                                class="fas fa-shopping-bag text-white me-2"></i>Electro</h1>
-                        <!-- <img src="img/logo.png" alt="Logo"> -->
-                    </a>
-                  
-                    <div class="collapse navbar-collapse" id="navbarCollapse">
-    <div class="navbar-nav d-flex w-100 py-0 nav-custom">
+            <nav class="navbar navbar-expand-lg navbar-light bg-primary">
 
-        <!-- Home -->
-        <a href="<?= BASE_URL ?>" class="nav-item nav-link active">Trang chủ</a>
+<!-- LOGO MOBILE -->
+<a href="<?=BASE_URL?>" class="navbar-brand d-flex align-items-center d-lg-none">
+    <img src="<?=BASE_URL?>uploads/logo/logo.jpg" alt="Logo" style="height:40px">
+    <span class="text-white ms-2 fw-bold">QUYET-KIDDO</span>
+</a>
 
+<!-- NÚT MENU MOBILE (BẮT BUỘC) -->
+<button class="navbar-toggler ms-auto" type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarCollapse"
+        aria-controls="navbarCollapse"
+        aria-expanded="false"
+        aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
 
+<!-- MENU -->
+<div class="collapse navbar-collapse" id="navbarCollapse">
+    <div class="navbar-nav w-100 nav-custom">
 
+        <a href="<?=BASE_URL?>" class="nav-item nav-link active">Trang chủ</a>
 
+        <?php
+        require_once BASE_PATH . '/app/models/category.php';
+        $categoryModel = new category();
+        $danh_muc = $categoryModel->getAll();
+        ?>
 
-
-
-<?php 
-
-require_once BASE_PATH . '/app/models/category.php';
-$categoryModel = new category();
-$danh_muc = $categoryModel->getAll();
-
-
-
-
-?>
-
+        <!-- TẤT CẢ SẢN PHẨM -->
         <div class="nav-item dropdown">
-            <a href="<?= BASE_URL ?>tat-ca-san-pham" class="nav-link dropdown-toggle" >
+            <a href="<?=BASE_URL?>tat-ca-san-pham"
+               class="nav-link dropdown-toggle"
+               data-bs-toggle="dropdown">
                 Tất cả sản phẩm
             </a>
             <div class="dropdown-menu m-0">
-            <?php foreach ($danh_muc as $dm): ?>
-        <a href="<?= BASE_URL ?>category/<?= $dm['slug'] ?>" class="dropdown-item">
-            <?= htmlspecialchars($dm['name']) ?>
-        </a>
-    <?php endforeach; ?>
+                <?php foreach ($danh_muc as $dm): ?>
+                    <a href="<?=BASE_URL?>category/<?=$dm['slug']?>"
+                       class="dropdown-item">
+                        <?=htmlspecialchars($dm['name'])?>
+                    </a>
+                <?php endforeach; ?>
             </div>
         </div>
 
-        <!-- Shop -->
         <div class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+            <a href="#" class="nav-link dropdown-toggle"
+               data-bs-toggle="dropdown">
                 Tin tức
             </a>
             <div class="dropdown-menu m-0">
-                <a href="<?= BASE_URL ?>bestseller" class="dropdown-item">Bestseller</a>
-               
+                <a href="<?=BASE_URL?>bestseller" class="dropdown-item">
+                    Bestseller
+                </a>
             </div>
         </div>
 
-        <!-- Single product (ví dụ) -->
-        <a href="<?= BASE_URL ?>product/sample-product" class="nav-item nav-link">
+        <a href="<?=BASE_URL?>product/sample-product"
+           class="nav-item nav-link">
             Về chúng tôi
         </a>
 
-        <!-- Pages -->
-       
-
-        <!-- Contact -->
-        <a href="<?= BASE_URL ?>contact" class="nav-item nav-link me-2">Liên hệ</a>
-
-        <!-- All Category (mobile only) -->
-        <div class="nav-item dropdown d-block d-lg-none mb-3">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                All Category
-            </a>
-            <div class="dropdown-menu m-0">
-                <ul class="list-unstyled categories-bars">
-                    <li>
-                        <div class="categories-bars-item">
-                            <a href="<?= BASE_URL ?>category/accessories">Accessories</a>
-                            <span>(3)</span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="categories-bars-item">
-                            <a href="<?= BASE_URL ?>category/electronics-computer">
-                                Electronics & Computer
-                            </a>
-                            <span>(5)</span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="categories-bars-item">
-                            <a href="<?= BASE_URL ?>category/laptop-desktop">
-                                Laptops & Desktops
-                            </a>
-                            <span>(2)</span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="categories-bars-item">
-                            <a href="<?= BASE_URL ?>category/mobile-tablet">
-                                Mobiles & Tablets
-                            </a>
-                            <span>(8)</span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="categories-bars-item">
-                            <a href="<?= BASE_URL ?>category/smart-device">
-                                SmartPhone & Smart TV
-                            </a>
-                            <span>(5)</span>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-    </div>
-
-    <?php
-$isLogin = isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true;
-?>
-
-<?php if (!$isLogin): ?>
-    <!-- CHƯA ĐĂNG NHẬP -->
-    <a href="<?= BASE_URL ?>login" class="nav-item nav-link">
-        <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập
-    </a>
-
-    <a href="<?= BASE_URL ?>register" class="nav-item nav-link">
-        <i class="fas fa-user-plus me-1"></i> Đăng ký
-    </a>
-
-<?php else: ?>
-    <!-- ĐÃ ĐĂNG NHẬP -->
-    <div class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-           data-bs-toggle="dropdown">
-            <i class="fas fa-user-circle me-1"></i>
-            <?= htmlspecialchars($_SESSION['user_name']) ?>
+        <a href="<?=BASE_URL?>contact"
+           class="nav-item nav-link">
+            Liên hệ
         </a>
 
-        <div class="dropdown-menu dropdown-menu-end m-0">
-            <a href="<?= BASE_URL ?>account/profile" class="dropdown-item">
-                <i class="fas fa-id-card me-2"></i> Thông tin cá nhân
+        <!-- LOGIN -->
+        <?php if (!$isLogin): ?>
+            <a href="<?=BASE_URL?>login" class="nav-item nav-link">
+                Đăng nhập
             </a>
-
-            <a href="<?= BASE_URL ?>account/orders" class="dropdown-item">
-                <i class="fas fa-box me-2"></i> Đơn hàng của tôi
+            <a href="<?=BASE_URL?>register" class="nav-item nav-link">
+                Đăng ký
             </a>
+        <?php else: ?>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle"
+                   data-bs-toggle="dropdown">
+                    <?=htmlspecialchars($_SESSION['user_name'])?>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <a href="<?=BASE_URL?>account/profile"
+                       class="dropdown-item">Tài khoản</a>
 
-            <div class="dropdown-divider"></div>
+                       <!-- <a href="<?=BASE_URL?>account/profile"
+                       class="dropdown-item">Thông tin cá nhân</a> -->
 
-            <a href="<?= BASE_URL ?>logout" class="dropdown-item text-danger">
-                <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
-            </a>
-        </div>
+                       <a href="<?=BASE_URL?>theo-doi-don-hang"
+                       class="dropdown-item">Đơn hàng của tôi</a>
+
+                    <a href="<?=BASE_URL?>logout"
+                       class="dropdown-item text-danger">Đăng xuất</a>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <!-- HOTLINE MOBILE -->
+        <a href="tel:0975142461"
+           class="btn btn-secondary mt-2 d-lg-none">
+             0975 142 461
+        </a>
+
     </div>
-<?php endif; ?>
-
-
-    <!-- Hotline -->
-    <a href="tel:+01234567890"
-       class="btn btn-secondary py-2 px-4 px-lg-3 mb-3 mb-md-3 mb-lg-0">
-        <i class="fa fa-mobile-alt me-2"></i> +0123 456 7890
-    </a>
 </div>
+</nav>
 
-                </nav>
             </div>
         </div>
     </div>
-    <!-- Navbar & Hero End -->

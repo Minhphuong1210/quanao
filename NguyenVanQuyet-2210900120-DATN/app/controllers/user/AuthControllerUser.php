@@ -26,6 +26,15 @@ class AuthControllerUser
             $user = $userModel->checkMatKhau($tel, $password);
 
             if ($user) {
+
+
+                if ((int)$user['active'] !== 1) {
+                    $_SESSION['error'] = 'Tài khoản đã bị khóa!';
+                    header('Location: ' . BASE_URL . 'admin/login');
+                    exit;
+                }
+            
+
                 // Login thành công
                 $_SESSION['user_logged_in'] = true;
                 $_SESSION['user_id'] = $user['id'];

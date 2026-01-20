@@ -216,4 +216,55 @@ class Order
         ]);
     }
 
+    public function updatePaymentStatus($orderId, $payment)
+    {
+        $sql = "
+            UPDATE orders
+            SET payment = :payment
+            WHERE id = :id
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':payment' => $payment,
+            ':id' => $orderId,
+        ]);
+    }
+// tổng đơn 
+    public function getSummary()
+{
+    $sql = "
+        SELECT 
+            COUNT(*) AS total_orders,
+            COALESCE(SUM(tong_tien), 0) AS total_revenue
+        FROM orders
+    ";
+    return $this->pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
+}
+// thống kê theo trạng thái biểu đồ tròn 
+public function getOrderByStatus()
+{
+    $sql = "
+        SELECT status, COUNT(*) AS total
+        FROM orders
+        GROUP BY status
+    ";
+    return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// doanh thu theo ngày 
+public function getRevenueByDate()
+{
+    $sql = "
+        SELECT 
+            DATE(ngay_tao) AS order_date,
+            SUM(tong_tien) AS revenue
+        FROM orders
+        GROUP BY DATE(ngay_tao)
+        ORDER BY order_date ASC
+    ";
+    return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 }

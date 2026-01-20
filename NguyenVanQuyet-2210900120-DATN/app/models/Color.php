@@ -28,6 +28,12 @@ class Color
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+    public function countAll()
+    {
+        return $this->conn->query("SELECT COUNT(*) FROM colors where active =1 ")->fetchColumn();
+    }
+
     /**
      * (OPTIONAL) Lấy màu + số sản phẩm
      */
@@ -93,7 +99,7 @@ class Color
     public function find($id)
     {
         $sql = "
-            SELECT id, name, ma_mau
+            SELECT id, name, ma_mau,slug,active
             FROM colors
             WHERE id = :id AND active = 1
             LIMIT 1
@@ -103,6 +109,49 @@ class Color
         $stmt->execute(['id' => $id]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function create($data)
+    {
+        $sql = "INSERT INTO colors (name, ma_mau, slug, active)
+                VALUES (:name, :ma_mau, :slug, :active)";
+
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':name'   => $data['name'],
+            ':ma_mau' => $data['ma_mau'],
+            ':slug'   => $data['slug'],
+            ':active' => $data['active'] ?? 1,
+        ]);
+    }
+
+    /* ===== UPDATE ===== */
+    public function update($id, $data)
+    {
+        $sql = "UPDATE colors
+                SET name = :name,
+                    ma_mau = :ma_mau,
+                    slug = :slug,
+                    active = :active
+                WHERE id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':name'   => $data['name'],
+            ':ma_mau' => $data['ma_mau'],
+            ':slug'   => $data['slug'],
+            ':active' => $data['active'],
+            ':id'     => $id,
+        ]);
+    }
+
+    /* ===== DELETE (soft) ===== */
+    public function delete($id)
+    {
+        $stmt = $this->conn->prepare(
+            "UPDATE colors SET active = 0 WHERE id = :id"
+        );
+        return $stmt->execute(['id' => $id]);
     }
 
 }

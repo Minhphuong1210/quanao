@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    <style>
+    <!-- <style>
         :root {
             --primary: #6366f1;
             --bg-dark: #0f172a;
@@ -98,7 +98,11 @@
                 margin-left: 0;
             }
         }
-    </style>
+    </style> -->
+
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/admin/css/style.css">
+
+
 </head>
 
 <body>
@@ -146,7 +150,7 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table table-dark table-hover mb-0">
+            <table class="table  table-hover mb-0">
                 <thead>
                     <tr>
                         <th>Ảnh</th>
