@@ -237,62 +237,62 @@
         }
 
         // JS cho SPA-like: Load content động từ sidebar (không chuyển trang)
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     const contentPlaceholder = document.querySelector('.content-placeholder');
-        //     const navLinks = document.querySelectorAll('.load-content');
-        //     const alertsContainer = document.querySelector('.main-content');
+        document.addEventListener('DOMContentLoaded', function() {
+            const contentPlaceholder = document.querySelector('.content-placeholder');
+            const navLinks = document.querySelectorAll('.load-content');
+            const alertsContainer = document.querySelector('.main-content');
 
-        //     navLinks.forEach(link => {
-        //         link.addEventListener('click', function(e) {
-        //             e.preventDefault();
-        //             const loadUrl = this.getAttribute('data-load');
-        //             if (!loadUrl) return;
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const loadUrl = this.getAttribute('data-load');
+                    if (!loadUrl) return;
 
-        //             // Show loading spinner
-        //             contentPlaceholder.innerHTML = '<div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-3x text-primary mb-3"></i><h4>Đang tải...</h4></div>';
+                    // Show loading spinner
+                    contentPlaceholder.innerHTML = '<div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-3x text-primary mb-3"></i><h4>Đang tải...</h4></div>';
 
-        //             // Fetch content via AJAX
-        //             fetch(loadUrl)
-        //                 .then(response => {
-        //                     if (!response.ok) throw new Error('Lỗi tải nội dung');
-        //                     return response.text();
-        //                 })
-        //                 .then(html => {
-        //                     // Inject HTML vào placeholder
-        //                     contentPlaceholder.innerHTML = html;
+                    // Fetch content via AJAX
+                    fetch(loadUrl)
+                        .then(response => {
+                            if (!response.ok) throw new Error('Lỗi tải nội dung');
+                            return response.text();
+                        })
+                        .then(html => {
+                            // Inject HTML vào placeholder
+                            contentPlaceholder.innerHTML = html;
 
-        //                     // Update active class
-        //                     navLinks.forEach(l => l.classList.remove('active'));
-        //                     this.classList.add('active');
+                            // Update active class
+                            navLinks.forEach(l => l.classList.remove('active'));
+                            this.classList.add('active');
 
-        //                     // Re-init Bootstrap components (modals, tables, etc.)
-        //                     const modals = document.querySelectorAll('[data-bs-toggle="modal"], .modal');
-        //                     modals.forEach(m => {
-        //                         const modal = bootstrap.Modal.getInstance(m) || new bootstrap.Modal(m);
-        //                         // Không show modal tự động, chỉ re-init
-        //                     });
+                            // Re-init Bootstrap components (modals, tables, etc.)
+                            const modals = document.querySelectorAll('[data-bs-toggle="modal"], .modal');
+                            modals.forEach(m => {
+                                const modal = bootstrap.Modal.getInstance(m) || new bootstrap.Modal(m);
+                                // Không show modal tự động, chỉ re-init
+                            });
 
-        //                     // Clear old alerts
-        //                     document.querySelectorAll('.alert').forEach(alert => alert.remove());
+                            // Clear old alerts
+                            document.querySelectorAll('.alert').forEach(alert => alert.remove());
 
-        //                     // Scroll to top
-        //                     window.scrollTo(0, 0);
-        //                 })
-        //                 .catch(error => {
-        //                     console.error('Lỗi AJAX:', error);
-        //                     contentPlaceholder.innerHTML = '<div class="alert alert-danger text-center py-5"><i class="fas fa-exclamation-triangle me-2"></i>Lỗi tải nội dung. <a href="' + this.href + '" class="alert-link">Thử lại</a></div>';
-        //                 });
-        //         });
-        //     });
+                            // Scroll to top
+                            window.scrollTo(0, 0);
+                        })
+                        .catch(error => {
+                            console.error('Lỗi AJAX:', error);
+                            contentPlaceholder.innerHTML = '<div class="alert alert-danger text-center py-5"><i class="fas fa-exclamation-triangle me-2"></i>Lỗi tải nội dung. <a href="' + this.href + '" class="alert-link">Thử lại</a></div>';
+                        });
+                });
+            });
 
-        //     // Auto-load default content nếu placeholder trống (ví dụ: dashboard)
-        //     if (contentPlaceholder.innerHTML.includes('Nội dung sẽ được load') || contentPlaceholder.innerHTML.includes('Đang tải nội dung')) {
-        //         const defaultLink = document.querySelector('.load-content[href="/admin"]');
-        //         if (defaultLink) {
-        //             defaultLink.click();
-        //         }
-        //     }
-        // });
+            // Auto-load default content nếu placeholder trống (ví dụ: dashboard)
+            if (contentPlaceholder.innerHTML.includes('Nội dung sẽ được load') || contentPlaceholder.innerHTML.includes('Đang tải nội dung')) {
+                const defaultLink = document.querySelector('.load-content[href="/admin"]');
+                if (defaultLink) {
+                    defaultLink.click();
+                }
+            }
+        });
     </script>
 </body>
 

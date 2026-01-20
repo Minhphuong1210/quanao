@@ -242,36 +242,36 @@ class AdminController
             $variants = $_POST['variants'] ?? [];
 
             // Validation
-            // $errors = [];
-            // if (strlen($name) < 1 || strlen($name) > 225) {
-            //     $errors[] = 'Tên sản phẩm phải từ 3 đến 225 ký tự.';
-            // }
-            // if ($price <= 0) {
-            //     $errors[] = 'Giá sản phẩm phải lớn hơn 0.';
-            // }
-            // if ($category_id <= 0) {
-            //     $errors[] = 'Vui lòng chọn danh mục.';
-            // }
-            // if ($nha_cung_cap_id <= 0) {
-            //     $errors[] = 'Vui lòng chọn nhà cung cấp.';
-            // }
+            $errors = [];
+            if (strlen($name) < 1 || strlen($name) > 225) {
+                $errors[] = 'Tên sản phẩm phải từ 3 đến 225 ký tự.';
+            }
+            if ($price <= 0) {
+                $errors[] = 'Giá sản phẩm phải lớn hơn 0.';
+            }
+            if ($category_id <= 0) {
+                $errors[] = 'Vui lòng chọn danh mục.';
+            }
+            if ($nha_cung_cap_id <= 0) {
+                $errors[] = 'Vui lòng chọn nhà cung cấp.';
+            }
 
-            // // Kiểm tra ít nhất 1 biến thể hợp lệ
-            // $valid_variants = 0;
-            // foreach ($variants as $v) {
-            //     $size_id = (int)($v['size_id'] ?? 0);
-            //     $color_id = (int)($v['color_id'] ?? 0);
-            //     if ($size_id > 0 && $color_id > 0) {
-            //         $valid_variants++;
-            //     }
-            // }
-            // if ($valid_variants === 0) {
-            //     $errors[] = 'Phải có ít nhất 1 biến thể (size + màu) hợp lệ.';
-            // }
+            // Kiểm tra ít nhất 1 biến thể hợp lệ
+            $valid_variants = 0;
+            foreach ($variants as $v) {
+                $size_id = (int)($v['size_id'] ?? 0);
+                $color_id = (int)($v['color_id'] ?? 0);
+                if ($size_id > 0 && $color_id > 0) {
+                    $valid_variants++;
+                }
+            }
+            if ($valid_variants === 0) {
+                $errors[] = 'Phải có ít nhất 1 biến thể (size + màu) hợp lệ.';
+            }
 
-            // if (!empty($errors)) {
-            //     $error = implode('<br>', $errors);
-            // } else {
+            if (!empty($errors)) {
+                $error = implode('<br>', $errors);
+            } else {
                 // Xử lý upload ảnh
                 $main_image = $this->uploadMainImage($_FILES['image'] ?? []);
                 $image_array = $this->uploadExtraImages($_FILES['image_array'] ?? []);
@@ -341,7 +341,7 @@ class AdminController
                         }
                     }
                 }
-            // }
+            }
         }
 
         // Load view

@@ -13,11 +13,7 @@ class HomeController
         $product_banner = $productModel->getActiveBanner();
         $products = $productModel->getHomeProducts();
         $product_featured = $productModel->getFeaturedProducts();
-        $productModel = new Product();
-        $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-        $limit = 9;
-        $data = $productModel->getActive($page, $limit);
-        $product_active = $data['products'];
+        $product_active = $productModel->getActive();
 
         include BASE_PATH . '/app/views/user/home/home.php';
     }
