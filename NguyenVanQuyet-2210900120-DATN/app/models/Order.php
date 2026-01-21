@@ -170,27 +170,50 @@ class Order
 
 // tạo đơn hàng của admin xem đươc hết
 
-    public function getOrder()
+      public function getAllPaginate($limit, $offset)
     {
         $sql = "
-        SELECT
-            id,
-            ma_don_hang,
-            status,
-            payment,
-            tong_tien,
-            ngay_tao
-        FROM orders
-        ORDER BY ngay_tao DESC
-        LIMIT :limit OFFSET :offset
-    ";
+            SELECT
+                o.id,
+                o.ma_don_hang,
+                o.name,
+                o.phone,
+                o.status,
+                o.payment,
+                o.tong_tien,
+                o.ngay_tao
+            FROM orders o
+            ORDER BY o.ngay_tao DESC
+            LIMIT :limit OFFSET :offset
+        ";
 
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
 
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function countAll()
+    {
+        return (int)$this->pdo
+            ->query("SELECT COUNT(*) FROM orders")
+            ->fetchColumn();
+    }
+
+    public function updateStatus($orderId, $status)
+    {
+        $sql = "
+            UPDATE orders
+            SET status = :status
+            WHERE id = :id
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':status' => $status,
+            ':id' => $orderId,
+        ]);
     }
 
     public function updatePaymentStatus($orderId, $payment)

@@ -68,18 +68,37 @@ class AuthControllerUser
 
             // Validate
             if ($name === '' || $tel === '' || $address === '' || $email === '' || $password === '') {
-                $error = 'Vui lòng nhập đầy đủ thông tin';
-                include BASE_PATH . '/app/views/user/auth/register.php';
-                return;
+                $_SESSION['error'] = 'Vui lòng nhập đầu đủ thông tin';
+                header('Location: ' . BASE_URL . 'register');
+                        exit;
             }
 
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $error = 'Email không hợp lệ';
-                include BASE_PATH . '/app/views/user/auth/register.php';
-                return;
+                $_SESSION['error'] = 'Email k đúng định dạng';
+                header('Location: ' . BASE_URL . 'register');
+                        exit;
             }
 
             $userModel = new User();
+
+            // check sđt, email 
+
+            $user_phone = $userModel->findBytel($tel);
+
+            if ($user_phone) {
+                $_SESSION['error'] = 'Số điện thoại đã có người dùng rồi';
+                header('Location: ' . BASE_URL . 'register');
+                        exit;
+            }
+
+
+            $user_mail = $userModel->findBytel($email);
+
+            if ($user_mail) {
+                $_SESSION['error'] = 'Email đã có người dùng rồi';
+                header('Location: ' . BASE_URL . 'register');
+                        exit;
+            }
 
             $hashPassword = $userModel->hashPassword($password);
 

@@ -18,7 +18,8 @@ require_once BASE_PATH . '/app/controllers/admin/UserController.php';
 require_once BASE_PATH . '/app/controllers/admin/ColorController.php';
 require_once BASE_PATH . '/app/controllers/admin/NhaCungCapController.php';
 require_once BASE_PATH . '/app/controllers/admin/SizeController.php';
-
+require_once BASE_PATH . '/app/controllers/admin/CategoryPostController.php';
+require_once BASE_PATH . '/app/controllers/admin/PostController.php';
 
 
 require_once BASE_PATH . '/app/controllers/admin/CheckOutAdminController.php';
@@ -38,6 +39,8 @@ if (isset($parts[0]) && $parts[0] === 'admin') {
     $colorController = new ColorController();
     $nhaCungCapController = new NhaCungCapController();
     $sizeController = new SizeController();
+    $categoryPostController = new CategoryPostController();
+    $postController = new PostController();
     // /admin/login
     if (isset($parts[1]) && $parts[1] === 'login') {
         $authController = new AuthController();
@@ -164,6 +167,48 @@ if (isset($parts[0]) && $parts[0] === 'admin') {
         }
         exit();
     }
+
+
+    if (isset($parts[1]) && $parts[1] === 'category-post') {
+        if (!isset($parts[2]) || $parts[2] === '') {
+            $categoryPostController->index();
+        }
+        // /admin/category-post/create
+        elseif ($parts[2] === 'create') {
+            $categoryPostController->create();
+        }
+        // /admin/category-post/edit/{id}
+        elseif ($parts[2] === 'edit' && isset($parts[3])) {
+            $categoryPostController->edit((int)$parts[3]);
+        }
+        // /admin/category-post/delete/{id}
+        elseif ($parts[2] === 'delete' && isset($parts[3])) {
+            $categoryPostController->delete((int)$parts[3]);
+        }
+        // /admin/category-post/restore/{id}
+        elseif ($parts[2] === 'restore' && isset($parts[3])) {
+            $categoryPostController->restore((int)$parts[3]);
+        }
+        else {
+            die('404 CategoryPost Admin!');
+        }
+        exit();
+    }
+
+
+    if ($parts[1] === 'post') {
+        if (!isset($parts[2])) {
+            $postController->index();
+        } elseif ($parts[2] === 'create') {
+            $postController->create();
+        } elseif ($parts[2] === 'edit') {
+            $postController->edit($parts[3]);
+        } elseif ($parts[2] === 'delete') {
+            $postController->delete($parts[3]);
+        }
+        exit;
+    }
+    
 
     // /admin/order
 

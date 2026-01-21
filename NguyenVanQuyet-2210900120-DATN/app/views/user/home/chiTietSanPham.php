@@ -286,6 +286,48 @@ $hasSubImages = !empty($image_list);
             font-size: 24px;
         }
     }
+
+  
+.product-content {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+}
+
+/* fix text editor */
+.product-content p {
+    margin-bottom: 1rem;
+}
+
+.product-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+}
+
+.product-content ul,
+.product-content ol {
+    padding-left: 20px;
+}
+
+.product-content table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.product-content table td,
+.product-content table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.product-content iframe {
+    max-width: 100%;
+}
+
+
+
 </style>
 
 <div class="container py-5">
@@ -449,7 +491,7 @@ $hasSubImages = !empty($image_list);
                     <div class="card-header bg-white border-bottom">
                         <h5 class="mb-0"><i class="fas fa-file-alt me-2 text-primary"></i> Chi tiết sản phẩm</h5>
                     </div>
-                    <div class="card-body"><?= $product['content'] ?></div>
+                    <div class="card-body product-content"><?= $product['content'] ?></div>
                 </div>
             </div>
         </div>
@@ -562,7 +604,7 @@ $hasSubImages = !empty($image_list);
             btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang thêm...';
 
             try {
-                const res = await fetch('<?= BASE_URL ?>cart/add', {
+                const res = await fetch('<?= BASE_URL ?>postCart', {
                     method: 'POST',
                     body: new FormData(form)
                 });

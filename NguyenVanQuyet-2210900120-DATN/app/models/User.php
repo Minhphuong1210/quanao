@@ -117,6 +117,27 @@ class User
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+// tìm theo sđt 
+
+    public function findBytel($tel)
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT id, name, tel, email, address, is_admin, active FROM users WHERE tel = :tel LIMIT 1"
+        );
+        $stmt->execute([':tel' => $tel]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+// tìm theo sđt 
+
+public function findByemail($email)
+{
+    $stmt = $this->pdo->prepare(
+        "SELECT id, name, tel, email, address, is_admin, active FROM users WHERE email = :email LIMIT 1"
+    );
+    $stmt->execute([':email' => $email]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 
     public function paginate($page = 1, $perPage = 10)
 {

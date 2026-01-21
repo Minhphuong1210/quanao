@@ -86,6 +86,13 @@ include BASE_PATH . '/app/views/user/layout/header.php';
     <div class="ua-register-box">
         <h2>Đăng ký tài khoản</h2>
 
+        <?php if (!empty($_SESSION['error'])): ?>
+    <div class="alert alert-danger">
+        <?= htmlspecialchars($_SESSION['error']) ?>
+    </div>
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>
+
         <form method="POST" action="/register">
     
             <div class="ua-register-group">

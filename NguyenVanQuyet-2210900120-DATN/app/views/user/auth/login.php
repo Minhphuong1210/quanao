@@ -84,6 +84,20 @@ include BASE_PATH . '/app/views/user/layout/header.php';
 <div class="ua-login-wrapper">
     <div class="ua-login-box">
         <h2>Đăng nhập</h2>
+        <?php if (!empty($_SESSION['error'])): ?>
+    <div class="alert alert-danger">
+        <?= htmlspecialchars($_SESSION['error']) ?>
+    </div>
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>
+
+
+<?php if (!empty($_SESSION['success'])): ?>
+    <div class="alert alert-primary">
+        <?= htmlspecialchars($_SESSION['success']) ?>
+    </div>
+    <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
 
         <form method="POST" action="">
             <div class="ua-login-group">

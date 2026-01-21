@@ -34,7 +34,7 @@ class CartController
         $productModel = new Product();
         $sizeModel = new Size();
         $colorModel = new Color();
-
+        $productDetailModel = new Product_Detail();
         $product = $productModel->find($product_id);
         if (!$product) {
             $response['message'] = 'Sản phẩm không tồn tại';
@@ -64,11 +64,33 @@ class CartController
             $color_name = $color['name'];
         }
 
-        $image = $product['image'] ?? null;
-        if (!empty($product['image_array'])) {
-            $imgs = array_map('trim', explode('","', trim($product['image_array'], '"')));
-            $image = $imgs[0] ?? $image;
+
+        $variant = $productDetailModel->checkVariantAvailability(
+            $product_id,
+            $color_id,
+            $size_id
+        );
+    
+        if (!$variant) {
+            $response['message'] = 'Biến thể sản phẩm không tồn tại';
+            echo json_encode($response); exit;
         }
+    
+        if ((int)$variant['is_available'] !== 1) {
+            $response['message'] = 'Sản phẩm đã hết hàng';
+            echo json_encode($response); exit;
+        }
+        $stock = (int)$variant['stock'];
+
+
+      
+
+
+        $image = $product['image'] ?? null;
+        // if (!empty($product['image_array'])) {
+        //     $imgs = array_map('trim', explode('","', trim($product['image_array'], '"')));
+        //     $image = $imgs[0] ?? $image;
+        // }
 
         if (!isset($_SESSION['cart'])) {
             $_SESSION['cart'] = [];
@@ -81,6 +103,14 @@ class CartController
 
         if ($color_id) {
             $key .= '_' . $color_id;
+        }
+
+
+        $current_qty = $_SESSION['cart'][$key]['quantity'] ?? 0;
+
+        if (($current_qty + $quantity) > $stock) {
+            $response['message'] = 'Số lượng vượt quá tồn kho. Hiện chỉ còn ' . $stock . ' sản phẩm';
+            echo json_encode($response); exit;
         }
 
         if (isset($_SESSION['cart'][$key])) {
