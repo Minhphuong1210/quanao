@@ -16,127 +16,8 @@ if (isset($_SESSION['success_message'])) {
     <title>Quanao Admin - <?= $title ?? 'Dashboard' ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --bg-dark: #0f172a;
-            --card-bg: #1e293b;
-            --text-light: #f1f5f9;
-            --border-light: rgba(255, 255, 255, 0.1);
-        }
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/admin/css/style.css">
 
-        body {
-            background: linear-gradient(135deg, var(--bg-dark) 0%, #1e293b 100%);
-            color: var(--text-light);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            overflow-x: hidden;
-        }
-
-        .sidebar {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid var(--border-light);
-            height: 100vh;
-            position: fixed;
-            width: 280px;
-            z-index: 1000;
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar .nav-link {
-            color: var(--text-light);
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin: 4px 12px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .sidebar .nav-link:hover,
-        .sidebar .nav-link.active {
-            background: var(--primary);
-            color: white;
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-
-        .header {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-light);
-            padding: 16px 24px;
-            position: sticky;
-            top: 0;
-            z-index: 999;
-        }
-
-        .main-content {
-            margin-left: 280px;
-            padding: 24px;
-            min-height: 100vh;
-            transition: margin-left 0.3s ease;
-        }
-
-        .content-placeholder {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 40px;
-            border: 1px solid var(--border-light);
-        }
-
-        .footer {
-            background: rgba(15, 23, 42, 0.95);
-            border-top: 1px solid var(--border-light);
-            padding: 16px 0;
-            text-align: center;
-            margin-top: auto;
-        }
-
-        @media (max-width: 992px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .sidebar.show {
-                transform: translateX(0);
-            }
-        }
-
-        /* Custom table styles */
-        .table-dark {
-            background-color: rgba(30, 41, 59, 0.8) !important;
-        }
-
-        .table-dark th {
-            border-color: rgba(255, 255, 255, 0.1) !important;
-            background-color: rgba(15, 23, 42, 0.9) !important;
-        }
-
-        .table-dark td {
-            border-color: rgba(255, 255, 255, 0.05) !important;
-            vertical-align: middle;
-        }
-
-        .table-hover tbody tr:hover {
-            background-color: rgba(99, 102, 241, 0.1) !important;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: nowrap;
-        }
-
-        .action-buttons .btn {
-            padding: 4px 8px;
-            font-size: 12px;
-            min-width: 60px;
-        }
-    </style>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -172,7 +53,7 @@ if (isset($_SESSION['success_message'])) {
             </div>
 
             <!-- Search box -->
-            <div class="card bg-dark border-0 mb-4">
+            <div class="card  border-0 mb-4">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8">
@@ -191,7 +72,7 @@ if (isset($_SESSION['success_message'])) {
 
             <!-- Products table -->
             <div class="table-responsive rounded-3 overflow-hidden">
-                <table class="table table-hover table-dark table-striped mb-0">
+                <table class="table table-hover  table-striped mb-0">
                     <thead>
                         <tr>
                             <th width="60">ID</th>

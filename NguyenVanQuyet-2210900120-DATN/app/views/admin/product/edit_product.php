@@ -15,215 +15,8 @@ $suppliers = $data['suppliers'] ?? [];
     <title>Quanao Admin - Chỉnh Sửa Sản Phẩm</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6366f1;
-            --bg-dark: #0f172a;
-            --card-bg: #1e293b;
-            --text-light: #f1f5f9;
-            --border-light: rgba(255, 255, 255, 0.1);
-        }
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/admin/css/style.css">
 
-        body {
-            background: linear-gradient(135deg, var(--bg-dark) 0%, #1e293b 100%);
-            color: var(--text-light);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            overflow-x: hidden;
-        }
-
-        .sidebar {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid var(--border-light);
-            height: 100vh;
-            position: fixed;
-            width: 280px;
-            z-index: 1000;
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar .nav-link {
-            color: var(--text-light);
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin: 4px 12px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .sidebar .nav-link:hover,
-        .sidebar .nav-link.active {
-            background: var(--primary);
-            color: white;
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-
-        .header {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-light);
-            padding: 16px 24px;
-            position: sticky;
-            top: 0;
-            z-index: 999;
-        }
-
-        .main-content {
-            margin-left: 280px;
-            padding: 24px;
-            min-height: 100vh;
-            transition: margin-left 0.3s ease;
-        }
-
-        .content-placeholder {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 40px;
-            border: 1px solid var(--border-light);
-        }
-
-        .form-control,
-        .form-select {
-            background-color: rgba(30, 41, 59, 0.8) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: var(--text-light) !important;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            border-color: var(--primary) !important;
-            box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25) !important;
-        }
-
-        .variant-row {
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .variant-row:hover {
-            border-color: var(--primary);
-            background: rgba(30, 41, 59, 0.8);
-        }
-
-        .btn-add-variant {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            border: none;
-            color: white;
-        }
-
-        .btn-add-variant:hover {
-            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-        }
-
-        .btn-remove-variant {
-            background: rgba(239, 68, 68, 0.2);
-            color: #f87171;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-remove-variant:hover {
-            background: rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-        }
-
-        .form-check-input {
-            background-color: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .form-check-input:checked {
-            background-color: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .form-check-label {
-            cursor: pointer;
-        }
-
-        .image-preview-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .image-preview {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 2px solid var(--primary);
-        }
-
-        .current-image {
-            position: relative;
-            display: inline-block;
-        }
-
-        .current-image img {
-            border: 3px solid var(--primary);
-            border-radius: 8px;
-        }
-
-        .current-image-info {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-
-        .debug-info {
-            background: rgba(0, 0, 0, 0.3);
-            border-left: 4px solid #6366f1;
-            padding: 10px;
-            margin: 10px 0;
-            font-family: monospace;
-            font-size: 12px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .required-star {
-            color: #ff6b6b;
-        }
-
-        .slug-display {
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 8px;
-            padding: 10px 15px;
-            margin-bottom: 20px;
-            font-family: monospace;
-            word-break: break-all;
-        }
-
-        .slug-label {
-            color: #6366f1;
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .slug-value {
-            color: #e2e8f0;
-            font-size: 16px;
-        }
-
-        .slug-url {
-            color: #94a3b8;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-    </style>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -244,7 +37,7 @@ $suppliers = $data['suppliers'] ?? [];
                         <?php endif; ?>
                     </p>
                 </div>
-                <a href="/admin/product" class="btn btn-outline-light">
+                <a href="/admin/product" class="btn btn-outline-dark">
                     <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
                 </a>
             </div>
@@ -285,9 +78,9 @@ $suppliers = $data['suppliers'] ?? [];
                     </div>
                 </div>
 
-                <div class="card bg-dark border-0 rounded-3 shadow-lg p-4 p-lg-5">
+                <div class="card border-0 rounded-3 shadow-lg p-4 p-lg-5">
                     <form method="POST"
-                        action="<?= BASE_URL ?>/admin/product/edit/<?= htmlspecialchars($product['slug']) ?>"
+                        action="<?= BASE_URL ?>admin/product/edit/<?= htmlspecialchars($product['slug']) ?>"
                         enctype="multipart/form-data"
                         id="productForm"> <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
 
@@ -454,16 +247,16 @@ $suppliers = $data['suppliers'] ?? [];
                             <?php endif; ?>
 
                             <!-- Checkbox giữ ảnh cũ -->
-                            <div class="form-check mb-3">
+                            <!-- <div class="form-check mb-3">
                                 <input class="form-check-input" type="checkbox" id="keepMainImage" name="keepMainImage" value="1" checked>
                                 <label class="form-check-label text-light" for="keepMainImage">
                                     Giữ lại ảnh hiện tại
                                 </label>
                                 <div class="form-text text-muted">Bỏ chọn nếu muốn upload ảnh mới</div>
-                            </div>
+                            </div> -->
 
                             <!-- Input upload ảnh mới -->
-                            <div id="newImageContainer" style="display: none;">
+                            <div id="newImageContainer" style=";">
                                 <input type="file" name="image" id="image"
                                     class="form-control form-control-lg"
                                     accept="image/*">
@@ -505,16 +298,16 @@ $suppliers = $data['suppliers'] ?? [];
                             <?php endif; ?>
 
                             <!-- Checkbox giữ ảnh cũ -->
-                            <div class="form-check mb-3">
+                            <!-- <div class="form-check mb-3">
                                 <input class="form-check-input" type="checkbox" id="keepImageArray" name="keepImageArray" value="1" checked>
                                 <label class="form-check-label text-light" for="keepImageArray">
                                     Giữ lại ảnh hiện tại
                                 </label>
                                 <div class="form-text text-muted">Bỏ chọn nếu muốn upload ảnh mới (ảnh cũ sẽ bị xóa)</div>
-                            </div>
+                            </div> -->
 
                             <!-- Input upload ảnh mới -->
-                            <div id="newImageArrayContainer" style="display: none;">
+                            <div id="newImageArrayContainer" style="">
                                 <input type="file" name="image_array[]" id="image_array"
                                     class="form-control form-control-lg"
                                     accept="image/*"
@@ -892,13 +685,10 @@ $suppliers = $data['suppliers'] ?? [];
             // Hiển thị màu sắc trong dropdown
             initColorSelects();
 
-            console.log('=== DEBUG FORM VALUES ===');
-            console.log('Product ID: <?= $product ? $product['id'] : '' ?>');
-            console.log('Product Slug: <?= $product ? $product['slug'] : '' ?>');
-            console.log('Variant Index:', variantIndex);
         });
 
         document.getElementById('addVariant')?.addEventListener('click', function() {
+            let variantIndex = <?= $variantIndex ?>;
             const template = `
                 <div class="variant-row" data-index="${variantIndex}">
                     <div class="row">
@@ -989,39 +779,36 @@ $suppliers = $data['suppliers'] ?? [];
             calculateTotalStock();
         }
 
-        function initColorSelects() {
-            document.querySelectorAll('.color-select').forEach(select => {
-                // Giữ lại giá trị đã chọn
-                const selectedValue = select.value;
+       function initColorSelects() {
+    document.querySelectorAll('.color-select').forEach(select => {
 
-                // Xóa option hiện có trừ option đầu tiên
-                const firstOption = select.options[0];
-                select.innerHTML = '';
-                select.appendChild(firstOption);
+        const selectedValue = select.value;
 
-                // Thêm lại các option với màu sắc
-                <?php foreach ($colors as $color): ?>
-                    const option = document.createElement('option');
-                    option.value = '<?= $color['id'] ?>';
-                    option.textContent = '<?= htmlspecialchars($color['name']) ?>';
+        const firstOption = select.options[0];
+        select.innerHTML = '';
+        select.appendChild(firstOption);
 
-                    // Thêm màu nền nếu có mã màu
-                    const maMau = '<?= $color['ma_mau'] ?>';
-                    if (maMau && maMau !== 'NULL' && maMau !== 'null') {
-                        option.style.backgroundColor = maMau;
-                        option.style.color = getContrastColor(maMau);
-                        option.title = 'Mã màu: ' + maMau;
-                    }
+        <?php foreach ($colors as $color): ?>
+            var option = document.createElement('option');
+            option.value = '<?= $color['id'] ?>';
+            option.textContent = '<?= htmlspecialchars($color['name']) ?>';
 
-                    // Chọn lại giá trị đã chọn trước đó
-                    if (option.value === selectedValue) {
-                        option.selected = true;
-                    }
+            var maMau = '<?= $color['ma_mau'] ?>';
+            if (maMau && maMau !== 'NULL' && maMau !== 'null') {
+                option.style.backgroundColor = maMau;
+                option.style.color = getContrastColor(maMau);
+                option.title = 'Mã màu: ' + maMau;
+            }
 
-                    select.appendChild(option);
-                <?php endforeach; ?>
-            });
-        }
+            if (option.value === selectedValue) {
+                option.selected = true;
+            }
+
+            select.appendChild(option);
+        <?php endforeach; ?>
+    });
+}
+
 
         // Hàm xác định màu chữ tương phản
         function getContrastColor(hexColor) {
@@ -1118,6 +905,23 @@ $suppliers = $data['suppliers'] ?? [];
             return true;
         });
     </script>
+<script src="https://cdn.ckeditor.com/ckeditor5/41.3.1/classic/ckeditor.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const textarea = document.querySelector('#content');
+
+    if (!textarea) return;
+
+    ClassicEditor
+        .create(textarea, {
+            language: 'vi',
+            placeholder: 'Nhập mô tả chi tiết về sản phẩm...'
+        })
+        .catch(error => console.error(error));
+});
+</script>
+
 </body>
 
 </html>

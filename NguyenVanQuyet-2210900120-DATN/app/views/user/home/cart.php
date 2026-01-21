@@ -47,6 +47,8 @@ include BASE_PATH . '/app/views/user/layout/header.php';
 
 		                        <td>
 		                            <div class="d-flex align-items-center">
+
+
 		                                <img src="<?=BASE_URL?>/<?=$item['image']?>" width="70" class="me-3 rounded">
 
 		                            </div>
@@ -57,7 +59,7 @@ include BASE_PATH . '/app/views/user/layout/header.php';
 		<div>
 		                                    <strong><?=htmlspecialchars($item['name'])?></strong><br>
 		                                    <small class="text-muted">
-		                                        Size: <?=$item['name_size'] ?? '-'?> |
+                                            Kích cỡ: <?=$item['name_size'] ?? '-'?> |
 		                                        Màu: <?=$item['name_color'] ?? '-'?>
 		                                    </small>
 		                                </div>

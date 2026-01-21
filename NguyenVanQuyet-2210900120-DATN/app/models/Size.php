@@ -9,10 +9,9 @@ class Size
         $this->conn = Database::getInstance();
     }
 
-    /**
-     * Lấy toàn bộ màu sắc (dùng cho bộ lọc)
-     * bảng colors: id, name, ma_mau, active, slug
-     */
+    /* =========================================================
+     * GET ALL SIZE (dùng filter / dropdown)
+     * ========================================================= */
     public function getAll()
     {
         $sql = "
@@ -28,23 +27,22 @@ class Size
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * (OPTIONAL) Lấy màu + số sản phẩm
-     */
+    /* =========================================================
+     * GET SIZE + TOTAL PRODUCT
+     * ========================================================= */
     public function getAllWithProductCount()
     {
         $sql = "
             SELECT 
-                c.id,
-                c.name,
-                c.slug,
-                c.ma_mau,
+                s.id,
+                s.name,
+                s.slug,
                 COUNT(DISTINCT pd.product_id) AS total
-            FROM colors c
-            LEFT JOIN product_detail pd ON pd.color_id = c.id
-            WHERE c.active = 1
-            GROUP BY c.id
-            ORDER BY c.id ASC
+            FROM sizes s
+            LEFT JOIN product_detail pd ON pd.size_id = s.id
+            WHERE s.active = 1
+            GROUP BY s.id
+            ORDER BY s.id ASC
         ";
 
         $stmt = $this->conn->prepare($sql);
@@ -53,58 +51,133 @@ class Size
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Lấy color theo slug (dùng kiểm tra tồn tại)
-     */
+    /* =========================================================
+     * COUNT ALL SIZE
+     * ========================================================= */
+    public function countAll()
+    {
+        return $this->conn
+            ->query("SELECT COUNT(*) FROM sizes WHERE active = 1")
+            ->fetchColumn();
+    }
+
+    /* =========================================================
+     * FIND SIZE BY SLUG
+     * ========================================================= */
     public function findBySlug(string $slug)
     {
         $sql = "
-            SELECT id, name, ma_mau, slug
-            FROM colors
-            WHERE slug = :slug AND active = 1
+            SELECT id, name, slug
+            FROM sizes
+            WHERE slug = :slug
+              AND active = 1
             LIMIT 1
         ";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(['slug' => $slug]);
+        $stmt->execute([
+            ':slug' => $slug
+        ]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-
-    public function getByIds($ids)
+    /* =========================================================
+     * FIND SIZE BY IDS (array)
+     * ========================================================= */
+    public function getByIds(array $ids)
     {
-        if (empty($ids)) return [];
-    
+        if (empty($ids)) {
+            return [];
+        }
+
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
-    
+
         $sql = "
             SELECT id, name, slug
             FROM sizes
             WHERE id IN ($placeholders)
-            AND active = 1
+              AND active = 1
         ";
-    
+
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($ids);
-    
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
-    public function find($id)
+    /* =========================================================
+     * FIND ONE SIZE BY ID
+     * ========================================================= */
+    public function find(int $id)
     {
         $sql = "
-            SELECT id, name
+            SELECT id, name, slug
             FROM sizes
-            WHERE id = :id AND active = 1
+            WHERE id = :id
+              AND active = 1
             LIMIT 1
         ";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute(['id' => $id]);
+        $stmt->execute([
+            ':id' => $id
+        ]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    /* =========================================================
+     * CREATE SIZE
+     * ========================================================= */
+    public function create(array $data)
+    {
+        $sql = "
+            INSERT INTO sizes (name, slug, active)
+            VALUES (:name, :slug, :active)
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([
+            ':name'   => $data['name'],
+            ':slug'   => $data['slug'],
+            ':active' => $data['active'] ?? 1,
+        ]);
+    }
+
+    /* =========================================================
+     * UPDATE SIZE
+     * ========================================================= */
+    public function update(int $id, array $data)
+    {
+        $sql = "
+            UPDATE sizes
+            SET name = :name,
+                slug = :slug
+            WHERE id = :id
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([
+            ':name' => $data['name'],
+            ':slug' => $data['slug'],
+            ':id'   => $id,
+        ]);
+    }
+
+    /* =========================================================
+     * DELETE SIZE (SOFT DELETE)
+     * ========================================================= */
+    public function delete(int $id)
+    {
+        $sql = "UPDATE sizes SET active = 0 WHERE id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([
+            ':id' => $id
+        ]);
+    }
 }
