@@ -43,7 +43,7 @@ class ColorController
             exit;
         }
 
-        require BASE_PATH . '/app/views/admin/colors/create.php';
+        require BASE_PATH . '/app/views/admin/colors/add.php';
     }
 
     public function edit($id)

@@ -37,7 +37,7 @@ class NhaCungCapController
             $this->model->create([
                 'name'   => trim($_POST['name']),
                 'vi_tri' => $_POST['vi_tri'],
-                
+                'giam_gia' => $_POST['giam_gia'],
             ]);
 
             $_SESSION['success'] = 'Thêm nhà cung cấp thành công';
@@ -61,6 +61,7 @@ class NhaCungCapController
             $this->model->update($id, [
                 'name'   => trim($_POST['name']),
                 'vi_tri' => $_POST['vi_tri'],
+                'giam_gia' => $_POST['giam_gia'],
             ]);
 
             $_SESSION['success'] = 'Cập nhật thành công';

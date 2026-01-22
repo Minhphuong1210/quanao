@@ -34,10 +34,13 @@
             <div class="mb-3">
                 <label class="form-label">Vị trí</label>
                 <input type="text" name="vi_tri" class="form-control"
-                       value="<?= htmlspecialchars($item['vi_tri']) ?>" required>
+                       value="<?= $item['vi_tri'] ?>" required>
             </div>
 
-           
+            <div class="mb-3">
+        <label class="form-label">Giảm giá (tính theo %) </label>
+        <input type="text" name="giam_gia" class="form-control"  value="<?= htmlspecialchars($item['giam_gia']) ?>" required>
+    </div>
 
             <div class="text-center">
                 <button class="btn btn-warning">

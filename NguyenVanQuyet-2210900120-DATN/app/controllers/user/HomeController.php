@@ -4,7 +4,7 @@ require_once BASE_PATH . '/app/models/Color.php';
 require_once BASE_PATH . '/app/models/Size.php';
 require_once BASE_PATH . '/app/models/category.php';
 require_once BASE_PATH . '/app/models/Product_Detail.php';
-
+require_once BASE_PATH . '/app/models/Comment.php';
 class HomeController
 {
     public function index()
@@ -83,7 +83,7 @@ class HomeController
         $colorModel = new Color();
         $sizeModel = new Size();
         $productDetailModel = new Product_Detail();
-
+        $commentModel = new Comment(); 
         $product = $productModel->getBySlug($slug);
 
         if (!$product) {
@@ -111,7 +111,7 @@ class HomeController
         // Lấy kích cỡ có sẵn
         $sizes = $productDetailModel->getAvailableSizes($product['id']);
 
-        // 🎯 QUAN TRỌNG: Xử lý ảnh theo đúng yêu cầu
+        // QUAN TRỌNG: Xử lý ảnh theo đúng yêu cầu
         // 1. Lấy ảnh chính (mặc định) từ trường 'image'
         $main_image = $product['image'] ?? '';
 
@@ -120,8 +120,27 @@ class HomeController
 
         // 3. Hoặc lấy tất cả ảnh (phân biệt rõ ràng)
         $all_product_images = $productDetailModel->getAllProductImages($product['id']);
-        // $all_product_images['main_image'] - ảnh chính
-        // $all_product_images['sub_images'] - mảng ảnh phụ
+
+        $comments = $commentModel->getByProduct($product['id']);
+
+        // Mặc định
+        $userCommented = false;
+        $userReviewedProducts = [];
+    
+        // Nếu user đã đăng nhập
+        if (isset($_SESSION['user_id'])) {
+            // Check đã đánh giá sản phẩm này chưa
+            $userCommented = $commentModel->isUserCommented(
+                $product['id'],
+                $_SESSION['user_id']
+            );
+    
+            // Các sản phẩm user đã đánh giá
+            $userReviewedProducts = $commentModel->getProductsReviewedByUser(
+                $_SESSION['user_id']
+            );
+        }
+
 
         // Truyền dữ liệu ra view
         include BASE_PATH . '/app/views/user/home/chiTietSanPham.php';

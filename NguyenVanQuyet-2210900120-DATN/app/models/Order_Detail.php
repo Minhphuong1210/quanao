@@ -172,4 +172,22 @@ class OrderDetail
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
+    public function existsProductInOrder($orderId, $productId): bool
+{
+    $sql = "SELECT 1 FROM order_details
+            WHERE order_id = :order_id
+              AND product_id = :product_id
+            LIMIT 1";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+        ':order_id'   => $orderId,
+        ':product_id' => $productId
+    ]);
+
+    return (bool)$stmt->fetchColumn();
+}
+
 }

@@ -56,25 +56,49 @@ class Comment
     /* ==================== CRUD CHO ADMIN & USER ==================== */
 
     // Tạo bình luận mới (user hoặc admin)
-    public function create($data)
+    public function create(array $data): bool
     {
-        $sql = "INSERT INTO comment 
-                (product_id, post_id, comment, type, user_id, parent_id, star, image, liked) 
-                VALUES 
-                (:product_id, :post_id, :comment, :type, :user_id, :parent_id, :star, :image, 0)";
-
+        // ===== VALIDATE =====
+        if (empty($data['user_id'])) {
+            return false;
+        }
+    
+        if (empty($data['comment'])) {
+            return false;
+        }
+    
+        // Nếu là review thì bắt buộc có sao
+        if (($data['type'] ?? 'comment') === 'review') {
+            if (
+                empty($data['star']) ||
+                !is_numeric($data['star']) ||
+                $data['star'] < 1 ||
+                $data['star'] > 5
+            ) {
+                return false;
+            }
+        }
+    
+        $sql = "INSERT INTO comment
+                (order_id, product_id, post_id, comment, type, user_id, parent_id, star, image, liked)
+                VALUES
+                (:order_id, :product_id, :post_id, :comment, :type, :user_id, :parent_id, :star, :image, 0)";
+    
         $stmt = $this->conn->prepare($sql);
+    
         return $stmt->execute([
-            ':product_id' => $data['product_id'] ?? null,
-            ':post_id'    => $data['post_id'] ?? null,
-            ':comment'    => trim($data['comment'] ?? ''),
-            ':type'       => $data['type'] ?? 'comment',
-            ':user_id'    => $data['user_id'] ?? null,
-            ':parent_id'  => $data['parent_id'] ?? null,
-            ':star'       => $data['star'] ?? null,
-            ':image'      => $data['image'] ?? null
+            ':order_id'  => $data['order_id']  ?? null,
+            ':product_id'=> $data['product_id'] ?? null,
+            ':post_id'   => $data['post_id'] ?? null,
+            ':comment'   => trim($data['comment']),
+            ':type'      => $data['type'] ?? 'comment', // review | comment | reply
+            ':user_id'   => $data['user_id'],
+            ':parent_id' => $data['parent_id'] ?? null,
+            ':star'      => $data['star'] ?? null,
+            ':image'     => $data['image'] ?? null
         ]);
     }
+    
 
     // Cập nhật bình luận (chủ yếu admin duyệt hoặc user sửa)
     public function update($id, $data)
@@ -174,4 +198,71 @@ class Comment
 
         return $tree;
     }
+
+    public function isReviewed($productId, $userId)
+    {
+        $sql = "SELECT id FROM comment
+                WHERE product_id = :productId
+                  AND user_id = :userId
+                  AND parent_id IS NULL
+                  AND star IS NOT NULL
+                LIMIT 1";
+    
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':productId' => $productId,
+            ':userId'    => $userId
+        ]);
+    
+        return (bool) $stmt->fetch();
+    }
+    
+    public function getByProduct($productId)
+    {
+        $sql = "SELECT c.*, u.name AS user_name
+                FROM comment c
+                JOIN users u ON u.id = c.user_id
+                WHERE c.product_id = ?
+                ORDER BY c.id DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$productId]);
+
+        return $stmt->fetchAll();
+    }
+
+    public function isUserCommented($productId, $userId)
+    {
+        $sql = "SELECT id FROM comment
+                WHERE product_id = ? 
+                AND user_id = ?
+                AND star IS NOT NULL
+                LIMIT 1";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$productId, $userId]);
+
+        return $stmt->fetch() !== false;
+    }
+
+    public function getProductsReviewedByUser($userId)
+    {
+        $sql = "
+            SELECT 
+                p.id,
+                p.name,
+                p.slug,
+                MAX(c.id) AS last_comment_id
+            FROM comment c
+            JOIN products p ON p.id = c.product_id
+            WHERE c.user_id = :user_id
+            GROUP BY p.id, p.name, p.slug
+            ORDER BY last_comment_id DESC
+        ";
+    
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':user_id' => $userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }

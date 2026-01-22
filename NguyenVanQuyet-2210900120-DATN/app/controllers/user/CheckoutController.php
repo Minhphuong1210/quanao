@@ -99,14 +99,24 @@ class CheckoutController
     {
         $orderModel = new Order();
         $orderDetailModel = new OrderDetail();
-
+        $productModel = new Product();
         $cart = $_SESSION['cart'] ?? [];
         $total = 0;
+        $totalDiscount = 0;
         // lây tổng tiền
         foreach ($cart as $item) {
 
-            $total += $item['quantity'] * $item['price'];
-
+            $price = $item['price'];
+            $qty   = $item['quantity'];
+        
+          
+            $giamGia = $productModel->getNccGiamGiaByProductId($item['product_id']);
+        
+            $origin = $price * $qty;
+            $discountMoney = $price * ($giamGia / 100) * $qty;
+        
+            $total += ($origin - $discountMoney);
+            $totalDiscount += $discountMoney;
         }
         // nối chuỗi tên và họ vào
         $name = trim($ho . ' ' . $ten);
@@ -140,7 +150,7 @@ class CheckoutController
                 'name_product' => $item['name'],
                 'price_product' => $item['price'],
                 'quantity' => $item['quantity'],
-                'total' => $item['quantity'] * $item['price'],
+                'total' => $total,
             ]);
         }
 

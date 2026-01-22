@@ -47,6 +47,11 @@
         <input type="text" name="tel" class="form-control" required>
     </div>
 
+
+    <div class="mb-3">
+        <label class="form-label">Giảm giá (tính theo %) </label>
+        <input type="text" name="giam_gia" class="form-control" required>
+    </div>
     <!-- Email -->
    
 

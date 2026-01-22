@@ -532,6 +532,27 @@ $hasSubImages = !empty($image_list);
             </div>
         </div>
     <?php endif; ?>
+   
+    <div class="my-4">
+    <h4 class="mb-4"><i class="fas fa-random me-2 text-primary"></i> Đánh giá sản phẩm</h4>
+    <?php foreach ($comments as $c): ?>
+    <div class="border-bottom mb-3 pb-3">
+        <strong><?= htmlspecialchars($c['user_name']) ?></strong>
+
+        <?php if ($c['star']): ?>
+            <div class="text-warning">
+                <?php for ($i = 1; $i <= 5; $i++): ?>
+                    <i class="fas fa-star<?= $i <= $c['star'] ? '' : '-o' ?>"></i>
+                <?php endfor; ?>
+            </div>
+        <?php endif; ?>
+
+        <p><?= nl2br(htmlspecialchars($c['comment'])) ?></p>
+    </div>
+<?php endforeach; ?>
+    </div>
+
+
 </div>
 
 <script>

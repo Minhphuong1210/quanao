@@ -1006,4 +1006,20 @@ class Product
             'pages' => (int)ceil($total / $limit)
         ];
     }
+
+    public function getNccGiamGiaByProductId($productId)
+    {
+        $sql = "
+            SELECT ncc.giam_gia
+            FROM san_pham sp
+            JOIN nha_cung_cap ncc ON sp.nha_cung_cap_id = ncc.id
+            WHERE sp.id = :id
+            LIMIT 1
+        ";
+    
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':id' => $productId]);
+        return $stmt->fetchColumn() ?? 0;
+    }
+
 }

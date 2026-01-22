@@ -20,6 +20,7 @@
           href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Libraries CSS -->
     <link rel="stylesheet" href="<?=BASE_URL?>assets/lib/animate/animate.min.css">
@@ -187,76 +188,20 @@
 </head>
 
 <body>
+
+<?php
+                $isLogin = isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true;
+                ?>
     <!-- Topbar Start -->
     <div class="container-fluid px-5 d-none border-bottom d-lg-block">
-        <div class="row gx-0 align-items-center">
-            <div class="col-lg-4 text-center text-lg-start mb-lg-0">
-                <div class="d-inline-flex align-items-center" style="">
-                    <a href="#!" class="text-muted me-2"> Giúp </a><small> / </small>
-                    <a href="#!" class="text-muted mx-2"> Hỗ trợ</a><small> / </small>
-                    <a href="#!" class="text-muted ms-2"> Liên hệ</a>
-
-                </div>
-            </div>
-            <div class="col-lg-4 text-center d-flex align-items-center justify-content-center">
-                <small class="text-dark">Liên hệ:</small>
-                <a href="#!" class="text-muted">0975142461</a>
-            </div>
-
-            <div class="col-lg-4 d-flex justify-content-end align-items-center">
-            <?php
-$isLogin = isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true;
-?>
-
-<?php if (!$isLogin): ?>
-    <!-- CHƯA ĐĂNG NHẬP -->
-    <a href="<?=BASE_URL?>loginUser" class="nav-item nav-link">
-        <i class="fas fa-sign-in-alt me-1"></i> Đăng nhập
-    </a>
-
-    <a href="<?=BASE_URL?>register" class="nav-item nav-link">
-        <i class="fas fa-user-plus me-1"></i> Đăng ký
-    </a>
-
-<?php else: ?>
-    <!-- ĐÃ ĐĂNG NHẬP -->
-    <div class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-           data-bs-toggle="dropdown">
-            <i class="fas fa-user-circle me-1"></i>
-            <?=htmlspecialchars($_SESSION['user_name'])?>
-        </a>
-
-        <div class="dropdown-menu dropdown-menu-end m-0">
-            <a href="<?=BASE_URL?>account/profile" class="dropdown-item">
-                <i class="fas fa-id-card me-2"></i> Thông tin cá nhân
-            </a>
-
-            <a href="<?=BASE_URL?>theo-doi-don-hang" class="dropdown-item">
-                <i class="fas fa-box me-2"></i> Đơn hàng của tôi
-            </a>
-
-            <div class="dropdown-divider"></div>
-
-            <a href="<?=BASE_URL?>logout" class="dropdown-item text-danger">
-                <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
-            </a>
-        </div>
-    </div>
-<?php endif; ?>
-
-            </div>
-
-        </div>
+        
     </div>
     <div class="container-fluid px-5 py-4 d-none d-lg-block">
         <div class="row gx-0 align-items-center text-center">
             <div class="col-md-4 col-lg-3 text-center text-lg-start">
                 <div class="d-inline-flex align-items-center">
                     <a href="#" class="navbar-brand p-0">
-                        <!-- <h1 class="display-5 text-primary m-0"><i
-                                class="fas fa-shopping-bag text-secondary me-2"></i>Electro</h1> -->
-                        <!-- <img src="img/logo.png" alt="Logo"> -->
+                        
 
                         <h1 class="logo m-0">
     <a href="/">
@@ -401,7 +346,7 @@ if (!empty($cart)) {
         <?php else: ?>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle"
-                   data-bs-toggle="dropdown">
+                   data-toggle="dropdown">
                     <?=htmlspecialchars($_SESSION['user_name'])?>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">

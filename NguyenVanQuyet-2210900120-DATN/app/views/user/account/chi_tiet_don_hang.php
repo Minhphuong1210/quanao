@@ -2,6 +2,21 @@
 
 <div class="container py-4">
     <h4 class="mb-4"> Chi tiết đơn hàng</h4>
+    <?php if (isset($_SESSION['success'])): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <?= htmlspecialchars($_SESSION['success']) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <?= htmlspecialchars($_SESSION['error']) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>
 
     <!-- Thông tin đơn -->
     <div class="card mb-4">
@@ -40,20 +55,70 @@
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($orderDetails as $i => $item): ?>
-            <tr>
-                <td><?= $i + 1 ?></td>
-                <td><?= htmlspecialchars($item['name_product']) ?></td>
-                <td><?= htmlspecialchars($item['color_name'] ?? '-') ?></td>
-                <td><?= htmlspecialchars($item['size_name'] ?? '-') ?></td>
-                <td><?= $item['quantity'] ?></td>
-                <td><?= number_format($item['total'], 0, ',', '.') ?>₫</td>
-                <td class="text-danger">
-                    <?= number_format($item['total'] * $item['quantity'], 0, ',', '.') ?>₫
-                </td>
-            </tr>
-        <?php endforeach; ?>
-        </tbody>
+<?php foreach ($orderDetails as $i => $item): ?>
+    <tr>
+        <td><?= $i + 1 ?></td>
+        <td><?= htmlspecialchars($item['name_product']) ?></td>
+        <td><?= htmlspecialchars($item['color_name'] ?? '-') ?></td>
+        <td><?= htmlspecialchars($item['size_name'] ?? '-') ?></td>
+        <td><?= $item['quantity'] ?></td>
+        <td><?= number_format($item['total'], 0, ',', '.') ?>₫</td>
+        <td class="text-danger">
+            <?= number_format($item['total'] * $item['quantity'], 0, ',', '.') ?>₫
+        </td>
+    </tr>
+
+    <!-- FORM ĐÁNH GIÁ -->
+    <?php if ($order['status'] == OrderStatus::COMPLETED): ?>
+    <tr>
+        <td colspan="7">
+            <form action="<?= BASE_URL ?>danh-gia-san-pham" method="post" enctype="multipart/form-data"
+                  class="border rounded p-3 bg-light">
+
+                <input type="hidden" name="product_id" value="<?= $item['product_id'] ?>">
+                <input type="hidden" name="order_id" value="<?= $order['id'] ?>">
+
+                <div class="row g-3">
+                    <!-- Sao -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Đánh giá</label>
+                        <select name="star" class="form-select" required>
+                            <option value="">Chọn sao</option>
+                            <option value="5">★★★★★ (Rất tốt)</option>
+                            <option value="4">★★★★☆</option>
+                            <option value="3">★★★☆☆</option>
+                            <option value="2">★★☆☆☆</option>
+                            <option value="1">★☆☆☆☆</option>
+                        </select>
+                    </div>
+
+                    <!-- Nhận xét -->
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Nhận xét</label>
+                        <textarea name="comment" class="form-control" rows="3"
+                                  placeholder="Cảm nhận của bạn về sản phẩm..." required></textarea>
+                    </div>
+
+                    <!-- Ảnh -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Ảnh (tuỳ chọn)</label>
+                        <input type="file" name="image" class="form-control" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="text-end mt-3">
+                    <button class="btn btn-primary">
+                        Gửi đánh giá
+                    </button>
+                </div>
+            </form>
+        </td>
+    </tr>
+    <?php endif; ?>
+
+<?php endforeach; ?>
+</tbody>
+
     </table>
 
     <div class="text-end">

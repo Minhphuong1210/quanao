@@ -1,107 +1,27 @@
 <?php include BASE_PATH . '/app/views/user/layout/header.php'; ?>
 <!-- Carousel Start -->
 <div class="container-fluid carousel bg-light px-0">
-    <div class="row g-0 justify-content-end">
-        <div class="col-12 col-lg-7 col-xl-9">
-            <div class="header-carousel owl-carousel bg-light py-5">
-
-                <!-- SLIDE 1 -->
-                <div class="row g-0 header-carousel-item align-items-center">
-                    <div class="col-xl-6 carousel-img wow fadeInLeft" data-wow-delay="0.1s">
-                        <img src="<?= BASE_URL; ?>/assets/img/slider1.jpg"
-                             class="img-fluid w-100"
-                             alt="Thời trang trẻ em">
-                    </div>
-                    <div class="col-xl-6 carousel-content p-4">
-                        <h4 class="text-uppercase fw-bold mb-4 wow fadeInRight"
-                            data-wow-delay="0.1s"
-                            style="letter-spacing: 3px;">
-                            Giảm giá lên đến 400.000 VNĐ
-                        </h4>
-
-                        <h1 class="display-3 text-capitalize mb-4 wow fadeInRight"
-                            data-wow-delay="0.3s">
-                            Áp dụng cho quần áo & phụ kiện trẻ em chọn lọc
-                        </h1>
-
-                        <p class="text-dark wow fadeInRight"
-                           data-wow-delay="0.5s">
-                            Áp dụng điều khoản & điều kiện
-                        </p>
-
-                        <a class="btn btn-primary rounded-pill py-3 px-5 wow fadeInRight"
-                           data-wow-delay="0.7s"
-                           href="<?= BASE_URL; ?>tat-ca-san-pham">
-                            Mua ngay
-                        </a>
-                    </div>
-                </div>
-
-                <!-- SLIDE 2 -->
-                <div class="row g-0 header-carousel-item align-items-center">
-                    <div class="col-xl-6 carousel-img wow fadeInLeft" data-wow-delay="0.1s">
-                        <img src="<?= BASE_URL; ?>/assets/img/slider2.jpg"
-                             class="img-fluid w-100"
-                             alt="Thời trang trẻ em">
-                    </div>
-                    <div class="col-xl-6 carousel-content p-4">
-                        <h4 class="text-uppercase fw-bold mb-4 wow fadeInRight"
-                            data-wow-delay="0.1s"
-                            style="letter-spacing: 3px;">
-                            Ưu đãi lên đến 200.000 VNĐ
-                        </h4>
-
-                        <h1 class="display-3 text-capitalize mb-4 wow fadeInRight"
-                            data-wow-delay="0.3s">
-                            Áp dụng cho quần áo & phụ kiện trẻ em chọn lọc
-                        </h1>
-
-                        <p class="text-dark wow fadeInRight"
-                           data-wow-delay="0.5s">
-                            Áp dụng điều khoản & điều kiện
-                        </p>
-
-                        <a class="btn btn-primary rounded-pill py-3 px-5 wow fadeInRight"
-                           data-wow-delay="0.7s"
-                           href="<?= BASE_URL; ?>tat-ca-san-pham">
-                            Mua ngay
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- BANNER PHẢI -->
-        <div class="col-12 col-lg-5 col-xl-3 wow fadeInRight" data-wow-delay="0.1s">
-            <div class="carousel-header-banner h-100">
-                <img src="img/header-img.jpg"
-                     class="img-fluid w-100 h-100"
-                     style="object-fit: cover;"
-                     alt="Sản phẩm nổi bật">
-
-                <div class="carousel-banner">
-                    <div class="carousel-banner-content text-center p-4">
-                        <a href="<?= isset($product_banner['slug']) 
-                            ? 'chi-tiet-san-pham/' . htmlspecialchars($product_banner['slug']) 
-                            : '#!' ?>"
-                           class="d-block text-white fs-3">
-                            <?= isset($product_banner['name']) 
-                                ? $product_banner['name'] 
-                                : 'Không có sản phẩm' ?>
-                        </a>
-
-                        <span class="text-primary fs-5">
-                            <?= isset($product_banner['price']) 
-                                ? $product_banner['price'] 
-                                : 'Chưa có giá' ?>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+<div id="carouselExample" class="carousel slide">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="<?= BASE_URL; ?>/assets/img/artboard_1_928e2226a8f94cda82aaa57fa48416b6.jpg" class="d-block w-100" alt="...">
     </div>
+    <div class="carousel-item">
+      <img src="<?= BASE_URL; ?>/assets/img/artboard_6..-min.png" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="<?= BASE_URL; ?>/assets/img/spark_joy_3200__2_-min.jpg" class="d-block w-100" alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
 </div>
 
 <!-- Carousel End -->
@@ -235,7 +155,7 @@
             <div class="col-lg-6 wow fadeInLeft" data-wow-delay="0.1s">
                 <a href="<?= BASE_URL ?>tat-ca-san-pham">
                     <div class="bg-primary rounded position-relative">
-                        <img src="img/product-banner.jpg"
+                        <img src="<?= BASE_URL; ?>/assets/img/img/product-banner.jpg"
                              class="img-fluid w-100 rounded"
                              alt="Bộ sưu tập thời trang trẻ em">
                         <div class="position-absolute top-0 start-0 w-100 h-100
@@ -265,7 +185,7 @@
             <div class="col-lg-6 wow fadeInRight" data-wow-delay="0.2s">
                 <a href="<?= BASE_URL ?>tat-ca-san-pham">
                     <div class="text-center bg-primary rounded position-relative">
-                        <img src="img/product-banner-2.jpg"
+                        <img src="<?= BASE_URL; ?>/assets/img/img/product-banner-2.jpg"
                              class="img-fluid w-100"
                              alt="Khuyến mãi thời trang trẻ em">
 
@@ -445,7 +365,7 @@
 
                         </div>
 
-                        Hành động
+                       
                        
                     </div>
                 </div>

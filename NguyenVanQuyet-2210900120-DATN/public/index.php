@@ -20,8 +20,7 @@ require_once BASE_PATH . '/app/controllers/admin/NhaCungCapController.php';
 require_once BASE_PATH . '/app/controllers/admin/SizeController.php';
 require_once BASE_PATH . '/app/controllers/admin/CategoryPostController.php';
 require_once BASE_PATH . '/app/controllers/admin/PostController.php';
-
-
+require_once BASE_PATH . '/app/controllers/user/storeviewUserController.php';
 require_once BASE_PATH . '/app/controllers/admin/CheckOutAdminController.php';
 
 // $requestUri = $_SERVER['REQUEST_URI'];
@@ -426,6 +425,12 @@ switch ($path) {
         $homeController = new HomeController();
         $homeController->danhMucTinTuc();
         break;
+
+    case "danh-gia-san-pham":
+        $storeviewUserController = new StoreviewUserController();
+        $storeviewUserController->storeReview();
+        break;
+
 
     default:
         die('404 - Not Found!');

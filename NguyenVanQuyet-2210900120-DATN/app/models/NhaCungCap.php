@@ -42,13 +42,14 @@ class NhaCungCap
     /* ===== CREATE ===== */
     public function create($data)
     {
-        $sql = "INSERT INTO nha_cung_cap (name, vi_tri)
-                VALUES (:name, :vi_tri)";
+        $sql = "INSERT INTO nha_cung_cap (name, vi_tri,giam_gia)
+                VALUES (:name, :vi_tri,:giam_gia)";
 
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ':name'   => $data['name'],
-            ':vi_tri' => $data['vi_tri'] ?? 0,
+            ':vi_tri' => $data['vi_tri'] ,
+            ':giam_gia' => $data['giam_gia'] ,
         ]);
     }
 
@@ -57,13 +58,15 @@ class NhaCungCap
     {
         $sql = "UPDATE nha_cung_cap
                 SET name = :name,
-                    vi_tri = :vi_tri
+                    vi_tri = :vi_tri,
+                    giam_gia =:giam_gia
                 WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
             ':name'   => $data['name'],
             ':vi_tri' => $data['vi_tri'],
+            ':giam_gia' => $data['giam_gia'],
             ':id'     => $id,
         ]);
     }

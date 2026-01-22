@@ -63,7 +63,7 @@
                     <tr>
                         <td><?= $user['id'] ?></td>
                         <td><?= htmlspecialchars($user['name']) ?></td>
-                        <td><?= htmlspecialchars($user['vi_tri']) ?></td>
+                        <td><?= $user['vi_tri'] ?></td>
                         
                         <td>
                             <a href="<?= BASE_URL ?>admin/nha_cung_cap/edit/<?= $user['id'] ?>" class="text-primary me-2">
