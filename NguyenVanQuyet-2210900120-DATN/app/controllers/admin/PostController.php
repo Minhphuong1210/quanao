@@ -61,26 +61,23 @@ class PostController
             $content = trim($_POST['content'] ?? '');
             $category_post_id = (int)($_POST['category_post_id'] ?? 0);
 
+
             // upload ảnh
             $image = $this->uploadMainImage($_FILES['image'] ?? []);
-
-            if (!$image) {
-                $error = 'Vui lòng chọn ảnh bài viết';
-            } else {
                 $this->model->create([
-                    'name' => $name,
-                    'slug' => $slug,
-                    'image' => $image,
-                    'description' => $description,
-                    'content' => $content,
-                    'category_post_id' => $category_post_id,
+                    'name' => $name ?? '',
+                    'slug' => $slug ?? '',
+                    'image' => $image ?? '',
+                    'description' => $description ?? '',
+                    'content' => $content ?? '',
+                    'category_post_id' => $category_post_id ?? '',
                     'active'=>1,
                 ]);
 
                 $_SESSION['success'] = 'Thêm bài viết thành công';
                 header('Location: ' . BASE_URL . 'admin/post');
                 exit;
-            }
+            
         }
 
         require BASE_PATH . '/app/views/admin/post/add.php';
@@ -108,6 +105,9 @@ class PostController
             $content = trim($_POST['content'] ?? '');
             $category_post_id = (int)($_POST['category_post_id'] ?? 0);
             $active = (int)($_POST['active'] ?? 1);
+
+
+         
 
             $image = $this->uploadMainImage($_FILES['image'] ?? [], $item['image']);
     
@@ -185,36 +185,41 @@ class PostController
     }
 
     private function uploadMainImage($file, $oldImage = '')
-    {
-        if (empty($file['name']) || $file['error'] !== UPLOAD_ERR_OK) {
-            return $oldImage;
-        }
-
-        $uploadDir = BASE_PATH . '/public/uploads/posts/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
-        }
-
-        $allowed = ['image/jpeg', 'image/png', 'image/webp'];
-        if (!in_array(mime_content_type($file['tmp_name']), $allowed)) {
-            return $oldImage;
-        }
-
-        if ($file['size'] > 5 * 1024 * 1024) {
-            return $oldImage;
-        }
-
-        $fileName = uniqid() . '_' . basename($file['name']);
-        $target = $uploadDir . $fileName;
-
-        if (move_uploaded_file($file['tmp_name'], $target)) {
-            if ($oldImage && file_exists(BASE_PATH . '/public/' . $oldImage)) {
-                unlink(BASE_PATH . '/public/' . $oldImage);
-            }
-            return 'uploads/posts/' . $fileName;
-        }
-
+{
+    if (empty($file['name']) || $file['error'] !== UPLOAD_ERR_OK) {
         return $oldImage;
     }
+
+    $uploadDir = BASE_PATH . '/public/uploads/posts/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $allowedExt = ['jpg', 'jpeg', 'png', 'webp'];
+
+    if (!in_array($ext, $allowedExt)) {
+        return $oldImage;
+    }
+
+    // if ($file['size'] > 5 * 1024 * 1024) {
+    //     return $oldImage;
+    // }
+
+    $fileName = uniqid('post_', true) . '.' . $ext;
+    $target = $uploadDir . $fileName;
+
+    if (move_uploaded_file($file['tmp_name'], $target)) {
+
+        if ($oldImage && file_exists(BASE_PATH . '/public/' . $oldImage)) {
+            unlink(BASE_PATH . '/public/' . $oldImage);
+        }
+
+        return 'uploads/posts/' . $fileName;
+    }
+
+    return $oldImage;
+}
+
 
 }

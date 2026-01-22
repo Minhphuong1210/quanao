@@ -1,59 +1,10 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Tin Tức - Cập nhật thông tin sản phẩm & dịch vụ</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ <!-- Header -->
+ <?php include BASE_PATH . '/app/views/user/layout/header.php'; ?>
     <style>
-        /* Biến CSS */
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --light-color: #f8f9fa;
-            --dark-color: #343a40;
-            --gray-color: #6c757d;
-            --border-color: #dee2e6;
-            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
-        }
 
-        /* Reset và cơ bản */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--dark-color);
-            background-color: #f5f7fa;
-        }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
 
-        ul {
-            list-style: none;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
 
         .section-title {
             font-size: 1.8rem;
@@ -144,7 +95,7 @@
         }
 
         /* Hero section */
-        .hero {
+        /* .hero {
             background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(52, 152, 219, 0.8)), url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80');
             background-size: cover;
             background-position: center;
@@ -152,7 +103,7 @@
             text-align: center;
             padding: 5rem 0;
             margin-bottom: 3rem;
-        }
+        } */
 
         .hero h1 {
             font-size: 2.8rem;
@@ -549,11 +500,11 @@
             .main-content {
                 grid-template-columns: 1fr;
             }
-            
+
             .news-list {
                 grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             }
-            
+
             .hero h1 {
                 font-size: 2.3rem;
             }
@@ -571,28 +522,28 @@
                 padding: 1rem 0;
                 box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
             }
-            
+
             nav ul.active {
                 display: flex;
             }
-            
+
             nav ul li {
                 text-align: center;
                 padding: 0.5rem 0;
             }
-            
+
             .mobile-menu-btn {
                 display: block;
             }
-            
+
             .hero {
                 padding: 3rem 0;
             }
-            
+
             .hero h1 {
                 font-size: 2rem;
             }
-            
+
             .hero p {
                 font-size: 1rem;
             }
@@ -602,50 +553,30 @@
             .featured-image {
                 height: 220px;
             }
-            
+
             .news-list {
                 grid-template-columns: 1fr;
             }
-            
+
             .footer-content {
                 grid-template-columns: 1fr;
             }
         }
     </style>
-</head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="container header-container">
-            <div class="logo">
-                <i class="fas fa-newspaper"></i>
-                <span>Tin Tức Công Ty</span>
-            </div>
-            
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
-            
-            <nav>
-                <ul id="mainMenu">
-                    <li><a href="#" class="active">Trang chủ</a></li>
-                    <li><a href="#">Tin tức</a></li>
-                    <li><a href="#">Sản phẩm</a></li>
-                    <li><a href="#">Dịch vụ</a></li>
-                    <li><a href="#">Ưu đãi</a></li>
-                    <li><a href="#">Liên hệ</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+
+
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="container">
-            <h1>Cập nhật thông tin mới nhất</h1>
-            <p>Đây là nơi tổng hợp các tin tức, thông báo và bài viết mới nhất liên quan đến sản phẩm, dịch vụ, hoạt động kinh doanh và những cập nhật quan trọng của chúng tôi.</p>
-            <p>Các thông tin được cập nhật thường xuyên nhằm giúp khách hàng nhanh chóng nắm bắt xu hướng, chương trình ưu đãi và những thay đổi cần thiết trong quá trình sử dụng sản phẩm và dịch vụ.</p>
-        </div>
+        <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6 wow fadeInUp" data-wow-delay="0.1s">
+            Danh mục bài viết
+        </h1>
+        <ol class="breadcrumb justify-content-center mb-0 wow fadeInUp" data-wow-delay="0.3s">
+            <li class="breadcrumb-item"><a href="<?=BASE_URL?>">Trang chủ</a></li>
+            <li class="breadcrumb-item active text-white">Danh mục bài viết</li>
+        </ol>
+            </div>
     </section>
 
     <!-- Main Content -->
@@ -654,107 +585,83 @@
             <!-- Main News Section -->
             <main>
                 <!-- Featured News -->
+                <?php if (!empty($posts)): ?>
                 <section class="featured-news">
-                    <h2 class="section-title">Tin tức nổi bật</h2>
+                    <h2 class="section-title">
+                        <?= htmlspecialchars($categoryPost['name']) ?>
+                    </h2>
+
+                    <?php $featured = $posts[0]; ?>
                     <article class="featured-card">
                         <div class="featured-image">
-                            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Ra mắt sản phẩm mới">
+                            <img src="<?=BASE_URL?>/<?=$featured['image']?>">
                         </div>
                         <div class="featured-content">
-                            <span class="category">Sản phẩm mới</span>
-                            <h2>Ra mắt dòng sản phẩm công nghệ cao - Phiên bản 2024</h2>
-                            <p>Chúng tôi tự hào giới thiệu dòng sản phẩm công nghệ cao mới nhất với nhiều cải tiến vượt trội về hiệu suất và tiết kiệm năng lượng. Sản phẩm được phát triển dựa trên nghiên cứu thị trường và phản hồi từ khách hàng.</p>
-                            <a href="#" class="read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
+                            <span class="category">
+                                <?= htmlspecialchars($featured['category_name']) ?>
+                            </span>
+                            <h2><?= htmlspecialchars($featured['name']) ?></h2>
+                            <p><?= htmlspecialchars($featured['description']) ?></p>
+                            <a href="<?= BASE_URL ?>chi-tiet-bai-viet/<?= $featured['slug'] ?>"
+                               class="read-more">
+                                Đọc tiếp <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
                     </article>
                 </section>
-
+            <?php endif; ?>
                 <!-- News List -->
                 <section class="latest-news">
-                    <h2 class="section-title">Tin tức mới nhất</h2>
-                    <div class="news-list">
-                        <!-- News item 1 -->
+                <h2 class="section-title">Tin tức mới nhất</h2>
+
+                <div class="news-list">
+                    <?php foreach ($posts as $key => $post): ?>
+                        <?php if ($key == 0) continue; ?>
+
                         <article class="news-card">
                             <div class="news-image">
-                                <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Khuyến mãi mùa hè">
+                                <img src="<?=BASE_URL?>/<?=$post['image']?>"
+                                     alt="<?= htmlspecialchars($post['name']) ?>">
                             </div>
                             <div class="news-content">
                                 <div class="meta">
-                                    <span class="category">Khuyến mãi</span>
-                                    <span class="date">15/06/2024</span>
+                                    <span class="category">
+                                        <?= htmlspecialchars($post['category_name']) ?>
+                                    </span>
+                                    <span class="date">
+                                        <?= date('d/m/Y', strtotime($post['created_at'])) ?>
+                                    </span>
                                 </div>
-                                <h3>Chương trình ưu đãi mùa hè: Giảm đến 30% cho sản phẩm điện tử</h3>
-                                <p>Nhân dịp hè 2024, chúng tôi triển khai chương trình khuyến mãi lớn với ưu đãi lên đến 30% cho các sản phẩm điện tử tiêu dùng.</p>
-                                <a href="#" class="read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
+                                <h3><?= htmlspecialchars($post['name']) ?></h3>
+                                <p><?= htmlspecialchars($post['description']) ?></p>
+                                <a href="<?= BASE_URL ?>chi-tiet-bai-viet/<?= $post['slug'] ?>"
+                                   class="read-more">
+                                    Đọc tiếp <i class="fas fa-arrow-right"></i>
+                                </a>
                             </div>
                         </article>
 
-                        <!-- News item 2 -->
-                        <article class="news-card">
-                            <div class="news-image">
-                                <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Hội nghị khách hàng">
-                            </div>
-                            <div class="news-content">
-                                <div class="meta">
-                                    <span class="category">Sự kiện</span>
-                                    <span class="date">10/06/2024</span>
-                                </div>
-                                <h3>Hội nghị khách hàng thường niên 2024: Kết nối và phát triển</h3>
-                                <p>Sự kiện quan trọng nhất trong năm dành cho đối tác và khách hàng thân thiết sẽ diễn ra vào tháng 7 tới đây.</p>
-                                <a href="#" class="read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
-                            </div>
-                        </article>
-
-                        <!-- News item 3 -->
-                        <article class="news-card">
-                            <div class="news-image">
-                                <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80" alt="Nâng cấp dịch vụ">
-                            </div>
-                            <div class="news-content">
-                                <div class="meta">
-                                    <span class="category">Dịch vụ</span>
-                                    <span class="date">05/06/2024</span>
-                                </div>
-                                <h3>Nâng cấp hệ thống dịch vụ khách hàng: Hỗ trợ 24/7</h3>
-                                <p>Từ tháng 6/2024, chúng tôi chính thức triển khai dịch vụ hỗ trợ khách hàng 24/7 trên tất cả các kênh liên lạc.</p>
-                                <a href="#" class="read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
-                            </div>
-                        </article>
-
-                        <!-- News item 4 -->
-                        <article class="news-card">
-                            <div class="news-image">
-                                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Báo cáo tài chính">
-                            </div>
-                            <div class="news-content">
-                                <div class="meta">
-                                    <span class="category">Kinh doanh</span>
-                                    <span class="date">01/06/2024</span>
-                                </div>
-                                <h3>Báo cáo tài chính quý 1/2024: Tăng trưởng ấn tượng 25%</h3>
-                                <p>Công ty đạt mức tăng trưởng doanh thu 25% trong quý 1 năm 2024, vượt xa kế hoạch đề ra.</p>
-                                <a href="#" class="read-more">Đọc tiếp <i class="fas fa-arrow-right"></i></a>
-                            </div>
-                        </article>
-                    </div>
-                </section>
+                    <?php endforeach; ?>
+                </div>
+            </section>
             </main>
 
             <!-- Sidebar -->
             <aside class="sidebar">
                 <!-- Categories -->
                 <div class="sidebar-widget">
-                    <h3 class="widget-title">Danh mục tin tức</h3>
-                    <ul class="categories-list">
-                        <li><a href="#">Tất cả tin tức <span class="count">42</span></a></li>
-                        <li><a href="#">Sản phẩm mới <span class="count">12</span></a></li>
-                        <li><a href="#">Khuyến mãi <span class="count">8</span></a></li>
-                        <li><a href="#">Dịch vụ <span class="count">7</span></a></li>
-                        <li><a href="#">Sự kiện <span class="count">5</span></a></li>
-                        <li><a href="#">Kinh doanh <span class="count">6</span></a></li>
-                        <li><a href="#">Cập nhật hệ thống <span class="count">4</span></a></li>
-                    </ul>
-                </div>
+                <h3 class="widget-title">Danh mục tin tức</h3>
+                <ul class="categories-list">
+                    <?php foreach ($categories as $cat): ?>
+                        <li>
+                            <a href="<?= BASE_URL ?>/danh-muc/<?= $cat['slug'] ?>">
+                                <?= htmlspecialchars($cat['name']) ?>
+                                <span class="count"><?= $cat['total'] ?></span>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
 
                 <!-- Promotion Banner -->
                 <div class="promotion-banner">
@@ -765,117 +672,30 @@
 
                 <!-- Recent Posts -->
                 <div class="sidebar-widget">
-                    <h3 class="widget-title">Bài viết gần đây</h3>
-                    <ul class="recent-posts">
+    <h3 class="widget-title">Bài viết gần đây</h3>
+
+    <ul class="recent-posts">
+                    <?php foreach ($recentPosts as $post): ?>
                         <li>
                             <div class="recent-thumbnail">
-                                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Bài viết gần đây 1">
+                                <img src="<?=BASE_URL?>/<?=$post['image']?>"
+                                     alt="<?= htmlspecialchars($post['name']) ?>">
                             </div>
+
                             <div class="recent-content">
-                                <h4>Hướng dẫn sử dụng sản phẩm mới</h4>
-                                <span class="date">14/06/2024</span>
+                                <h4>
+                                    <a href="<?= BASE_URL ?>chi-tiet-bai-viet/<?= $post['slug'] ?>">
+                                        <?= htmlspecialchars($post['name']) ?>
+                                    </a>
+                                </h4>
                             </div>
                         </li>
-                        <li>
-                            <div class="recent-thumbnail">
-                                <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Bài viết gần đây 2">
-                            </div>
-                            <div class="recent-content">
-                                <h4>Lịch bảo trì hệ thống tháng 6</h4>
-                                <span class="date">12/06/2024</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="recent-thumbnail">
-                                <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Bài viết gần đây 3">
-                            </div>
-                            <div class="recent-content">
-                                <h4>Tuyển dụng nhân sự mới</h4>
-                                <span class="date">10/06/2024</span>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                    <?php endforeach; ?>
+                </ul>
+</div>
+
             </aside>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>Về chúng tôi</h3>
-                    <p>Chúng tôi là công ty hàng đầu trong lĩnh vực cung cấp sản phẩm và dịch vụ chất lượng cao. Trang tin tức này cập nhật mọi thông tin mới nhất về hoạt động kinh doanh, sản phẩm và dịch vụ của chúng tôi.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Liên kết nhanh</h3>
-                    <ul class="footer-links">
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Trang chủ</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Tin tức</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Sản phẩm</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Dịch vụ</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Liên hệ</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Thông tin liên hệ</h3>
-                    <ul class="footer-links">
-                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</a></li>
-                        <li><a href="#"><i class="fas fa-phone"></i> (028) 1234 5678</a></li>
-                        <li><a href="#"><i class="fas fa-envelope"></i> info@congty.com</a></li>
-                        <li><a href="#"><i class="fas fa-clock"></i> Thứ 2 - Thứ 6: 8:00 - 17:00</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Đăng ký nhận tin</h3>
-                    <p>Đăng ký để nhận thông báo về tin tức và ưu đãi mới nhất từ chúng tôi.</p>
-                    <form class="newsletter-form">
-                        <input type="email" placeholder="Email của bạn" required>
-                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
-                    </form>
-                </div>
-            </div>
-            
-            <div class="copyright">
-                <p>&copy; 2024 Công Ty TNHH ABC. Tất cả các quyền được bảo lưu.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // Mobile menu toggle
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            document.getElementById('mainMenu').classList.toggle('active');
-        });
-        
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const menu = document.getElementById('mainMenu');
-            const menuBtn = document.getElementById('mobileMenuBtn');
-            
-            if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
-                menu.classList.remove('active');
-            }
-        });
-        
-        // Simple form submission
-        document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = this.querySelector('input[type="email"]').value;
-            alert(`Cảm ơn bạn đã đăng ký nhận tin với email: ${email}`);
-            this.reset();
-        });
-    </script>
-</body>
-</html>
+<?php include BASE_PATH . '/app/views/user/layout/footer.php'; ?>

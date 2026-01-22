@@ -340,8 +340,12 @@ if (!empty($cart)) {
 
         <?php
         require_once BASE_PATH . '/app/models/category.php';
+        require_once BASE_PATH . '/app/models/CategoryPost.php';
+
         $categoryModel = new category();
+        $categoryPostModel = new CategoryPost();
         $danh_muc = $categoryModel->getAll();
+        $categoryPos = $categoryPostModel->getAll()
         ?>
 
         <!-- TẤT CẢ SẢN PHẨM -->
@@ -367,9 +371,12 @@ if (!empty($cart)) {
                 Tin tức
             </a>
             <div class="dropdown-menu m-0">
-                <a href="<?=BASE_URL?>bestseller" class="dropdown-item">
-                    Bestseller
-                </a>
+                <?php foreach ($categoryPos as $categoryPosItem): ?>
+                    <a href="<?=BASE_URL?>tin-tuc/<?=$categoryPosItem['slug']?>"
+                       class="dropdown-item">
+                        <?=htmlspecialchars($categoryPosItem['name'])?>
+                    </a>
+                <?php endforeach; ?>
             </div>
         </div>
 

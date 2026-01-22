@@ -173,4 +173,15 @@ class CategoryPost
         $stmt->execute($params);
         return $stmt->fetchColumn() > 0;
     }
+
+    public function getAllWithCount()
+{
+    $sql = "SELECT c.*, COUNT(p.id) as total
+            FROM category_post c
+            LEFT JOIN posts p ON p.category_post_id = c.id AND p.active = 1
+            GROUP BY c.id";
+
+    return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }

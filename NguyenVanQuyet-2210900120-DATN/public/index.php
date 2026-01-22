@@ -196,7 +196,7 @@ if (isset($parts[0]) && $parts[0] === 'admin') {
     }
 
 
-    if ($parts[1] === 'post') {
+    if ( isset($parts[1]) && $parts[1] === 'post'){
         if (!isset($parts[2])) {
             $postController->index();
         } elseif ($parts[2] === 'create') {
@@ -329,6 +329,21 @@ if (isset($parts[0]) && $parts[0] === 'vnpay' && isset($parts[1])) {
     $checkOutController->vnpayReturn();
    }
    exit();
+}
+// đây là của bài viết
+
+if (isset($parts[0]) && $parts[0] === 'tin-tuc' && isset($parts[1])) {
+    $slug = $parts[1]; // Lấy slug động
+    $homeController = new HomeController();
+    $homeController->danhMucTinTuc($slug); 
+    exit;
+}
+
+if (isset($parts[0]) && $parts[0] === 'chi-tiet-bai-viet' && isset($parts[1])) {
+    $slug = $parts[1]; // Lấy slug động
+    $homeController = new HomeController();
+    $homeController->chiTietBaiViet($slug); 
+    exit;
 }
 
 // đây là các đường dẫn tính k chỉ fix cứng thế này

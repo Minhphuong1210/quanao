@@ -137,7 +137,7 @@ class HomeController
         header('Content-Type: application/json');
         echo json_encode([
             'success' => true,
-            'sizes' => $sizes
+            'sizes' => $sizes,
         ]);
         exit();
     }
@@ -153,12 +153,12 @@ class HomeController
                 'success' => true,
                 'stock' => $variant['stock'],
                 'variant_id' => $variant['id'],
-                'is_available' => $variant['is_available']
+                'is_available' => $variant['is_available'],
             ]);
         } else {
             echo json_encode([
                 'success' => false,
-                'message' => 'Biến thể không tồn tại'
+                'message' => 'Biến thể không tồn tại',
             ]);
         }
         exit();
@@ -173,23 +173,73 @@ class HomeController
         if ($variant) {
             echo json_encode([
                 'success' => true,
-                'variant' => $variant
+                'variant' => $variant,
             ]);
         } else {
             echo json_encode([
                 'success' => false,
-                'message' => 'Không tìm thấy biến thể'
+                'message' => 'Không tìm thấy biến thể',
             ]);
         }
         exit();
     }
 
-public function gioiThieuVeChungToi(){
-    include BASE_PATH . '/app/views/user/home/gioiThieuVeChungToi.php';
-}
+    public function gioiThieuVeChungToi()
+    {
+        include BASE_PATH . '/app/views/user/home/gioiThieuVeChungToi.php';
+    }
 
-public function danhMucTinTuc(){
-    include BASE_PATH . '/app/views/user/home/danhMucTinTuc.php';
-}
+    public function danhMucTinTuc($slug)
+    {
+
+        $categoryPostModel = new CategoryPost();
+        $postModel = new Post();
+        $categoryPost = $categoryPostModel->getBySlug($slug);
+        if (!$categoryPost) {
+            die('Danh mục không tồn tại');
+        }
+        $categories = $categoryPostModel->getAllWithCount();
+        // Lấy bài viết theo danh mục
+        $posts = $postModel->getByCategoryId($categoryPost['id']);
+        $recentPosts = $postModel->getRecent(3);
+        include BASE_PATH . '/app/views/user/home/danhMucTinTuc.php';
+    }
+
+    public function chiTietBaiViet($slug)
+    {
+        $postModel = new Post();
+        // $commentModel = new Comment();
+    
+       
+        $article = $postModel->findBySlug($slug);
+    
+        if (!$article) {
+            include BASE_PATH . '/app/views/errors/404.php';
+            exit;
+        }
+    
+    
+        $postModel->increaseView($article['id']);
+    
+    
+        $related_articles = $postModel->getRelated(
+            $article['category_post_id'],
+            $article['id'],
+            4
+        );
+    
+       
+        $recent_posts = $postModel->getRecent(5);
+    
+  
+        // $comments = $commentModel->getByArticle($article['id']);
+        // $comment_count = count($comments);
+    
+      
+        include BASE_PATH . '/app/views/user/home/chiTietBaiViet.php';
+    }
+ 
+    
+    
 
 }

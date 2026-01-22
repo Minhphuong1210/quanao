@@ -123,4 +123,87 @@ class Post
         return (int) $stmt->fetchColumn();
     }
 
+    public function getByCategoryId($categoryId)
+    {
+        $sql = "SELECT p.*, c.name AS category_name
+                FROM posts p
+                INNER JOIN category_post c ON c.id = p.category_post_id
+                WHERE p.active = 1
+                  AND p.category_post_id = :category_id
+                ORDER BY p.id DESC";
+    
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([
+            ':category_id' => $categoryId
+        ]);
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function getRecent($limit = 5)
+{
+    $sql = "SELECT p.*, c.name AS category_name
+            FROM posts p
+            LEFT JOIN category_post c ON c.id = p.category_post_id
+            WHERE p.active = 1
+            ORDER BY p.id DESC
+            LIMIT :limit";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function findBySlug($slug)
+{
+    $sql = "
+        SELECT 
+            p.*, 
+            c.name AS category_name,
+            c.slug AS category_slug
+        FROM posts p
+        LEFT JOIN category_post c ON c.id = p.category_post_id
+        WHERE p.slug = :slug
+          AND p.active = 1
+        LIMIT 1
+    ";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+        ':slug' => $slug
+    ]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+public function increaseView($id)
+{
+    $stmt = $this->conn->prepare(
+        "UPDATE posts SET view = view + 1 WHERE id = :id"
+    );
+    $stmt->execute([':id' => $id]);
+}
+
+public function getRelated($categoryId, $excludeId, $limit = 4)
+{
+    $sql = "
+        SELECT id, name, slug, image
+        FROM posts
+        WHERE active = 1
+          AND category_post_id = :category_id
+          AND id != :exclude_id
+        ORDER BY id DESC
+        LIMIT :limit
+    ";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(':category_id', $categoryId, PDO::PARAM_INT);
+    $stmt->bindValue(':exclude_id', $excludeId, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }
